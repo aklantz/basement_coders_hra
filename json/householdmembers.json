@@ -1,0 +1,16 @@
+[
+  {
+    "memberUUID": "7c1f5a10-1111-4a2b-9c3d-000000000001",
+    "name": "Casey Smith",
+    "lastCheckIn": "2026-09-25T08:30:00Z",
+    "householdOwnerUUID": "550e8400-e29b-41d4-a716-446655440001",
+    "safetyStatus": "SAFE"
+  },
+  {
+    "memberUUID": "7c1f5a10-1111-4a2b-9c3d-000000000002",
+    "name": "Riley Smith",
+    "lastCheckIn": "2026-09-24T19:15:00Z",
+    "householdOwnerUUID": "550e8400-e29b-41d4-a716-446655440001",
+    "safetyStatus": "IN_NEED"
+  }
+]

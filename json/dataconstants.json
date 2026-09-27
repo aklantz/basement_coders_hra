@@ -1,0 +1,5 @@
+{
+  "USER_FILE": "json/users.json",
+  "AID_REQUEST_FILE": "json/aidRequests.json",
+  "RESOURCE_FILE": "json/shelters.json"
+}

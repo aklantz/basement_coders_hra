@@ -1,0 +1,31 @@
+[
+  {
+    "requestId": "a1b2c3d4-0001-4000-8000-000000000001",
+    "requester": "550e8400-e29b-41d4-a716-446655440002",
+    "category": "WATER",
+    "urgency": "",
+    "status": "SUBMITTED",
+    "householdSize": 4,
+    "streetAddress": "12 Palmetto Ln, Tega Cay, SC",
+    "assignments": [],
+    "statusHistory": [
+      { "status": "SUBMITTED", "changedAt": "2026-09-24T09:00:00Z" }
+    ],
+    "isDuplicate": false
+  },
+  {
+    "requestId": "a1b2c3d4-0002-4000-8000-000000000002",
+    "requester": "550e8400-e29b-41d4-a716-446655440001",
+    "category": "MEDICAL",
+    "urgency": "",
+    "status": "ASSIGNED",
+    "householdSize": 2,
+    "streetAddress": "142 Riverbend Dr, Tega Cay, SC",
+    "assignments": ["b2c3d4e5-0001-4000-8000-000000000001"],
+    "statusHistory": [
+      { "status": "SUBMITTED", "changedAt": "2026-09-23T14:20:00Z" },
+      { "status": "ASSIGNED", "changedAt": "2026-09-23T15:05:00Z" }
+    ],
+    "isDuplicate": false
+  }
+]

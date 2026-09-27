@@ -1,0 +1,9 @@
+{
+  "RequestCategory": ["FOOD", "WATER", "MEDICAL", "RESCUE", "TRANSPORT", "SUPPLIES", "POWER", "DEBRIS_REMOVAL", "OTHER"],
+  "ShelterStatus": ["OPEN", "FULL", "CLOSED"],
+  "USERTYPE": ["ADMIN", "VOLUNTEER", "COORDINATOR"],
+  "TaskStatus": ["PENDING", "ACCEPTED", "COMPLETED", "CANCELLED"],
+  "RequestStatus": ["SUBMITTED", "ASSIGNED", "IN_PROGESS", "FULFILLED", "CLOSED", "EXPIRED"],
+  "SafetyStatus": ["SAFE", "IN_NEED", "UNKNOWN"],
+  "HurricaneCategory": ["CATEGORY_5", "CATEGORY_4", "CATEGORY_3", "CATEGORY_2", "CATEGORY_1"]
+}

@@ -1,0 +1,14 @@
+[
+  {
+    "itemId": "d4e5f6a7-0001-4000-8000-000000000001",
+    "supplyType": "Bottled Water (cases)",
+    "quantity": 480,
+    "reorderThreshold": 100
+  },
+  {
+    "itemId": "d4e5f6a7-0002-4000-8000-000000000002",
+    "supplyType": "First Aid Kits",
+    "quantity": 35,
+    "reorderThreshold": 20
+  }
+]
