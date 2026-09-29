@@ -18,13 +18,13 @@ This product is built for users who need fast, dependable, and straightforward h
 information without the distractions of full-scale weather platforms.
 
 # Requirements
-  [Requirements Document](https://github.com/aklantz/basement_coders_hra/blob/main/docs/requirements.pdf)
-  [Non-Functional Requirements Spreadsheet](https://docs.google.com/spreadsheets/d/1l8WZhmJeAYPEAHWg-Z581cVLqXcrtnlvaOM-UHEX92g/edit?gid=0#gid=0)
+  [Requirements Document](https://github.com/aklantz/basement_coders_hra/blob/main/docs/requirements.pdf)\
+  [Non-Functional Requirements Spreadsheet](https://docs.google.com/spreadsheets/d/1l8WZhmJeAYPEAHWg-Z581cVLqXcrtnlvaOM-UHEX92g/edit?gid=0#gid=0)\
   [Functional Requirements Spreadsheet](https://docs.google.com/spreadsheets/d/18mnP7rMTIdjlWnz0r0lPOu8dCD_HRQnw/edit?gid=2122181382#gid=2122181382)
   
 # Code Design
-  [UML Class Diagram](https://github.com/aklantz/basement_coders_hra/blob/main/docs/uml-class-diagram.pdf)
-  [UML Sequence Diagram 1](https://github.com/aklantz/basement_coders_hra/blob/main/docs/uml-sequence-diagram1.pdf)
+  [UML Class Diagram](https://github.com/aklantz/basement_coders_hra/blob/main/docs/uml-class-diagram.pdf)\
+  [UML Sequence Diagram 1](https://github.com/aklantz/basement_coders_hra/blob/main/docs/uml-sequence-diagram1.pdf)\
   [UML Sequence Diagram 2](https://github.com/aklantz/basement_coders_hra/blob/main/docs/uml-sequence-diagram2.pdf)
   
 # SCRUM Board
