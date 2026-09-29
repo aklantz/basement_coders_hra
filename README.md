@@ -1,5 +1,5 @@
 # Basement Coders Hurricane Relief
-The Hurricane Tracker is designed to provide precise, real‑time storm monitoring through a
+This Hurricane Tracker is designed to provide precise, real‑time storm monitoring through a
 clean, intuitive interface. Unlike competitors that overwhelm users with broad, cluttered weather
 dashboards, our platform is purpose-built for hurricane‑specific intelligence.
 Our system focuses on delivering live updates, clear visualizations, and easy‑to‑understand data,
