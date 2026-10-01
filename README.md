@@ -9,10 +9,10 @@ prioritizing accuracy, simplicity, and speed, the Hurricane Tracker empowers ind
 families, and communities to make informed decisions before, during, and after major storm
 events.
 
-**Key strengths include:**\
- - Real‑time hurricane tracking with minimal latency\
- - Streamlined interface designed for clarity under pressure\
- - Focused feature set that avoids unnecessary noise\
+**Key strengths include:**
+ - Real‑time hurricane tracking with minimal latency
+ - Streamlined interface designed for clarity under pressure
+ - Focused feature set that avoids unnecessary noise
  - Reliable data sourcing for trustworthy storm insights
 
 This product is built for users who need fast, dependable, and straightforward hurricane
