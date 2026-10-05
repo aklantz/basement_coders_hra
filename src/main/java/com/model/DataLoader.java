@@ -48,12 +48,4 @@ public class DataLoader extends DataConstants {
 
         return shelters;
     }
-
-    public static void main(String[] args) {
-        ArrayList<Shelter> shelters = getCachedShelters();
-
-        for (Shelter shelter : shelters) {
-            System.out.println(shelter);
-        }
-    }
 }
