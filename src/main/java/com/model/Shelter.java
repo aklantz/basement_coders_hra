@@ -107,18 +107,29 @@ public class Shelter {
     }
 
     // getters
+    public UUID getResourceId() { 
+        return resourceId; 
+    }
 
-    public UUID getResourceId() { return resourceId; }
+    public String getName() { 
+        return name; 
+    }
 
-    public String getName() { return name; }
+    public int getCapacity() { 
+        return capacity; 
+    }
 
-    public int getCapacity() { return capacity; }
+    public int getOccupancy() { 
+        return occupancy; 
+    }
 
-    public int getOccupancy() { return occupancy; }
+    public ShelterStatus getStatus() { 
+        return status; 
+    }
 
-    public ShelterStatus getStatus() { return status; }
-
-    public LocalDateTime getLastUpdated() { return lastUpdated; }
+    public LocalDateTime getLastUpdated() { 
+        return lastUpdated; 
+    }
 
     @Override
     public String toString() {
@@ -126,4 +137,5 @@ public class Shelter {
                 + " | Occupancy: " + occupancy + "/" + capacity
                 + " | Spots left: " + getRemainingCapacity();
     }
+
 }

@@ -1,5 +1,5 @@
 package com.hurricane;
 
-public class TaskAssignment {
+public class Shelter {
     
 }

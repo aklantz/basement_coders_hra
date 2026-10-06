@@ -16,13 +16,17 @@ public class InventoryItem {
         this.reorderThreshold = reorderThreshold;
     }
 
+    /** UML lists both adjustQuanity and adjustQuantity; the first is a typo, so only one is kept. */
     public void adjustQuantity(int amount) {
+        // TODO: add amount (can be negative); don't let quantity drop below 0
     }
 
     public void setReorderThreshold(int threshold) {
+        // TODO: validate and set
     }
 
     public boolean isLowStock() {
+        // TODO: quantity <= reorderThreshold
         return false;
     }
 }
