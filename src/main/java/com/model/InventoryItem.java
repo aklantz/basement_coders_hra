@@ -1,4 +1,4 @@
-package com.hurricane;
+package com.model;
 
 import java.util.UUID;
 
