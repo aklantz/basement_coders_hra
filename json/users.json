@@ -8,9 +8,12 @@
     "homeAddress": "142 Riverbend Dr, Tega Cay, SC",
     "phoneNumber": "803-555-0142",
     "emailAddress": "jsmith@example.com",
-    "accountStatus": "",
+    "accountStatus": "ACTIVE",
     "type": "ADMIN",
-    "houseHoldMembers": ["7c1f5a10-1111-4a2b-9c3d-000000000001", "7c1f5a10-1111-4a2b-9c3d-000000000002"],
+    "houseHoldMembers": [
+      "7c1f5a10-1111-4a2b-9c3d-000000000001",
+      "7c1f5a10-1111-4a2b-9c3d-000000000002"
+    ],
     "safetyStatus": "SAFE"
   },
   {
@@ -22,7 +25,7 @@
     "homeAddress": "88 Harbor Pointe Rd, Fort Mill, SC",
     "phoneNumber": "803-555-0198",
     "emailAddress": "mrivera@example.com",
-    "accountStatus": "",
+    "accountStatus": "ACTIVE",
     "type": "VOLUNTEER",
     "houseHoldMembers": [],
     "safetyStatus": "UNKNOWN"
