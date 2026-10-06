@@ -1,4 +1,4 @@
-package com.hurricane;
+package com.model;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
