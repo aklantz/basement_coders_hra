@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.UUID;
 
+import com.hurricane.AidRequest;
+
 /**
  * Facade between the UI and the rest of the system. Singleton.
  */
@@ -38,19 +40,37 @@ public class ReliefApplication {
      */
     public User createAccount(String username, String password, String firstName, String lastName,
                               Date dateOfBirth, String homeAddress, String emailAddress, String phoneNumber) {
-        // TODO: build User, hash password, userDirectory.addUser(...), return the new user (or null on failure)
-        return null;
+         String fullName = firstName + " " + lastName;
+        User user = new User(UUID.randomUUID(), username, User.hashPassword(password), fullName,
+                dateOfBirth, homeAddress, emailAddress, phoneNumber);
+ 
+        // UserDirectory decides whether the user is valid / unique
+        if (!userDirectory.addUser(user)) {
+            return null;
+        }
+        userDirectory.save();
+        logAction("CREATE_ACCOUNT", "User", user.getUserId());
+        return user;
     }
 
     public User login(String username, String password) {
-        // TODO: userDirectory.getUser(username, password); set currentUser on success
-        return null;
+        User user = userDirectory.getUser(username, password);
+        if (user == null) {
+            return null;
+        }
+        currentUser = user;
+        logAction("LOGIN", "User", user.getUserId());
+        return currentUser;
     }
 
-    /** UML says "bool"; Java uses boolean. */
+ 
     public boolean logout() {
-        // TODO: clear currentUser, return true if someone was logged in
-        return false;
+          if (currentUser == null) {
+            return false;
+        }
+        logAction("LOGOUT", "User", currentUser.getUserId());
+        currentUser = null;
+        return true;
     }
 
     /**
