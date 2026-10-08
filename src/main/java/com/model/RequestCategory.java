@@ -1,5 +1,8 @@
 package com.model;
 
+/**
+ * The type of aid being requested.
+ */
 public enum RequestCategory {
     FOOD,
     WATER,

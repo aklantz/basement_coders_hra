@@ -1,87 +1,91 @@
 package com.model;
 
-   import java.util.ArrayList;
-   import java.util.Calendar;
-   import java.util.GregorianCalendar;
-   import java.util.UUID;
+import java.util.ArrayList;
 
-   /**
-    * Text-based UI for the hurricane relief app.
-    */
-   public class ReliefUI {
+public class ReliefUI {
+    private ReliefApplication reliefApp;
 
-    private static int passed = 0;
-    private static int failed = 0;
+    ReliefUI() {
+        reliefApp = ReliefApplication.getInstance();
+    }
 
-       /**
-        * Loads the shelters and displays each one.
-        *
-        * @param args not used
-        */
-       public static void main(String[] args) {
-           ArrayList<Shelter> shelters = DataLoader.getCachedShelters();
-           System.out.println("Shelters:");
-           for (Shelter shelter : shelters) {
-               System.out.println(shelter);
-           }
-            testAccountLoginLogout();
-       }
+    public void run() {
+        scenario1();
+        scenario2();
+        scenario3();
+        scenario4();
+    }
 
     /**
-     * Tests createAccount, login and logout. Uses a unique username each run so a
-     * test account saved on a previous run does not make the duplicate check fail.
+     * Scenario 1: Maria Rivera (volunteer) logs in and logs out.
      */
-    private static void testAccountLoginLogout() {
-        System.out.println("\nAccount tests:");
-        ReliefApplication app = ReliefApplication.getInstance();
- 
-        String username = "testuser_" + UUID.randomUUID().toString().substring(0, 8);
-        String password = "testpass123";
- 
-        // create account
-        User created = app.createAccount(username, password, "Test", "User",
-                new GregorianCalendar(2000, Calendar.JANUARY, 1).getTime(),
-                "1 Test St, Columbia, SC 29201", "test@relief.org", "803-555-0100",
-                USERTYPE.VOLUNTEER);
-        check("createAccount returns a user", created != null);
- 
-        User duplicate = app.createAccount(username, password, "Test", "User",
-                new GregorianCalendar(2000, Calendar.JANUARY, 1).getTime(),
-                "1 Test St, Columbia, SC 29201", "test@relief.org", "803-555-0100",
-                USERTYPE.VOLUNTEER);
-        check("createAccount rejects a duplicate username", duplicate == null);
- 
-        // login
-        check("not logged in before login", !app.isLoggedIn());
- 
-        check("login fails with wrong password", app.login(username, "wrongpass") == null);
-        check("still not logged in after failed login", !app.isLoggedIn());
- 
-        check("login fails with unknown username", app.login("nobody_here", password) == null);
- 
-        User loggedIn = app.login(username, password);
-        check("login succeeds with correct password", loggedIn != null);
-        check("logged in after login", app.isLoggedIn());
- 
-        // logout
-        check("logout returns true when logged in", app.logout());
-        check("not logged in after logout", !app.isLoggedIn());
-        check("logout returns false when nobody is logged in", !app.logout());
- 
-        // login again after logging out
-        check("login works again after logout", app.login(username, password) != null);
-        app.logout();
- 
-        System.out.println("\n" + passed + " passed, " + failed + " failed");
-    }
- 
-    private static void check(String description, boolean result) {
-        if (result) {
-            passed++;
-            System.out.println("  PASS: " + description);
-        } else {
-            failed++;
-            System.out.println("  FAIL: " + description);
+    public void scenario1() {
+        System.out.println();
+
+        User user = reliefApp.login("mrivera", "password");
+        if (user == null) {
+            System.out.println("Sorry, Maria Rivera couldn't log in.");
+            return;
         }
+        System.out.println("Maria Rivera is now logged in");
+
+        if (!reliefApp.logout()) {
+            System.out.println("Sorry, Maria Rivera could not be logged out.");
+            return;
+        }
+        System.out.println("Maria Rivera has logged out");
     }
-   }
+
+    /**
+     * Scenario 2: Jordan Smith (admin) logs in and logs out.
+     */
+    public void scenario2() {
+        System.out.println();
+
+        User user = reliefApp.login("jsmith", "password");
+        if (user == null) {
+            System.out.println("Sorry, Jordan Smith couldn't log in.");
+            return;
+        }
+        System.out.println("Jordan Smith is now logged in");
+
+        if (!reliefApp.logout()) {
+            System.out.println("Sorry, Jordan Smith could not be logged out.");
+            return;
+        }
+        System.out.println("Jordan Smith has logged out");
+    }
+    public void scenario3() {
+    System.out.println();
+
+    ArrayList<Shelter> shelters = DataLoader.getCachedShelters();
+    if (shelters.isEmpty()) {
+        System.out.println("Sorry, no shelters were loaded.");
+        return;
+    }
+    System.out.println(shelters.size() + " shelter(s) loaded");
+}
+public void scenario4() {
+    System.out.println();
+
+    ArrayList<AidRequest> requests = DataLoader.getAidRequests();
+    if (requests.isEmpty()) {
+        System.out.println("Sorry, no aid requests were loaded.");
+        return;
+    }
+    System.out.println(requests.size() + " aid request(s) loaded");
+
+    for (AidRequest request : requests) {
+        String requesterName = (request.getRequester() == null)
+                ? "UNKNOWN USER"
+                : request.getRequester().getUsername();
+        System.out.println("- " + request.getCategory() + " request from "
+                + requesterName + " (status: " + request.getStatus() + ")");
+    }
+}
+
+    public static void main(String[] args) {
+        ReliefUI reliefInterface = new ReliefUI();
+        reliefInterface.run();
+    }
+}
