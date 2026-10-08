@@ -12,7 +12,7 @@ public class UserDirectory {
     private static UserDirectory userDirectory;
     private ArrayList<User> users;
 
-     /**
+    /**
      * Creates the directory and loads the saved users through the DataLoader
      */
     private UserDirectory() {
@@ -30,6 +30,13 @@ public class UserDirectory {
             userDirectory = new UserDirectory();
         }
         return userDirectory;
+    }
+
+    /**
+     * Returns ALL users — needed for DataWriter.saveUsers()
+     */
+    public ArrayList<User> getUsers() {
+        return users;
     }
 
     /**
@@ -63,11 +70,8 @@ public class UserDirectory {
         return null;
     }
 
-     /**
-     * Creates a new user and adds it to the directory. The facade passes in the raw
-     * information; building the right kind of User happens here.
-     * @param userType the kind of account (volunteer or coordinator)
-     * @return the new user, or null if the information is invalid or the username is taken
+    /**
+     * Creates a new user and adds it to the directory.
      */
     public User createUser(String username, String password, String fullName, Date dateOfBirth,
                            String homeAddress, String emailAddress, String phoneNumber,
@@ -75,33 +79,32 @@ public class UserDirectory {
         if (isBlank(username) || isBlank(password) || isBlank(fullName) || userType == null) {
             return null;
         }
- 
+
         UUID userId = UUID.randomUUID();
         User user;
+
         switch (userType) {
             case VOLUNTEER:
                 user = new Volunteer(userId, username, password, fullName, dateOfBirth,
                         homeAddress, emailAddress, phoneNumber, username);
                 user.setAccountStatus(AccountStatus.ACTIVE);
                 break;
+
             case COORDINATOR:
                 user = new Coordinator(userId, username, password, fullName, dateOfBirth,
                         homeAddress, emailAddress, phoneNumber, username);
-                // coordinators wait for approval (see getPendingCoordinators)
                 user.setAccountStatus(AccountStatus.PENDING);
                 break;
+
             default:
-                // ADMIN accounts are not created through sign-up
                 return null;
         }
- 
+
         return addUser(user) ? user : null;
     }
 
     /**
      * Adds a user if the username is not taken
-     * @param user the user to add
-     * @return true if the user was added
      */
     public boolean addUser(User user) {
         if (user == null || getUser(user.getUsername()) != null) {
@@ -113,8 +116,6 @@ public class UserDirectory {
 
     /**
      * Finds users whose home address is in the given zip code
-     * @param zipCode the zip code
-     * @return the matching users
      */
     public ArrayList<User> getUsersByZipCode(String zipCode) {
         ArrayList<User> matches = new ArrayList<User>();
@@ -132,7 +133,6 @@ public class UserDirectory {
 
     /**
      * Gets coordinators whose accounts are waiting for approval
-     * @return the pending coordinators
      */
     public ArrayList<Coordinator> getPendingCoordinators() {
         ArrayList<Coordinator> pending = new ArrayList<Coordinator>();
@@ -147,16 +147,13 @@ public class UserDirectory {
 
     /**
      * Saves all users to file
-     * @return true if the users were saved
      */
     public boolean save() {
-        return DataWriter.saveUsers();
+        return DataWriter.saveUsers(users);
     }
 
     /**
      * Finds a user by id
-     * @param userId the id
-     * @return the user, or null if not found
      */
     public User getUserById(UUID userId) {
         if (userId == null) {

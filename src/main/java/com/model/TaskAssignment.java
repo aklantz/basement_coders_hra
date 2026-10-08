@@ -23,17 +23,17 @@ public class TaskAssignment {
         this.status = TaskStatus.PENDING;
     }
 
-    public void acceptAssignment() {
-    }
+    public void acceptAssignment() {}
 
-    public void confirmCompletion() {
-    }
+    public void confirmCompletion() {}
 
     public TaskStatus getStatus() {
         return status;
     }
 
-    public void reassign(UUID volunteerId) {
-        
+    public void reassign(UUID volunteerId) {}
+
+    public UUID getTaskId() {
+        return taskId;
     }
 }

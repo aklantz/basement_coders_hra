@@ -1,5 +1,6 @@
 package com.model;
 
+import java.util.ArrayList;
 import java.util.UUID;
 
 /**
@@ -15,7 +16,9 @@ public class AidRequest {
     private int householdSize;
     private String streetAddress;
     private boolean isDuplicate;
-    // TODO: assignments (ArrayList<TaskAssignment>) and statusHistory (ArrayList<StatusChange>)
+
+    private ArrayList<TaskAssignment> assignments = new ArrayList<>();
+    private ArrayList<StatusChange> statusHistory = new ArrayList<>();
 
     public AidRequest(UUID requestId, User requester, RequestCategory category, UrgencyLevel urgency,
                       int householdSize, String streetAddress) {
@@ -38,7 +41,6 @@ public class AidRequest {
     }
 
     public boolean isLocationReliable() {
-        // TODO: implement
         return true;
     }
 
@@ -56,5 +58,29 @@ public class AidRequest {
 
     public RequestStatus getStatus() {
         return status;
+    }
+
+    public UrgencyLevel getUrgency() {
+        return urgency;
+    }
+
+    public int getHouseholdSize() {
+        return householdSize;
+    }
+
+    public String getStreetAddress() {
+        return streetAddress;
+    }
+
+    public boolean isDuplicate() {
+        return isDuplicate;
+    }
+
+    public ArrayList<TaskAssignment> getAssignments() {
+        return assignments;
+    }
+
+    public ArrayList<StatusChange> getStatusHistory() {
+        return statusHistory;
     }
 }
