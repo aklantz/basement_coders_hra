@@ -7,7 +7,7 @@ import java.util.UUID;
 /**
  * A user of the hurricane relief application
  */
-public class User {
+public abstract class User {
 
     private UUID userId;
     private String username;
@@ -18,7 +18,6 @@ public class User {
     private String phoneNumber;
     private String emailAddress;
     private AccountStatus accountStatus;
-    private USERTYPE type;
     private ArrayList<HouseholdMember> houseHoldMembers;
     private SafetyStatus safetyStatus;
 
@@ -48,6 +47,11 @@ public class User {
         this.houseHoldMembers = new ArrayList<HouseholdMember>();
         this.safetyStatus = SafetyStatus.UNKNOWN;
     }
+
+    /**
+     * @return the user's type (admin, volunteer, or coordinator)
+     */
+    public abstract USERTYPE getType();
 
     /**
      * Sends a notification to the user
@@ -142,20 +146,6 @@ public class User {
      */
     public void setAccountStatus(AccountStatus accountStatus) {
         this.accountStatus = accountStatus;
-    }
-
-    /**
-     * @return the user's type (admin, volunteer, or coordinator)
-     */
-    public USERTYPE getType() {
-        return type;
-    }
-
-    /**
-     * @param type the user's type
-     */
-    public void setType(USERTYPE type) {
-        this.type = type;
     }
 
     /**

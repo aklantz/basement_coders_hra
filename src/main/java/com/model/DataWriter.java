@@ -1,51 +1,17 @@
 package com.model;
 
-import java.io.FileReader;
-import java.time.LocalDateTime;
-import java.time.OffsetDateTime;
-import java.util.ArrayList;
-import java.util.UUID;
-
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
-
 /**
- * Loads data from the JSON files.
+ * Writes data to the JSON files.
  */
-public class DataLoader extends DataConstants {
+public class DataWriter extends DataConstants {
 
     /**
-     * Loads all shelters from the shelters file.
+     * Saves all users to the users file.
+     * Not written yet, so it saves nothing.
      *
-     * @return a list of shelters
+     * @return false, since nothing is saved
      */
-    public static ArrayList<Shelter> getCachedShelters() {
-        ArrayList<Shelter> shelters = new ArrayList<Shelter>();
-
-        try (FileReader reader = new FileReader(SHELTER_FILE)) {
-            JSONParser parser = new JSONParser();
-            JSONArray sheltersJSON = (JSONArray) parser.parse(reader);
-
-            for (Object obj : sheltersJSON) {
-                JSONObject shelterJSON = (JSONObject) obj;
-
-                UUID id = UUID.fromString((String) shelterJSON.get(SHELTER_ID));
-                String name = (String) shelterJSON.get(SHELTER_NAME);
-                int capacity = ((Number) shelterJSON.get(SHELTER_CAPACITY)).intValue();
-                int occupancy = ((Number) shelterJSON.get(SHELTER_OCCUPANCY)).intValue();
-                ShelterStatus status = ShelterStatus.valueOf((String) shelterJSON.get(SHELTER_STATUS));
-
-                LocalDateTime lastUpdated = OffsetDateTime.parse(
-                    (String) shelterJSON.get(SHELTER_LAST_UPDATED)
-                ).toLocalDateTime();
-
-                shelters.add(new Shelter(id, name, capacity, occupancy, status, lastUpdated));
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        return shelters;
+    public static boolean saveUsers() {
+        return false;
     }
 }

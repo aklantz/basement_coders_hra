@@ -18,4 +18,16 @@ public class DataConstants {
     public static final String SHELTER_OCCUPANCY = "occupancy";
     public static final String SHELTER_STATUS = "status";
     public static final String SHELTER_LAST_UPDATED = "lastUpdated";
+
+    protected static final String USER_ID = "userId";
+    protected static final String USER_USERNAME = "username";
+    protected static final String USER_PASSWORD = "passwordHash";
+    protected static final String USER_FULL_NAME = "fullName";
+    protected static final String USER_DOB = "dateOfBirth";
+    protected static final String USER_ADDRESS = "homeAddress";
+    protected static final String USER_EMAIL = "emailAddress";
+    protected static final String USER_PHONE = "phoneNumber";
+    protected static final String USER_TYPE = "type";
+    protected static final String USER_ACCOUNT_STATUS = "accountStatus";
+    protected static final String USER_SAFETY_STATUS = "safetyStatus";
 }
