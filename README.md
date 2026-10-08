@@ -26,7 +26,7 @@ information without the distractions of full-scale weather platforms.
 
 # Code Design
 
-[UML Class Diagram](https://github.com/aklantz/basement_coders_hra/blob/main/docs/uml-class-diagram.pdf)\
+ [UML Class Diagram](https://github.com/user-attachments/files/33206752/uml-class-diagram.pdf)\
  [UML Sequence Diagram 1](https://github.com/aklantz/basement_coders_hra/blob/main/docs/uml-sequence-diagram1.pdf)\
  [UML Sequence Diagram 2](https://github.com/aklantz/basement_coders_hra/blob/main/docs/uml-sequence-diagram2.pdf)
 
@@ -36,7 +36,6 @@ information without the distractions of full-scale weather platforms.
 
 # Protoype
 
-# Presentation
 
 # Our Team
 
