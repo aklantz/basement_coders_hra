@@ -2,7 +2,7 @@
   {
     "userId": "550e8400-e29b-41d4-a716-446655440001",
     "username": "jsmith",
-    "passwordHash": "$2b$12$exampleHash0001",
+    "password": "password",
     "fullName": "Jordan Smith",
     "dateOfBirth": "1990-04-12",
     "homeAddress": "142 Riverbend Dr, Tega Cay, SC",
@@ -19,7 +19,7 @@
   {
     "userId": "550e8400-e29b-41d4-a716-446655440002",
     "username": "mrivera",
-    "passwordHash": "$2b$12$exampleHash0002",
+    "password": "password",
     "fullName": "Maria Rivera",
     "dateOfBirth": "1988-11-02",
     "homeAddress": "88 Harbor Pointe Rd, Fort Mill, SC",

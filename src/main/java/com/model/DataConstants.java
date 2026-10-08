@@ -21,7 +21,7 @@ public class DataConstants {
 
     protected static final String USER_ID = "userId";
     protected static final String USER_USERNAME = "username";
-    protected static final String USER_PASSWORD = "passwordHash";
+    protected static final String USER_PASSWORD = "password";
     protected static final String USER_FULL_NAME = "fullName";
     protected static final String USER_DOB = "dateOfBirth";
     protected static final String USER_ADDRESS = "homeAddress";
@@ -30,4 +30,16 @@ public class DataConstants {
     protected static final String USER_TYPE = "type";
     protected static final String USER_ACCOUNT_STATUS = "accountStatus";
     protected static final String USER_SAFETY_STATUS = "safetyStatus";
+
+    // aid request keys
+    protected static final String REQUEST_ID = "requestId";
+    protected static final String REQUEST_REQUESTER = "requester";
+    protected static final String REQUEST_CATEGORY = "category";
+    protected static final String REQUEST_URGENCY = "urgency";
+    protected static final String REQUEST_STATUS = "status";
+    protected static final String REQUEST_HOUSEHOLD_SIZE = "householdSize";
+    protected static final String REQUEST_STREET_ADDRESS = "streetAddress";
+    protected static final String REQUEST_ASSIGNMENTS = "assignments";
+    protected static final String REQUEST_STATUS_HISTORY = "statusHistory";
+    protected static final String REQUEST_IS_DUPLICATE = "isDuplicate";
 }

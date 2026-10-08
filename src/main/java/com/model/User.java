@@ -11,7 +11,7 @@ public abstract class User {
 
     private UUID userId;
     private String username;
-    private String passwordHash;
+    private String password;
     private String fullName;
     private Date dateOfBirth;
     private String homeAddress;
@@ -25,7 +25,7 @@ public abstract class User {
      * Creates a new user
      * @param userId the user's unique id
      * @param username the name the user logs in with
-     * @param passwordHash the user's stored password
+     * @param password the user's stored password
      * @param fullName the user's full name
      * @param dateOfBirth the user's date of birth
      * @param homeAddress the user's home address
@@ -33,12 +33,12 @@ public abstract class User {
      * @param phoneNumber the user's phone number
      * @param login the user's login, kept to match the UML (not currently stored)
      */
-    public User(UUID userId, String username, String passwordHash, String fullName,
+    public User(UUID userId, String username, String password, String fullName,
                 Date dateOfBirth, String homeAddress, String emailAddress,
                 String phoneNumber, String login) {
         this.userId = userId;
         this.username = username;
-        this.passwordHash = passwordHash;
+        this.password = password;
         this.fullName = fullName;
         this.dateOfBirth = dateOfBirth;
         this.homeAddress = homeAddress;
@@ -67,7 +67,7 @@ public abstract class User {
      * @return true if the passwords match
      */
     public boolean verifyPassword(String password) {
-        return password != null && password.equals(passwordHash);
+        return password != null && password.equals(password);
     }
 
     /**
@@ -95,8 +95,8 @@ public abstract class User {
     /**
      * @return the user's stored password
      */
-    public String getPasswordHash() {
-        return passwordHash;
+    public String getPassword() {
+        return password;
     }
 
     /**
