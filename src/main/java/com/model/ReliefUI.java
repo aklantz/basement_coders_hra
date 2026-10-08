@@ -16,19 +16,19 @@ public class ReliefUI {
 	}
 
 	/**
-	 * Scenario 1: Connor logs in, views her existing aid requests,
+	 * Scenario 1: Maria Rivera logs in, views her existing aid requests,
 	 * and submits a new request for FOOD.
 	 */
 	public void scenario1() {
 		System.out.println();
 
-		// Replace "password" with the plain-text password that matches Connor's passwordHash
-		User user = reliefApp.login("cthiele", "password");
+		// Replace "password" with the plain-text password that matches Maria's passwordHash
+		User user = reliefApp.login("mrivera", "password");
 		if (user == null) {
 			System.out.println("Sorry, we couldn't log in.");
 			return;
 		}
-		System.out.println("Connor Thiele is now logged in");
+		System.out.println("Maria Rivera is now logged in");
 
 		ArrayList<AidRequest> myRequests = reliefApp.getMyRequests();
 		if (myRequests == null || myRequests.isEmpty()) {
@@ -37,7 +37,7 @@ public class ReliefUI {
 			System.out.println("You have " + myRequests.size() + " request(s) in the system.");
 		}
 
-		// Adjust these arguments to match your full submitAidRequest signature
+		// Adjust to match the facade 
 		if (!reliefApp.submitAidRequest(RequestCategory.FOOD, 4, UrgencyLevel.HIGH, "12 Palmetto Ln, Tega Cay, SC")) {
 			System.out.println("Sorry, your aid request could not be submitted.");
 		} else {
