@@ -1,6 +1,8 @@
 package com.model;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 import java.util.UUID;
 
 /**
@@ -12,13 +14,25 @@ public class UserDirectory {
     private ArrayList<User> users;
 
     /**
-     * Creates the directory and loads saved users from file
+     * Creates the directory with temporary sample users
      */
     private UserDirectory() {
-        users = DataLoader.getUsers();
-        if (users == null) {
-            users = new ArrayList<User>();
-        }
+        users = new ArrayList<User>();
+
+        User volunteer = new Volunteer(UUID.randomUUID(), "volunteer1", "pass123", "Val Volunteer",
+                new GregorianCalendar(2001, Calendar.MARCH, 22).getTime(),
+                "200 Oak Ave, Columbia, SC 29201", "val@relief.org",
+                "803-555-0102", "volunteer1");
+        volunteer.setAccountStatus(AccountStatus.ACTIVE);
+
+        User coordinator = new Coordinator(UUID.randomUUID(), "coord1", "pass123", "Casey Coordinator",
+                new GregorianCalendar(1985, Calendar.JULY, 9).getTime(),
+                "300 Pine Rd, Columbia, SC 29201", "casey@relief.org",
+                "803-555-0103", "coord1");
+        coordinator.setAccountStatus(AccountStatus.ACTIVE);
+
+        users.add(volunteer);
+        users.add(coordinator);
     }
 
     /**
@@ -101,7 +115,7 @@ public class UserDirectory {
     public ArrayList<Coordinator> getPendingCoordinators() {
         ArrayList<Coordinator> pending = new ArrayList<Coordinator>();
         for (User user : users) {
-            if (user instanceof Coordinator
+            if (user.getType() == USERTYPE.COORDINATOR
                     && user.getAccountStatus() == AccountStatus.PENDING) {
                 pending.add((Coordinator) user);
             }
@@ -132,12 +146,5 @@ public class UserDirectory {
             }
         }
         return null;
-    }
-
-    /**
-     * @return all users in the directory
-     */
-    public ArrayList<User> getUsers() {
-        return users;
     }
 }
