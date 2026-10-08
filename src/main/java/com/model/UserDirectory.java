@@ -1,8 +1,7 @@
 package com.model;
 
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.GregorianCalendar;
+import java.util.Date;
 import java.util.UUID;
 
 /**
@@ -13,26 +12,14 @@ public class UserDirectory {
     private static UserDirectory userDirectory;
     private ArrayList<User> users;
 
-    /**
-     * Creates the directory with temporary sample users
+     /**
+     * Creates the directory and loads the saved users through the DataLoader
      */
     private UserDirectory() {
-        users = new ArrayList<User>();
-
-        User volunteer = new Volunteer(UUID.randomUUID(), "volunteer1", "pass123", "Val Volunteer",
-                new GregorianCalendar(2001, Calendar.MARCH, 22).getTime(),
-                "200 Oak Ave, Columbia, SC 29201", "val@relief.org",
-                "803-555-0102", "volunteer1");
-        volunteer.setAccountStatus(AccountStatus.ACTIVE);
-
-        User coordinator = new Coordinator(UUID.randomUUID(), "coord1", "pass123", "Casey Coordinator",
-                new GregorianCalendar(1985, Calendar.JULY, 9).getTime(),
-                "300 Pine Rd, Columbia, SC 29201", "casey@relief.org",
-                "803-555-0103", "coord1");
-        coordinator.setAccountStatus(AccountStatus.ACTIVE);
-
-        users.add(volunteer);
-        users.add(coordinator);
+        users = DataLoader.getUsers();
+        if (users == null) {
+            users = new ArrayList<User>();
+        }
     }
 
     /**
@@ -74,6 +61,41 @@ public class UserDirectory {
             return user;
         }
         return null;
+    }
+
+     /**
+     * Creates a new user and adds it to the directory. The facade passes in the raw
+     * information; building the right kind of User happens here.
+     * @param userType the kind of account (volunteer or coordinator)
+     * @return the new user, or null if the information is invalid or the username is taken
+     */
+    public User createUser(String username, String password, String fullName, Date dateOfBirth,
+                           String homeAddress, String emailAddress, String phoneNumber,
+                           USERTYPE userType) {
+        if (isBlank(username) || isBlank(password) || isBlank(fullName) || userType == null) {
+            return null;
+        }
+ 
+        UUID userId = UUID.randomUUID();
+        User user;
+        switch (userType) {
+            case VOLUNTEER:
+                user = new Volunteer(userId, username, password, fullName, dateOfBirth,
+                        homeAddress, emailAddress, phoneNumber, username);
+                user.setAccountStatus(AccountStatus.ACTIVE);
+                break;
+            case COORDINATOR:
+                user = new Coordinator(userId, username, password, fullName, dateOfBirth,
+                        homeAddress, emailAddress, phoneNumber, username);
+                // coordinators wait for approval (see getPendingCoordinators)
+                user.setAccountStatus(AccountStatus.PENDING);
+                break;
+            default:
+                // ADMIN accounts are not created through sign-up
+                return null;
+        }
+ 
+        return addUser(user) ? user : null;
     }
 
     /**
@@ -146,5 +168,9 @@ public class UserDirectory {
             }
         }
         return null;
+    }
+
+    private boolean isBlank(String text) {
+        return text == null || text.trim().isEmpty();
     }
 }

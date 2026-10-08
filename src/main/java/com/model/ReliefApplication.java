@@ -1,29 +1,21 @@
 package com.model;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.UUID;
 
-import com.hurricane.AidRequest;
-
 /**
  * Facade between the UI and the rest of the system. Singleton.
+ * Trimmed to the account methods so it compiles before the other directories exist.
  */
 public class ReliefApplication {
 
     private static ReliefApplication reliefApplication;
 
     private UserDirectory userDirectory;
-    private AidRequestDirectory aidRequestDirectory;
-    private ResourceDirectory resourceDirectory;
-    private HurricaneDirectory hurricaneDirectory;
     private User currentUser;
 
     private ReliefApplication() {
         userDirectory = UserDirectory.getInstance();
-        aidRequestDirectory = AidRequestDirectory.getInstance();
-        resourceDirectory = ResourceDirectory.getInstance();
-        hurricaneDirectory = HurricaneDirectory.getInstance();
         currentUser = null;
     }
 
@@ -34,18 +26,13 @@ public class ReliefApplication {
         return reliefApplication;
     }
 
-    /**
-     * The UML elides the rest of the parameters with "...". The extras below are borrowed
-     * from the User constructor (homeAddress, emailAddress, phoneNumber); adjust to match your diagram.
-     */
     public User createAccount(String username, String password, String firstName, String lastName,
-                              Date dateOfBirth, String homeAddress, String emailAddress, String phoneNumber) {
-         String fullName = firstName + " " + lastName;
-        User user = new User(UUID.randomUUID(), username, User.hashPassword(password), fullName,
-                dateOfBirth, homeAddress, emailAddress, phoneNumber);
- 
-        // UserDirectory decides whether the user is valid / unique
-        if (!userDirectory.addUser(user)) {
+                              Date dateOfBirth, String homeAddress, String emailAddress,
+                              String phoneNumber, USERTYPE userType) {
+        String fullName = firstName + " " + lastName;
+        User user = userDirectory.createUser(username, password, fullName, dateOfBirth,
+                homeAddress, emailAddress, phoneNumber, userType);
+        if (user == null) {
             return null;
         }
         userDirectory.save();
@@ -63,9 +50,8 @@ public class ReliefApplication {
         return currentUser;
     }
 
- 
     public boolean logout() {
-          if (currentUser == null) {
+        if (currentUser == null) {
             return false;
         }
         logAction("LOGOUT", "User", currentUser.getUserId());
@@ -73,30 +59,8 @@ public class ReliefApplication {
         return true;
     }
 
-    /**
-     * UML elides the rest of the parameters with "...". urgency and streetAddress come from
-     * the AidRequest constructor; adjust as needed.
-     */
-    public boolean submitAidRequest(RequestCategory category, int householdSize,
-                                    UrgencyLevel urgency, String streetAddress) {
-        // TODO: build AidRequest for currentUser, aidRequestDirectory.addRequest(...)
-        return false;
-    }
-
-    public ArrayList<AidRequest> getMyRequests() {
-        // TODO: return requests submitted by currentUser
-        return new ArrayList<AidRequest>();
-    }
-
-    public TaskAssignment assignTask(UUID requestId, UUID volunteerId) {
-        // TODO: look up request and volunteer, create TaskAssignment with currentUser as coordinator
-        return null;
-    }
-
-    /** Named getShelterDirectory but returns a list of shelters, per the UML. */
-    public ArrayList<Shelter> getShelterDirectory() {
-        // TODO: resourceDirectory.getActiveShelters(hurricaneDirectory.getAffectedZipCodes())
-        return new ArrayList<Shelter>();
+    public boolean isLoggedIn() {
+        return currentUser != null;
     }
 
     public void logAction(String action, String entityType, UUID entityId) {
