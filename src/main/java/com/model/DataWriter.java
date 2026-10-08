@@ -107,7 +107,7 @@ public class DataWriter extends DataConstants {
         JSONObject userJSON = new JSONObject();
         userJSON.put(USER_ID, user.getUserId().toString());
         userJSON.put(USER_USERNAME, user.getUsername());
-        userJSON.put(USER_PASSWORD, user.getPasswordHash());
+        userJSON.put(USER_PASSWORD, user.getPassword());
         userJSON.put(USER_FULL_NAME, user.getFullName());
         userJSON.put(USER_DOB, new SimpleDateFormat("yyyy-MM-dd").format(user.getDateOfBirth()));
         userJSON.put(USER_ADDRESS, user.getHomeAddress());

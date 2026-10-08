@@ -1,18 +1,1 @@
-[
-  {
-    "resourceId": "c3d4e5f6-0001-4000-8000-000000000001",
-    "name": "Tega Cay Community Center",
-    "capacity": 150,
-    "occupancy": 92,
-    "status": "OPEN",
-    "lastUpdated": "2026-09-27T07:00:00Z"
-  },
-  {
-    "resourceId": "c3d4e5f6-0002-4000-8000-000000000002",
-    "name": "Fort Mill High School Gym",
-    "capacity": 300,
-    "occupancy": 300,
-    "status": "FULL",
-    "lastUpdated": "2026-09-27T06:45:00Z"
-  }
-]
+[{"lastUpdated":"2026-09-27T07:00Z","resourceId":"c3d4e5f6-0001-4000-8000-000000000001","occupancy":92,"name":"Tega Cay Community Center","capacity":150,"status":"OPEN"},{"lastUpdated":"2026-09-27T06:45Z","resourceId":"c3d4e5f6-0002-4000-8000-000000000002","occupancy":300,"name":"Fort Mill High School Gym","capacity":300,"status":"FULL"}]
