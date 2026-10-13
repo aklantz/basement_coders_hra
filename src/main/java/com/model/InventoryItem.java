@@ -29,4 +29,20 @@ public class InventoryItem {
         // TODO: quantity <= reorderThreshold
         return false;
     }
+
+    public UUID getItemId() {
+        return itemId;
+    }
+
+    public String getSupplyType() {
+        return supplyType;
+    }
+
+    public int getQuantity() {
+        return quantity;
+    }
+
+    public int getReorderThreshold() {
+        return reorderThreshold;
+    }
 }

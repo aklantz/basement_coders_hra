@@ -5,7 +5,7 @@ import java.util.Date;
 import java.util.UUID;
 
 /**
- * A user of the hurricane relief application
+ * A user of the hurricane relief application.
  */
 public abstract class User {
 
@@ -20,19 +20,8 @@ public abstract class User {
     private AccountStatus accountStatus;
     private ArrayList<HouseholdMember> houseHoldMembers;
     private SafetyStatus safetyStatus;
+    private NotificationChannel preferredChannel;
 
-    /**
-     * Creates a new user
-     * @param userId the user's unique id
-     * @param username the name the user logs in with
-     * @param password the user's stored password
-     * @param fullName the user's full name
-     * @param dateOfBirth the user's date of birth
-     * @param homeAddress the user's home address
-     * @param emailAddress the user's email address
-     * @param phoneNumber the user's phone number
-     * @param login the user's login, kept to match the UML (not currently stored)
-     */
     public User(UUID userId, String username, String password, String fullName,
                 Date dateOfBirth, String homeAddress, String emailAddress,
                 String phoneNumber, String login) {
@@ -45,126 +34,82 @@ public abstract class User {
         this.emailAddress = emailAddress;
         this.phoneNumber = phoneNumber;
         this.houseHoldMembers = new ArrayList<HouseholdMember>();
+        this.accountStatus = AccountStatus.ACTIVE;
         this.safetyStatus = SafetyStatus.UNKNOWN;
+        this.preferredChannel = NotificationChannel.EMAIL;
     }
 
     /**
-     * @return the user's type (admin, volunteer, or coordinator)
+     * Returns the type of user (admin, volunteer, or coordinator).
      */
     public abstract USERTYPE getType();
 
     /**
-     * Sends a notification to the user
-     * @param message the text to send
+     * Prints a message to the user.
      */
     public void sendNotification(String message) {
         System.out.println("To " + fullName + ": " + message);
     }
 
     /**
-     * Checks a password against the stored password
-     * @param password the password to check
-     * @return true if the passwords match
+     * Returns true if the given password matches the stored one.
      */
     public boolean verifyPassword(String password) {
-        return password != null && password.equals(password);
+        return this.password.equals(password);
     }
 
-    /**
-     * Sets the user's preferred notification channel
-     * @param channel the channel to use
-     */
     public void setPreferredChannel(NotificationChannel channel) {
-        // TODO: store the channel once NotificationChannel is designed
+        this.preferredChannel = channel;
     }
 
-    /**
-     * @return the user's unique id
-     */
     public UUID getUserId() {
         return userId;
     }
 
-    /**
-     * @return the user's username
-     */
     public String getUsername() {
         return username;
     }
 
-    /**
-     * @return the user's stored password
-     */
     public String getPassword() {
         return password;
     }
 
-    /**
-     * @return the user's full name
-     */
     public String getFullName() {
         return fullName;
     }
 
-    /**
-     * @return the user's date of birth
-     */
     public Date getDateOfBirth() {
         return dateOfBirth;
     }
 
-    /**
-     * @return the user's home address
-     */
     public String getHomeAddress() {
         return homeAddress;
     }
 
-    /**
-     * @return the user's phone number
-     */
     public String getPhoneNumber() {
         return phoneNumber;
     }
 
-    /**
-     * @return the user's email address
-     */
     public String getEmailAddress() {
         return emailAddress;
     }
 
-    /**
-     * @return the user's account status
-     */
     public AccountStatus getAccountStatus() {
         return accountStatus;
     }
 
-    /**
-     * @param accountStatus the new account status
-     */
     public void setAccountStatus(AccountStatus accountStatus) {
         this.accountStatus = accountStatus;
     }
 
-    /**
-     * @return the members of the user's household
-     */
     public ArrayList<HouseholdMember> getHouseHoldMembers() {
         return houseHoldMembers;
     }
 
-    /**
-     * @return the user's safety status
-     */
     public SafetyStatus getSafetyStatus() {
         return safetyStatus;
     }
 
-    /**
-     * @param safetyStatus the user's new safety status
-     */
     public void setSafetyStatus(SafetyStatus safetyStatus) {
         this.safetyStatus = safetyStatus;
     }

@@ -8,7 +8,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.UUID;
 
-
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -106,7 +105,54 @@ public class DataLoader extends DataConstants {
                 LocalDateTime lastUpdated = OffsetDateTime.parse(
                         (String) shelterJSON.get(SHELTER_LAST_UPDATED)).toLocalDateTime();
 
-                shelters.add(new Shelter(id, name, capacity, occupancy, status, lastUpdated));
+                Shelter shelter = new Shelter(
+                        id,
+                        name,
+                        capacity,
+                        occupancy,
+                        status,
+                        lastUpdated);
+
+                JSONArray inventoryJSON =
+                        (JSONArray) shelterJSON.get("inventoryItems");
+
+                if (inventoryJSON != null) {
+
+                    ArrayList<InventoryItem> inventoryItems =
+                            new ArrayList<>();
+
+                    for (Object inventoryObject : inventoryJSON) {
+
+                        JSONObject itemJSON =
+                                (JSONObject) inventoryObject;
+
+                        UUID itemId =
+                                UUID.fromString(
+                                        (String) itemJSON.get("itemId"));
+
+                        String supplyType =
+                                (String) itemJSON.get("supplyType");
+
+                        int quantity =
+                                ((Number) itemJSON.get("quantity"))
+                                        .intValue();
+
+                        int reorderThreshold =
+                                ((Number) itemJSON.get("reorderThreshold"))
+                                        .intValue();
+
+                        inventoryItems.add(
+                                new InventoryItem(
+                                        itemId,
+                                        supplyType,
+                                        quantity,
+                                        reorderThreshold));
+                    }
+
+                    shelter.setInventoryItems(inventoryItems);
+                }
+
+                shelters.add(shelter);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -114,7 +160,8 @@ public class DataLoader extends DataConstants {
 
         return shelters;
     }
-     /**
+
+    /**
      * Loads all aid requests from the aid requests file.
      * Users must be loaded first, since each request links to its requester.
      *
@@ -123,14 +170,14 @@ public class DataLoader extends DataConstants {
     public static ArrayList<AidRequest> getAidRequests() {
         ArrayList<AidRequest> requests = new ArrayList<AidRequest>();
         UserDirectory userDirectory = UserDirectory.getInstance();
- 
+
         try (FileReader reader = new FileReader(AID_REQUEST_FILE)) {
             JSONParser parser = new JSONParser();
             JSONArray requestsJSON = (JSONArray) parser.parse(reader);
- 
+
             for (Object obj : requestsJSON) {
                 JSONObject requestJSON = (JSONObject) obj;
- 
+
                 UUID requestId = UUID.fromString((String) requestJSON.get(REQUEST_ID));
                 UUID requesterId = UUID.fromString((String) requestJSON.get(REQUEST_REQUESTER));
                 User requester = userDirectory.getUserById(requesterId);
@@ -140,20 +187,20 @@ public class DataLoader extends DataConstants {
                 int householdSize = ((Number) requestJSON.get(REQUEST_HOUSEHOLD_SIZE)).intValue();
                 String streetAddress = (String) requestJSON.get(REQUEST_STREET_ADDRESS);
                 boolean isDuplicate = Boolean.TRUE.equals(requestJSON.get(REQUEST_IS_DUPLICATE));
- 
+
                 AidRequest request = new AidRequest(requestId, requester, category, urgency,
                         householdSize, streetAddress);
                 request.updateStatus(status);
                 if (isDuplicate) {
                     request.markDuplicate();
                 }
- 
+
                 requests.add(request);
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
- 
+
         return requests;
     }
 }
