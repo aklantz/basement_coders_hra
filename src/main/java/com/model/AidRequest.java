@@ -40,6 +40,14 @@ public class AidRequest {
         this.isDuplicate = true;
     }
 
+    public void setAssignments(ArrayList<TaskAssignment> assignments) {
+        this.assignments = assignments;
+    }
+
+    public void setStatusHistory(ArrayList<StatusChange> statusHistory) {
+        this.statusHistory = statusHistory;
+    }
+
     public boolean isLocationReliable() {
         return true;
     }

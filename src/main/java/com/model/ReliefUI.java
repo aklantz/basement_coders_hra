@@ -1,15 +1,6 @@
 package com.model;
 
 import java.util.ArrayList;
-import com.model.UserDirectory;
-import com.model.AidRequestDirectory;
-import com.model.ShelterDirectory;
-import com.model.DataWriter;
-import com.model.DataLoader;
-import com.model.ReliefApplication;
-import com.model.User;
-import com.model.Shelter;
-import com.model.AidRequest;
 
 public class ReliefUI {
     private ReliefApplication reliefApp;
@@ -24,12 +15,12 @@ public class ReliefUI {
         scenario3();
         scenario4();
 
-        // Save all data after scenarios --- 10/13 Call the facade, and call the facade logout method. 
+        // Save all data after scenarios
         DataWriter.saveUsers(UserDirectory.getInstance().getUsers());
         DataWriter.saveAidRequests(AidRequestDirectory.getInstance().getRequests());
         DataWriter.saveResources(ShelterDirectory.getInstance().getShelters());
 
-        System.out.println("All data saved to JSON.");
+        System.out.println("\nAll data saved to JSON.");
     }
 
     /**
@@ -43,12 +34,14 @@ public class ReliefUI {
             System.out.println("Sorry, Maria Rivera couldn't log in.");
             return;
         }
+
         System.out.println("Maria Rivera is now logged in");
 
         if (!reliefApp.logout()) {
             System.out.println("Sorry, Maria Rivera could not be logged out.");
             return;
         }
+
         System.out.println("Maria Rivera has logged out");
     }
 
@@ -63,50 +56,82 @@ public class ReliefUI {
             System.out.println("Sorry, Jordan Smith couldn't log in.");
             return;
         }
+
         System.out.println("Jordan Smith is now logged in");
 
         if (!reliefApp.logout()) {
             System.out.println("Sorry, Jordan Smith could not be logged out.");
             return;
         }
+
         System.out.println("Jordan Smith has logged out");
     }
 
     /**
-     * Scenario 3: Load and display shelters.
+     * Scenario 3: Load and display shelters and inventory.
      */
     public void scenario3() {
         System.out.println();
 
         ArrayList<Shelter> shelters = DataLoader.getCachedShelters();
+
         if (shelters.isEmpty()) {
             System.out.println("Sorry, no shelters were loaded.");
             return;
         }
+
         System.out.println(shelters.size() + " shelter(s) loaded");
+
+        for (Shelter shelter : shelters) {
+            System.out.println("\nShelter: " + shelter.getName());
+
+            if (shelter.getInventoryItems() == null) {
+                System.out.println("Inventory Items: NULL");
+            } else {
+                System.out.println("Inventory Items Count: "
+                        + shelter.getInventoryItems().size());
+            }
+        }
     }
 
     /**
-     * Scenario 4: Load and display aid requests.
+     * Scenario 4: Load and display aid requests and assignments.
      */
     public void scenario4() {
         System.out.println();
 
         ArrayList<AidRequest> requests = DataLoader.getAidRequests();
+
         if (requests.isEmpty()) {
             System.out.println("Sorry, no aid requests were loaded.");
             return;
         }
+
         System.out.println(requests.size() + " aid request(s) loaded");
 
         for (AidRequest request : requests) {
+
             String requesterName = (request.getRequester() == null)
                     ? "UNKNOWN USER"
                     : request.getRequester().getUsername();
-            System.out.println("- " + request.getCategory() + " request from "
-                    + requesterName + " (status: " + request.getStatus() + ")");
+
+            System.out.println("- "
+                    + request.getCategory()
+                    + " request from "
+                    + requesterName
+                    + " (status: "
+                    + request.getStatus()
+                    + ")");
+
+            if (request.getAssignments() == null) {
+                System.out.println("  Assignments: NULL");
+            } else {
+                System.out.println("  Assignments Count: "
+                        + request.getAssignments().size());
+            }
         }
     }
+
 
     public static void main(String[] args) {
         ReliefUI reliefInterface = new ReliefUI();

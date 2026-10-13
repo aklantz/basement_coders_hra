@@ -1,5 +1,15 @@
 {
-  "zipCodes": ["29708", "29715", "29730"],
+  "affectedAreas": [
+    {
+      "zipCode": "29708"
+    },
+    {
+      "zipCode": "29715"
+    },
+    {
+      "zipCode": "29730"
+    }
+  ],
   "windSpeed": 120,
   "category": "CATEGORY_3"
 }

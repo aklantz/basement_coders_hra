@@ -167,14 +167,67 @@ public class DataWriter extends DataConstants {
      * @return the shelter's JSON object
      */
     private static JSONObject getShelterJSON(Shelter shelter) {
+
         JSONObject shelterJSON = new JSONObject();
-        shelterJSON.put(SHELTER_ID, shelter.getResourceId().toString());
-        shelterJSON.put(SHELTER_NAME, shelter.getName());
-        shelterJSON.put(SHELTER_CAPACITY, shelter.getCapacity());
-        shelterJSON.put(SHELTER_OCCUPANCY, shelter.getOccupancy());
-        shelterJSON.put(SHELTER_STATUS, shelter.getStatus().name());
-        shelterJSON.put(SHELTER_LAST_UPDATED, shelter.getLastUpdated()
-                .atOffset(ZoneOffset.UTC).toString());
+
+        shelterJSON.put(
+                SHELTER_ID,
+                shelter.getResourceId().toString());
+
+        shelterJSON.put(
+                SHELTER_NAME,
+                shelter.getName());
+
+        shelterJSON.put(
+                SHELTER_CAPACITY,
+                shelter.getCapacity());
+
+        shelterJSON.put(
+                SHELTER_OCCUPANCY,
+                shelter.getOccupancy());
+
+        shelterJSON.put(
+                SHELTER_STATUS,
+                shelter.getStatus().name());
+
+        shelterJSON.put(
+                SHELTER_LAST_UPDATED,
+                shelter.getLastUpdated()
+                        .atOffset(ZoneOffset.UTC)
+                        .toString());
+
+        JSONArray inventoryJSON =
+                new JSONArray();
+
+        for (InventoryItem item :
+                shelter.getInventoryItems()) {
+
+            JSONObject itemJSON =
+                    new JSONObject();
+
+            itemJSON.put(
+                    "itemId",
+                    item.getItemId().toString());
+
+            itemJSON.put(
+                    "supplyType",
+                    item.getSupplyType());
+
+            itemJSON.put(
+                    "quantity",
+                    item.getQuantity());
+
+            itemJSON.put(
+                    "reorderThreshold",
+                    item.getReorderThreshold());
+
+            inventoryJSON.add(itemJSON);
+        }
+
+        shelterJSON.put(
+                "inventoryItems",
+                inventoryJSON);
+
         return shelterJSON;
     }
 
