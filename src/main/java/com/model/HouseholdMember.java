@@ -30,4 +30,14 @@ public class HouseholdMember {
     public LocalDateTime getLastCheckIn() {
         return lastCheckIn;
     }
+
+    public boolean checkIn(SafetyStatus safetyStatus) {
+        this.safetyStatus = safetyStatus;
+        this.lastCheckIn = LocalDateTime.now();
+        return true;
+    }
+
+    public UUID getHouseholdOwnerUUID() {
+        return householdOwnerUUID;
+    }
 }
