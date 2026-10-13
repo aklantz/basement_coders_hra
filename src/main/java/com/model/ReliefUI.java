@@ -24,7 +24,7 @@ public class ReliefUI {
         scenario3();
         scenario4();
 
-        // Save all data after scenarios
+        // Save all data after scenarios --- 10/13 Call the facade, and call the facade logout method. 
         DataWriter.saveUsers(UserDirectory.getInstance().getUsers());
         DataWriter.saveAidRequests(AidRequestDirectory.getInstance().getRequests());
         DataWriter.saveResources(ShelterDirectory.getInstance().getShelters());
