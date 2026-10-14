@@ -107,6 +107,13 @@ public abstract class User {
     }
 
     /**
+     * @param fullName the user's new full name
+     */
+    public void setFullName(String fullName) {
+        this.fullName = fullName;
+    }
+
+    /**
      * @return the user's date of birth
      */
     public Date getDateOfBirth() {
@@ -121,6 +128,13 @@ public abstract class User {
     }
 
     /**
+     * @param homeAddress the user's new home address
+     */
+    public void setHomeAddress(String homeAddress) {
+        this.homeAddress = homeAddress;
+    }
+
+    /**
      * @return the user's phone number
      */
     public String getPhoneNumber() {
@@ -128,10 +142,24 @@ public abstract class User {
     }
 
     /**
+     * @param phoneNumber the user's new phone number
+     */
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
+    }
+
+    /**
      * @return the user's email address
      */
     public String getEmailAddress() {
         return emailAddress;
+    }
+
+    /**
+     * @param emailAddress the user's new email address
+     */
+    public void setEmailAddress(String emailAddress) {
+        this.emailAddress = emailAddress;
     }
 
     /**

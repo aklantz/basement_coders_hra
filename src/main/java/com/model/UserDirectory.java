@@ -90,6 +90,42 @@ public class UserDirectory {
     }
 
     /**
+     * Changes a user's contact details
+     * @param userId the id of the user to change
+     * @param fullName the new full name
+     * @param homeAddress the new home address
+     * @param emailAddress the new email address
+     * @param phoneNumber the new phone number
+     * @return true if the user was found and changed
+     */
+    public boolean editUser(UUID userId, String fullName, String homeAddress,
+                            String emailAddress, String phoneNumber) {
+        User user = getUserById(userId);
+        if (user == null) {
+            return false;
+        }
+        user.setFullName(fullName);
+        user.setHomeAddress(homeAddress);
+        user.setEmailAddress(emailAddress);
+        user.setPhoneNumber(phoneNumber);
+        return true;
+    }
+
+    /**
+     * Removes a user from the directory
+     * @param userId the id of the user to remove
+     * @return true if the user was found and removed
+     */
+    public boolean deleteUser(UUID userId) {
+        User user = getUserById(userId);
+        if (user == null) {
+            return false;
+        }
+        users.remove(user);
+        return true;
+    }
+
+    /**
      * Finds users whose home address is in the given zip code
      * @param zipCode the zip code
      * @return the matching users
