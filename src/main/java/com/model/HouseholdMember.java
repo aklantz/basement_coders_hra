@@ -2,38 +2,49 @@ package com.model;
 
 import java.util.UUID;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.HashMap;
 
 public class HouseholdMember {
 
-    private UUID memberUUID;
-    private String name;
-    private LocalDateTime lastCheckIn;
+    private HashMap<String, SafetyStatus> memberStatuses;
+    private HashMap<String, LocalDateTime> memberCheckInTimes;
+    private String householdName;
     private UUID householdOwnerUUID;
-    private SafetyStatus safetyStatus;
 
-    public HouseholdMember(UUID memberUUID) {
-        this.memberUUID = memberUUID;
+    public HouseholdMember(UUID householdOwnerUUID, String householdName) {
+        this.householdName = householdName;
+        this.householdOwnerUUID = householdOwnerUUID;
+        this.memberStatuses = new HashMap<>();
+        this.memberCheckInTimes = new HashMap<>();
     }
 
-    public UUID getMemberUUID() {
-        return memberUUID;
+    public boolean addHouseholdMember(String memberName) {
+        memberStatuses.put(memberName, SafetyStatus.UNKNOWN);
+        memberCheckInTimes.put(memberName, LocalDateTime.now());
+        return true;
     }
 
-    public SafetyStatus getSafetyStatus() {
-        return safetyStatus;
+    public ArrayList<String> getMembers() {
+        ArrayList<String> members = new ArrayList<>(memberStatuses.keySet());
+        return members;
     }
 
-    public String getName() {
-        return name;
+    public SafetyStatus getSafetyStatus(String memberName) {
+        return memberStatuses.get(memberName);
     }
 
-    public LocalDateTime getLastCheckIn() {
-        return lastCheckIn;
+    public String getHouseHoldName() {
+        return householdName;
     }
 
-    public boolean checkIn(SafetyStatus safetyStatus) {
-        this.safetyStatus = safetyStatus;
-        this.lastCheckIn = LocalDateTime.now();
+    public LocalDateTime getLastCheckIn(String memberName) {
+        return memberCheckInTimes.get(memberName);
+    }
+
+    public boolean checkIn(String memberName, SafetyStatus safetyStatus) {
+        memberStatuses.put(memberName, safetyStatus);
+        memberCheckInTimes.put(memberName, LocalDateTime.now());
         return true;
     }
 
