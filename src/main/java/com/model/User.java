@@ -20,7 +20,6 @@ public abstract class User {
     private AccountStatus accountStatus;
     private ArrayList<HouseholdMember> houseHoldMembers;
     private SafetyStatus safetyStatus;
-    private NotificationChannel preferredChannel;
 
     public User(UUID userId, String username, String password, String fullName,
                 Date dateOfBirth, String homeAddress, String emailAddress,
@@ -36,7 +35,6 @@ public abstract class User {
         this.houseHoldMembers = new ArrayList<HouseholdMember>();
         this.accountStatus = AccountStatus.ACTIVE;
         this.safetyStatus = SafetyStatus.UNKNOWN;
-        this.preferredChannel = NotificationChannel.EMAIL;
     }
 
     /**
@@ -56,10 +54,6 @@ public abstract class User {
      */
     public boolean verifyPassword(String password) {
         return this.password.equals(password);
-    }
-
-    public void setPreferredChannel(NotificationChannel channel) {
-        this.preferredChannel = channel;
     }
 
     public UUID getUserId() {
