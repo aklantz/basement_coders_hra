@@ -64,14 +64,14 @@ public class UserDirectory {
      */
     public User getUser(String username, String password) {
         User user = getUser(username);
-        if (user != null && user.verifyPassword(password)) {
+        if (user != null && password != null && user.verifyPassword(password)) {
             return user;
         }
         return null;
     }
 
     /**
-     * Creates a new user and adds it to the directory.
+     * Creates a new user, adds it to the directory and saves
      */
     public User createUser(String username, String password, String fullName, Date dateOfBirth,
                            String homeAddress, String emailAddress, String phoneNumber,
@@ -79,28 +79,27 @@ public class UserDirectory {
         if (isBlank(username) || isBlank(password) || isBlank(fullName) || userType == null) {
             return null;
         }
-
         UUID userId = UUID.randomUUID();
         User user;
-
         switch (userType) {
             case VOLUNTEER:
                 user = new Volunteer(userId, username, password, fullName, dateOfBirth,
                         homeAddress, emailAddress, phoneNumber, username);
                 user.setAccountStatus(AccountStatus.ACTIVE);
                 break;
-
             case COORDINATOR:
                 user = new Coordinator(userId, username, password, fullName, dateOfBirth,
                         homeAddress, emailAddress, phoneNumber, username);
                 user.setAccountStatus(AccountStatus.PENDING);
                 break;
-
             default:
                 return null;
         }
-
-        return addUser(user) ? user : null;
+        if (!addUser(user)) {
+            return null;
+        }
+        save();
+        return user;
     }
 
     /**
