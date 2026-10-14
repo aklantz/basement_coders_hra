@@ -72,6 +72,16 @@ public abstract class User {
         return fullName;
     }
 
+    /**
+     * @param fullName the user's new full name
+     */
+    public void setFullName(String fullName) {
+        this.fullName = fullName;
+    }
+
+    /**
+     * @return the user's date of birth
+     */
     public Date getDateOfBirth() {
         return dateOfBirth;
     }
@@ -80,14 +90,44 @@ public abstract class User {
         return homeAddress;
     }
 
+    /**
+     * @param homeAddress the user's new home address
+     */
+    public void setHomeAddress(String homeAddress) {
+        this.homeAddress = homeAddress;
+    }
+
+    /**
+     * @return the user's phone number
+     */
     public String getPhoneNumber() {
         return phoneNumber;
     }
 
+    /**
+     * @param phoneNumber the user's new phone number
+     */
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
+    }
+
+    /**
+     * @return the user's email address
+     */
     public String getEmailAddress() {
         return emailAddress;
     }
 
+    /**
+     * @param emailAddress the user's new email address
+     */
+    public void setEmailAddress(String emailAddress) {
+        this.emailAddress = emailAddress;
+    }
+
+    /**
+     * @return the user's account status
+     */
     public AccountStatus getAccountStatus() {
         return accountStatus;
     }
