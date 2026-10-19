@@ -14,11 +14,12 @@ public class ReliefUI {
         scenario2();
         scenario3();
         scenario4();
+        scenario5();
 
         // Save all data after scenarios
         DataWriter.saveUsers(UserDirectory.getInstance().getUsers());
         DataWriter.saveAidRequests(AidRequestDirectory.getInstance().getRequests());
-        DataWriter.saveResources(ShelterDirectory.getInstance().getShelters());
+        DataWriter.saveResources(ResourceDirectory.getInstance().getShelters());
 
         System.out.println("\nAll data saved to JSON.");
     }
@@ -129,6 +130,27 @@ public class ReliefUI {
                 System.out.println("  Assignments Count: "
                         + request.getAssignments().size());
             }
+        }
+    }
+
+        /**
+     * Scenario 5: Load and display the hurricane and affected zip codes.
+     */
+    public void scenario5() {
+        System.out.println();
+
+        HurricaneDirectory hurricane = HurricaneDirectory.getInstance();
+
+        if (hurricane.getHurricaneCategory() == null) {
+            System.out.println("Sorry, the hurricane couldn't be loaded.");
+            return;
+        }
+
+        System.out.println("Hurricane category: " + hurricane.getHurricaneCategory());
+        System.out.println(hurricane.getAffectedZipCodes().size() + " affected zip code(s)");
+
+        for (ZipCode zipCode : hurricane.getAffectedZipCodes()) {
+            System.out.println("- " + zipCode.getCode());
         }
     }
 

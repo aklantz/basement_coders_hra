@@ -2,15 +2,15 @@ package com.model;
 
 import java.util.ArrayList;
 
-public class ShelterDirectory {
+public class ResourceDirectory {
 
-    private static ShelterDirectory shelterDirectory;
+    private static ResourceDirectory resourceDirectory;
     private ArrayList<Shelter> shelters;
 
     /**
      * Loads shelters from DataLoader
      */
-    private ShelterDirectory() {
+    private ResourceDirectory() {
         shelters = DataLoader.getCachedShelters();
         if (shelters == null) {
             shelters = new ArrayList<Shelter>();
@@ -18,13 +18,13 @@ public class ShelterDirectory {
     }
 
     /**
-     * Singleton 
+     * Singleton
      */
-    public static ShelterDirectory getInstance() {
-        if (shelterDirectory == null) {
-            shelterDirectory = new ShelterDirectory();
+    public static ResourceDirectory getInstance() {
+        if (resourceDirectory == null) {
+            resourceDirectory = new ResourceDirectory();
         }
-        return shelterDirectory;
+        return resourceDirectory;
     }
 
     /**
