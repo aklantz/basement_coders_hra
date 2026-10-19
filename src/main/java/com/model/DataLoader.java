@@ -114,7 +114,7 @@ public class DataLoader extends DataConstants {
     public static ArrayList<Shelter> getCachedShelters() {
         ArrayList<Shelter> shelters = new ArrayList<Shelter>();
 
-        try (FileReader reader = new FileReader(SHELTER_FILE)) {
+        try (FileReader reader = new FileReader(RESOURCE_FILE)) {
             JSONParser parser = new JSONParser();
             JSONArray sheltersJSON = (JSONArray) parser.parse(reader);
 

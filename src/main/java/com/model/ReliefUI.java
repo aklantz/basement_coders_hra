@@ -18,7 +18,7 @@ public class ReliefUI {
         // Save all data after scenarios
         DataWriter.saveUsers(UserDirectory.getInstance().getUsers());
         DataWriter.saveAidRequests(AidRequestDirectory.getInstance().getRequests());
-        DataWriter.saveResources(ShelterDirectory.getInstance().getShelters());
+        DataWriter.saveResources(ResourceDirectory.getInstance().getShelters());
 
         System.out.println("\nAll data saved to JSON.");
     }

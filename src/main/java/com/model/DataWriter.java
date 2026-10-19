@@ -69,7 +69,7 @@ public class DataWriter extends DataConstants {
         try {
             return cacheShelters(shelters);
         } catch (RuntimeException exception) {
-            // return reportFailure(SHELTER_FILE, exception);
+            // return reportFailure(RESOURCE_FILE, exception);
             return false;
         }
     }
@@ -82,7 +82,7 @@ public class DataWriter extends DataConstants {
      */
     public static boolean cacheShelters(ArrayList<Shelter> shelters) {
         if (shelters == null) {
-            // return reportFailure(SHELTER_FILE,
+            // return reportFailure(RESOURCE_FILE,
             //         new IllegalArgumentException("The shelter list cannot be null."));
             return false;
         }
@@ -91,9 +91,9 @@ public class DataWriter extends DataConstants {
             for (Shelter shelter : shelters) {
                 sheltersJSON.add(getShelterJSON(shelter));
             }
-            return writeFile(SHELTER_FILE, sheltersJSON);
+            return writeFile(RESOURCE_FILE, sheltersJSON);
         } catch (RuntimeException exception) {
-            // return reportFailure(SHELTER_FILE, exception);
+            // return reportFailure(RESOURCE_FILE, exception);
             return false;
         }
     }

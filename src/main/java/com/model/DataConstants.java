@@ -8,8 +8,7 @@ public class DataConstants {
       // file names
     public static final String USER_FILE = "json/users.json";
     public static final String AID_REQUEST_FILE = "json/aidrequests.json";
-    public static final String RESOURCE_FILE = "json/resources.json";
-    public static final String SHELTER_FILE = "json/shelters.json";
+    public static final String RESOURCE_FILE = "json/shelters.json";
 
       // shelter keys
     public static final String SHELTER_ID = "resourceId";
