@@ -307,4 +307,63 @@ public class DataLoader extends DataConstants {
     private static LocalDateTime parseTime(String text) {
         return text == null ? null : OffsetDateTime.parse(text).toLocalDateTime();
     }
+
+    /**
+     * Loads the affected zip codes from the hurricane file.
+     *
+     * @return a list of affected zip codes
+     */
+    public static ArrayList<ZipCode> getAffectedZipCodes() {
+        ArrayList<ZipCode> zipCodes = new ArrayList<ZipCode>();
+        JSONObject hurricaneJSON = getHurricaneJSON();
+        if (hurricaneJSON == null) {
+            return zipCodes;
+        }
+        for (Object obj : (JSONArray) hurricaneJSON.get("affectedAreas")) {
+            JSONObject areaJSON = (JSONObject) obj;
+            zipCodes.add(new ZipCode((String) areaJSON.get("zipCode")));
+        }
+        return zipCodes;
+    }
+
+    /**
+     * Loads the wind speed from the hurricane file.
+     *
+     * @return the wind speed, or 0 if it could not be loaded
+     */
+    public static int getWindSpeed() {
+        JSONObject hurricaneJSON = getHurricaneJSON();
+        if (hurricaneJSON == null) {
+            return 0;
+        }
+        return ((Number) hurricaneJSON.get("windSpeed")).intValue();
+    }
+
+    /**
+     * Loads the category from the hurricane file.
+     *
+     * @return the hurricane category, or null if it could not be loaded
+     */
+    public static HurricaneCategory getHurricaneCategory() {
+        JSONObject hurricaneJSON = getHurricaneJSON();
+        if (hurricaneJSON == null) {
+            return null;
+        }
+        return HurricaneCategory.valueOf((String) hurricaneJSON.get("category"));
+    }
+
+    /**
+     * Reads the hurricane file.
+     *
+     * @return the hurricane's JSON object, or null if reading failed
+     */
+    private static JSONObject getHurricaneJSON() {
+        try (FileReader reader = new FileReader(HURRICANE_FILE)) {
+            JSONParser parser = new JSONParser();
+            return (JSONObject) parser.parse(reader);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
 }
