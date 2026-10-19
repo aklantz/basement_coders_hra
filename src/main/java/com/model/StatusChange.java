@@ -7,6 +7,11 @@ public class StatusChange {
     private RequestStatus status;
     private LocalDateTime changedAt;
 
+    public StatusChange(RequestStatus status, LocalDateTime changedAt) {
+        this.status = status;
+        this.changedAt = changedAt;
+    }
+
     public RequestStatus getStatus() {
         return status;
     }
