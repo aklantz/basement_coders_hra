@@ -49,6 +49,7 @@ public class DataLoader extends DataConstants {
                 if (user != null) {
                     user.setAccountStatus(AccountStatus.valueOf((String) userJSON.get(USER_ACCOUNT_STATUS)));
                     user.setSafetyStatus(SafetyStatus.valueOf((String) userJSON.get(USER_SAFETY_STATUS)));
+                    loadHouseholds(user, (JSONArray) userJSON.get("houseHoldMembers"));
                     users.add(user);
                 }
             }
@@ -57,6 +58,29 @@ public class DataLoader extends DataConstants {
         }
 
         return users;
+    }
+
+    /**
+     * Loads a user's households from JSON and adds them to the user.
+     *
+     * @param user the user who owns the households
+     * @param householdsJSON the saved households
+     */
+    private static void loadHouseholds(User user, JSONArray householdsJSON) {
+        for (Object householdObj : householdsJSON) {
+            JSONObject householdJSON = (JSONObject) householdObj;
+            HouseholdMember household = new HouseholdMember(
+                    UUID.fromString((String) householdJSON.get("householdOwnerUUID")),
+                    (String) householdJSON.get("householdName"));
+
+            for (Object memberObj : (JSONArray) householdJSON.get("members")) {
+                JSONObject memberJSON = (JSONObject) memberObj;
+                String name = (String) memberJSON.get("name");
+                household.addHouseholdMember(name);
+                household.checkIn(name, SafetyStatus.valueOf((String) memberJSON.get("safetyStatus")));
+            }
+            user.getHouseHoldMembers().add(household);
+        }
     }
 
     /**
@@ -194,6 +218,10 @@ public class DataLoader extends DataConstants {
                 if (isDuplicate) {
                     request.markDuplicate();
                 }
+                request.setStatusHistory(loadStatusHistory(
+                        (JSONArray) requestJSON.get(REQUEST_STATUS_HISTORY)));
+                request.setAssignments(loadAssignments(request,
+                        (JSONArray) requestJSON.get(REQUEST_ASSIGNMENTS), userDirectory));
 
                 requests.add(request);
             }
@@ -202,5 +230,81 @@ public class DataLoader extends DataConstants {
         }
 
         return requests;
+    }
+
+    /**
+     * Loads a request's status history from JSON.
+     *
+     * @param historyJSON the saved history
+     * @return the status changes in saved order
+     */
+    private static ArrayList<StatusChange> loadStatusHistory(JSONArray historyJSON) {
+        ArrayList<StatusChange> history = new ArrayList<>();
+        for (Object changeObj : historyJSON) {
+            JSONObject changeJSON = (JSONObject) changeObj;
+            history.add(new StatusChange(
+                    RequestStatus.valueOf((String) changeJSON.get("status")),
+                    parseTime((String) changeJSON.get("changedAt"))));
+        }
+        return history;
+    }
+
+    /**
+     * Loads a request's task assignments from JSON.
+     * Users must already be loaded, since each assignment links to a volunteer and coordinator.
+     *
+     * @param request the request the assignments belong to
+     * @param assignmentsJSON the saved assignments
+     * @param userDirectory the directory used to look up volunteers and coordinators
+     * @return the loaded assignments
+     */
+    private static ArrayList<TaskAssignment> loadAssignments(AidRequest request,
+            JSONArray assignmentsJSON, UserDirectory userDirectory) {
+        ArrayList<TaskAssignment> assignments = new ArrayList<>();
+        for (Object assignmentObj : assignmentsJSON) {
+            JSONObject assignmentJSON = (JSONObject) assignmentObj;
+
+            TaskAssignment assignment = new TaskAssignment(
+                    UUID.fromString((String) assignmentJSON.get("taskId")),
+                    request,
+                    findUser(userDirectory, (String) assignmentJSON.get("volunteer"), Volunteer.class),
+                    findUser(userDirectory, (String) assignmentJSON.get("coordinator"), Coordinator.class));
+
+            assignment.restoreState(
+                    parseTime((String) assignmentJSON.get("assignedAt")),
+                    parseTime((String) assignmentJSON.get("acceptedAt")),
+                    parseTime((String) assignmentJSON.get("completedAt")),
+                    TaskStatus.valueOf((String) assignmentJSON.get("status")));
+
+            assignments.add(assignment);
+        }
+        return assignments;
+    }
+
+    /**
+     * Looks up a user by ID and returns them only if they are the expected type.
+     *
+     * @param userDirectory the directory to search
+     * @param idString the user's ID as a string, or null
+     * @param userClass the expected user type, such as Volunteer.class
+     * @return the user, or null if not found or not the expected type
+     */
+    private static <T extends User> T findUser(UserDirectory userDirectory, String idString,
+                                               Class<T> userClass) {
+        if (idString == null) {
+            return null;
+        }
+        User user = userDirectory.getUserById(UUID.fromString(idString));
+        return userClass.isInstance(user) ? userClass.cast(user) : null;
+    }
+
+    /**
+     * Parses a saved time, or returns null if there is no time.
+     *
+     * @param text the saved time, such as 2026-10-18T14:30:00Z
+     * @return the time, or null
+     */
+    private static LocalDateTime parseTime(String text) {
+        return text == null ? null : OffsetDateTime.parse(text).toLocalDateTime();
     }
 }

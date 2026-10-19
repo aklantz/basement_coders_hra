@@ -9,6 +9,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.ArrayList;
 
@@ -117,11 +118,23 @@ public class DataWriter extends DataConstants {
         userJSON.put(USER_ACCOUNT_STATUS, user.getAccountStatus().name());
         userJSON.put(USER_SAFETY_STATUS, user.getSafetyStatus().name());
 
-        JSONArray membersJSON = new JSONArray();
-        for (HouseholdMember member : user.getHouseHoldMembers()) {
-            membersJSON.add(member.getMemberUUID().toString());
+        JSONArray householdsJSON = new JSONArray();
+        for (HouseholdMember household : user.getHouseHoldMembers()) {
+            JSONObject householdJSON = new JSONObject();
+            householdJSON.put("householdName", household.getHouseHoldName());
+            householdJSON.put("householdOwnerUUID", household.getHouseholdOwnerUUID().toString());
+
+            JSONArray membersJSON = new JSONArray();
+            for (String name : household.getMembers()) {
+                JSONObject memberJSON = new JSONObject();
+                memberJSON.put("name", name);
+                memberJSON.put("safetyStatus", household.getSafetyStatus(name).name());
+                membersJSON.add(memberJSON);
+            }
+            householdJSON.put("members", membersJSON);
+            householdsJSON.add(householdJSON);
         }
-        userJSON.put("houseHoldMembers", membersJSON);
+        userJSON.put("houseHoldMembers", householdsJSON);
         return userJSON;
     }
 
@@ -144,7 +157,17 @@ public class DataWriter extends DataConstants {
 
         JSONArray assignmentsJSON = new JSONArray();
         for (TaskAssignment assignment : request.getAssignments()) {
-            assignmentsJSON.add(assignment.getTaskId().toString());
+            JSONObject assignmentJSON = new JSONObject();
+            assignmentJSON.put("taskId", assignment.getTaskId().toString());
+            assignmentJSON.put("volunteer", assignment.getVolunteer() == null
+                    ? null : assignment.getVolunteer().getUserId().toString());
+            assignmentJSON.put("coordinator", assignment.getCoordinator() == null
+                    ? null : assignment.getCoordinator().getUserId().toString());
+            assignmentJSON.put("assignedAt", formatTime(assignment.getAssignedAt()));
+            assignmentJSON.put("acceptedAt", formatTime(assignment.getAcceptedAt()));
+            assignmentJSON.put("completedAt", formatTime(assignment.getCompletedAt()));
+            assignmentJSON.put("status", assignment.getStatus().name());
+            assignmentsJSON.add(assignmentJSON);
         }
         requestJSON.put("assignments", assignmentsJSON);
 
@@ -158,6 +181,16 @@ public class DataWriter extends DataConstants {
         }
         requestJSON.put("statusHistory", historyJSON);
         return requestJSON;
+    }
+
+    /**
+     * Formats a time the same way other times are saved, or null if there is no time.
+     *
+     * @param time the time to format
+     * @return the formatted time, or null
+     */
+    private static String formatTime(LocalDateTime time) {
+        return time == null ? null : time.atOffset(ZoneOffset.UTC).toString();
     }
 
     /**
