@@ -1,6 +1,7 @@
 package com.model;
 
 import java.util.ArrayList;
+import java.util.UUID;
 
 public class ReliefUI {
     private ReliefApplication reliefApp;
@@ -15,6 +16,7 @@ public class ReliefUI {
         scenario3();
         scenario4();
         scenario5();
+        scenario6();
 
         // Save all data after scenarios
         DataWriter.saveUsers(UserDirectory.getInstance().getUsers());
@@ -133,7 +135,7 @@ public class ReliefUI {
         }
     }
 
-        /**
+    /**
      * Scenario 5: Load and display the hurricane and affected zip codes.
      */
     public void scenario5() {
@@ -154,6 +156,43 @@ public class ReliefUI {
         }
     }
 
+    /**
+     * Scenario 6: Create a household, add members and check them in.
+     */
+    public void scenario6() {
+        System.out.println();
+
+        HouseholdMember household = new HouseholdMember(UUID.randomUUID(), "The Smiths");
+        household.addHouseholdMember("Alice");
+        household.addHouseholdMember("Bob");
+
+        if (household.getMembers().size() != 2) {
+            System.out.println("Sorry, the household members couldn't be added.");
+            return;
+        }
+
+        System.out.println(household.getHouseHoldName() + " has "
+                + household.getMembers().size() + " member(s)");
+
+        for (String member : household.getMembers()) {
+            System.out.println("- " + member
+                    + " (status: " + household.getSafetyStatus(member)
+                    + ", last check-in: " + household.getLastCheckIn(member) + ")");
+        }
+
+        household.checkIn("Alice", SafetyStatus.SAFE);
+        household.checkIn("Bob", SafetyStatus.IN_NEED);
+
+        if (household.getSafetyStatus("Alice") != SafetyStatus.SAFE
+                || household.getSafetyStatus("Bob") != SafetyStatus.IN_NEED) {
+            System.out.println("Sorry, the members couldn't be checked in.");
+            return;
+        }
+
+        System.out.println("\nAfter check-in:");
+        System.out.println("Alice is " + household.getSafetyStatus("Alice"));
+        System.out.println("Bob is " + household.getSafetyStatus("Bob"));
+    }
 
     public static void main(String[] args) {
         ReliefUI reliefInterface = new ReliefUI();
