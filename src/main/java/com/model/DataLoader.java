@@ -136,6 +136,7 @@ public class DataLoader extends DataConstants {
                         occupancy,
                         status,
                         lastUpdated);
+                shelter.setZipCode((String) shelterJSON.get(SHELTER_ZIP_CODE));
 
                 JSONArray inventoryJSON =
                         (JSONArray) shelterJSON.get("inventoryItems");

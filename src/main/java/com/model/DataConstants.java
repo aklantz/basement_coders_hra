@@ -18,6 +18,7 @@ public class DataConstants {
     public static final String SHELTER_OCCUPANCY = "occupancy";
     public static final String SHELTER_STATUS = "status";
     public static final String SHELTER_LAST_UPDATED = "lastUpdated";
+    public static final String SHELTER_ZIP_CODE = "zipCode";
 
     protected static final String USER_ID = "userId";
     protected static final String USER_USERNAME = "username";
