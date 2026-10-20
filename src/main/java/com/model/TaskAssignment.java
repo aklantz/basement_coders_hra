@@ -3,6 +3,9 @@ package com.model;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
+/**
+ * A task that a coordinator assigns to a volunteer to help with an aid request.
+ */
 public class TaskAssignment {
 
     private UUID taskId;
@@ -34,18 +37,70 @@ public class TaskAssignment {
         this.status = status;
     }
 
-    public void acceptAssignment() {}
+    /**
+     * The volunteer accepts the task. Only works while the task is PENDING.
+     * The aid request moves to IN_PROGRESS.
+     */
+    public void acceptAssignment() {
+        if (status != TaskStatus.PENDING) {
+            return;
+        }
+        status = TaskStatus.ACCEPTED;
+        acceptedAt = LocalDateTime.now();
+        if (request != null) {
+            request.updateStatus(RequestStatus.IN_PROGRESS);
+        }
+    }
 
-    public void confirmCompletion() {}
+    /**
+     * Marks the task as done. Only works after the volunteer has accepted it.
+     * The aid request moves to FULFILLED.
+     */
+    public void confirmCompletion() {
+        if (status != TaskStatus.ACCEPTED) {
+            return;
+        }
+        status = TaskStatus.COMPLETED;
+        completedAt = LocalDateTime.now();
+        if (request != null) {
+            request.updateStatus(RequestStatus.FULFILLED);
+        }
+    }
 
     public TaskStatus getStatus() {
         return status;
     }
 
-    public void reassign(UUID volunteerId) {}
+    /**
+     * Gives the task to a different volunteer. The task starts over as PENDING,
+     * and the aid request goes back to ASSIGNED.
+     *
+     * @param volunteerId the id of the new volunteer
+     */
+    public void reassign(UUID volunteerId) {
+        if (status == TaskStatus.COMPLETED || status == TaskStatus.CANCELLED) {
+            return;
+        }
+        User user = UserDirectory.getInstance().getUserById(volunteerId);
+        if (!(user instanceof Volunteer)) {
+            return;
+        }
+        volunteer = (Volunteer) user;
+        status = TaskStatus.PENDING;
+        assignedAt = LocalDateTime.now();
+        acceptedAt = null;
+        if (request != null) {
+            request.updateStatus(RequestStatus.ASSIGNED);
+        }
+    }
+    
 
     public UUID getTaskId() {
         return taskId;
+    }
+
+    public AidRequest getRequest() {
+        return request;
     }
 
     public Volunteer getVolunteer() {
