@@ -42,4 +42,5 @@ public class DataConstants {
     protected static final String REQUEST_ASSIGNMENTS = "assignments";
     protected static final String REQUEST_STATUS_HISTORY = "statusHistory";
     protected static final String REQUEST_IS_DUPLICATE = "isDuplicate";
+    protected static final String REQUEST_CREATED_AT = "createdAt";
 }
