@@ -1,5 +1,6 @@
 package com.model;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.UUID;
 
@@ -16,6 +17,7 @@ public class AidRequest {
     private int householdSize;
     private String streetAddress;
     private boolean isDuplicate;
+    private LocalDateTime createdAt;
 
     private ArrayList<TaskAssignment> assignments = new ArrayList<>();
     private ArrayList<StatusChange> statusHistory = new ArrayList<>();
@@ -30,6 +32,7 @@ public class AidRequest {
         this.streetAddress = streetAddress;
         this.status = RequestStatus.SUBMITTED;
         this.isDuplicate = false;
+        this.createdAt = LocalDateTime.now();
     }
 
     public void updateStatus(RequestStatus status) {
@@ -38,6 +41,29 @@ public class AidRequest {
 
     public void markDuplicate() {
         this.isDuplicate = true;
+    }
+
+    /**
+     * Marks this request as expired.
+     */
+    public void expire() {
+        updateStatus(RequestStatus.EXPIRED);
+    }
+
+    /**
+     * @return when this request was created
+     */
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    /**
+     * Restores the creation time when loading from JSON.
+     *
+     * @param createdAt when this request was created
+     */
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
     }
 
     public void setAssignments(ArrayList<TaskAssignment> assignments) {

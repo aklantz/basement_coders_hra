@@ -154,6 +154,7 @@ public class DataWriter extends DataConstants {
         requestJSON.put("householdSize", request.getHouseholdSize());
         requestJSON.put("streetAddress", request.getStreetAddress());
         requestJSON.put("isDuplicate", request.isDuplicate());
+        requestJSON.put(REQUEST_CREATED_AT, formatTime(request.getCreatedAt()));
 
         JSONArray assignmentsJSON = new JSONArray();
         for (TaskAssignment assignment : request.getAssignments()) {

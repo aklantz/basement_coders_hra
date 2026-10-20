@@ -218,6 +218,10 @@ public class DataLoader extends DataConstants {
                 if (isDuplicate) {
                     request.markDuplicate();
                 }
+                LocalDateTime createdAt = parseTime((String) requestJSON.get(REQUEST_CREATED_AT));
+                if (createdAt != null) {
+                    request.setCreatedAt(createdAt);
+                }
                 request.setStatusHistory(loadStatusHistory(
                         (JSONArray) requestJSON.get(REQUEST_STATUS_HISTORY)));
                 request.setAssignments(loadAssignments(request,
