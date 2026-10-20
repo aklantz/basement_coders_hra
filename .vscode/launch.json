@@ -1,0 +1,21 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+        "type": "java",
+        "name": "UI",
+        "request": "launch",
+        "mainClass": "com.hurricane/com.model.UI",
+        "projectName": "basement_coders_hra",
+        "envFile": "${workspaceFolder}/.env"
+    },
+    {
+        "type": "java",
+        "name": "Run Map App",
+        "request": "launch",
+        "mainClass": "com.hurricane/com.hurricane.App",
+        "projectName": "distance",
+        "envFile": "${workspaceFolder}/.env"
+    }
+]
+}
