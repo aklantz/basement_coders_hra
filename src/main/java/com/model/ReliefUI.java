@@ -18,11 +18,12 @@ public class ReliefUI {
         scenario5();
         scenario6();
         scenario7();
+        scenario8();
 
         // Save all data after scenarios
         DataWriter.saveUsers(UserDirectory.getInstance().getUsers());
         DataWriter.saveAidRequests(AidRequestDirectory.getInstance().getRequests());
-        DataWriter.saveResources(ResourceDirectory.getInstance().getShelters());
+        DataWriter.saveResources(ShelterDirectory.getInstance().getShelters());
 
         System.out.println("\nAll data saved to JSON.");
     }
@@ -150,6 +151,7 @@ public class ReliefUI {
         }
 
         System.out.println("Hurricane category: " + hurricane.getHurricaneCategory());
+        System.out.println("Wind speed: " + hurricane.getWindSpeed() + " mph");
         System.out.println(hurricane.getAffectedZipCodes().size() + " affected zip code(s)");
 
         for (ZipCode zipCode : hurricane.getAffectedZipCodes()) {
@@ -244,6 +246,31 @@ public class ReliefUI {
         System.out.println("After completing: " + task.getStatus()
                 + " | request: " + request.getStatus()
                 + " | completed at: " + task.getCompletedAt());
+    }
+
+    /**
+     * Scenario 8: Find the active shelters in the hurricane's affected zip codes,
+     * and the shelters that are closed.
+     */
+    public void scenario8() {
+        System.out.println();
+
+        ShelterDirectory shelterDirectory = ShelterDirectory.getInstance();
+        ArrayList<ZipCode> affected = HurricaneDirectory.getInstance().getAffectedZipCodes();
+
+        ArrayList<Shelter> active = shelterDirectory.getActiveShelters(affected);
+        System.out.println(active.size() + " active shelter(s) in affected zip codes");
+        for (Shelter shelter : active) {
+            System.out.println("- " + shelter.getName() + " (" + shelter.getZipCode()
+                    + ", " + shelter.getStatus()
+                    + ", " + shelter.getRemainingCapacity() + " spots left)");
+        }
+
+        ArrayList<Shelter> offline = shelterDirectory.getOfflineShelters();
+        System.out.println(offline.size() + " offline shelter(s)");
+        for (Shelter shelter : offline) {
+            System.out.println("- " + shelter.getName() + " (" + shelter.getZipCode() + ")");
+        }
     }
 
     public static void main(String[] args) {

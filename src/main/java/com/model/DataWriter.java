@@ -214,6 +214,10 @@ public class DataWriter extends DataConstants {
                 shelter.getStatus().name());
 
         shelterJSON.put(
+                SHELTER_ZIP_CODE,
+                shelter.getZipCode());
+
+        shelterJSON.put(
                 SHELTER_LAST_UPDATED,
                 shelter.getLastUpdated()
                         .atOffset(ZoneOffset.UTC)

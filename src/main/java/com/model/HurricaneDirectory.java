@@ -35,4 +35,11 @@ public class HurricaneDirectory {
     public HurricaneCategory getHurricaneCategory() {
         return category;
     }
+
+    /**
+     * @return the hurricane's wind speed in mph
+     */
+    public int getWindSpeed() {
+        return windSpeed;
+    }
 }
