@@ -149,7 +149,6 @@ public class DataWriter extends DataConstants {
         requestJSON.put("requestId", request.getRequestId().toString());
         requestJSON.put("requester", request.getRequester().getUserId().toString());
         requestJSON.put("category", request.getCategory().name());
-        requestJSON.put("urgency", request.getUrgency().name());
         requestJSON.put("status", request.getStatus().name());
         requestJSON.put("householdSize", request.getHouseholdSize());
         requestJSON.put("streetAddress", request.getStreetAddress());
@@ -171,16 +170,6 @@ public class DataWriter extends DataConstants {
             assignmentsJSON.add(assignmentJSON);
         }
         requestJSON.put("assignments", assignmentsJSON);
-
-        JSONArray historyJSON = new JSONArray();
-        for (StatusChange change : request.getStatusHistory()) {
-            JSONObject changeJSON = new JSONObject();
-            changeJSON.put("status", change.getStatus().name());
-            changeJSON.put("changedAt", change.getChangedAt()
-                    .atOffset(ZoneOffset.UTC).toString());
-            historyJSON.add(changeJSON);
-        }
-        requestJSON.put("statusHistory", historyJSON);
         return requestJSON;
     }
 
