@@ -171,4 +171,70 @@ public abstract class User {
     public void setSafetyStatus(SafetyStatus safetyStatus) {
         this.safetyStatus = safetyStatus;
     }
+
+    // Add these methods inside your existing User class
+// (needs: import java.util.ArrayList; uses getHouseHoldMembers() and the userId field)
+
+    /**
+     * Creates a household owned by this user.
+     *
+     * @param householdName the name of the household
+     * @return true if it was created, false if the name is blank or already used
+     */
+    public boolean addHousehold(String householdName) {
+        if (householdName == null || householdName.trim().isEmpty()
+                || getHousehold(householdName) != null) {
+            return false;
+        }
+        getHouseHoldMembers().add(new HouseholdMember(userId, householdName));
+        return true;
+    }
+
+    /**
+     * Finds one of this user's households by name.
+     *
+     * @param householdName the name of the household
+     * @return the household, or null if not found
+     */
+    public HouseholdMember getHousehold(String householdName) {
+        if (householdName == null) {
+            return null;
+        }
+        for (HouseholdMember household : getHouseHoldMembers()) {
+            if (householdName.equals(household.getHouseHoldName())) {
+                return household;
+            }
+        }
+        return null;
+    }
+
+    /**
+     * Adds a person to one of this user's households.
+     *
+     * @return true if added, false if the household doesn't exist, the name is blank,
+     *         or the person is already in the household
+     */
+    public boolean addHouseholdMember(String householdName, String memberName) {
+        HouseholdMember household = getHousehold(householdName);
+        if (household == null || memberName == null || memberName.trim().isEmpty()
+                || household.getMembers().contains(memberName)) {
+            return false;
+        }
+        return household.addHouseholdMember(memberName);
+    }
+
+    /**
+     * Checks in a person who is already in one of this user's households.
+     *
+     * @return true if checked in, false if the household or person doesn't exist
+     */
+    public boolean checkInHouseholdMember(String householdName, String memberName,
+            SafetyStatus safetyStatus) {
+        HouseholdMember household = getHousehold(householdName);
+        if (household == null || safetyStatus == null
+                || !household.getMembers().contains(memberName)) {
+            return false;
+        }
+        return household.checkIn(memberName, safetyStatus);
+    }
 }

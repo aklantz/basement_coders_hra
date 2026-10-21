@@ -72,6 +72,27 @@ public class ReliefApplication {
 		return shelterDirectory.getActiveShelters(hurricaneDirectory.getAffectedZipCodes());
 	}
 
+	// Returns false if nobody is logged in or the household already exists
+	public boolean createHousehold(String householdName) {
+		return isLoggedIn() && currentUser.addHousehold(householdName) && userDirectory.save();
+	}
+
+	public boolean addHouseholdMember(String householdName, String memberName) {
+		return isLoggedIn() && currentUser.addHouseholdMember(householdName, memberName)
+				&& userDirectory.save();
+	}
+
+	public boolean checkInHouseholdMember(String householdName, String memberName,
+			SafetyStatus safetyStatus) {
+		return isLoggedIn()
+				&& currentUser.checkInHouseholdMember(householdName, memberName, safetyStatus)
+				&& userDirectory.save();
+	}
+
+	public ArrayList<HouseholdMember> getHouseholds() {
+		return isLoggedIn() ? currentUser.getHouseHoldMembers() : new ArrayList<HouseholdMember>();
+	}
+
 	public void logAction(String action, String entityType, UUID entityId) {
 		// TODO: record who did what to which entity (audit log)
 	}

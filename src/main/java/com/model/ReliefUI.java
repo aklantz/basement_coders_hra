@@ -1,7 +1,6 @@
 package com.model;
 
 import java.util.ArrayList;
-import java.util.UUID;
 
 public class ReliefUI {
     private ReliefApplication reliefApp;
@@ -17,9 +16,6 @@ public class ReliefUI {
         scenario4();
         scenario5();
         scenario6();
-        scenario7();
-        scenario8();
-        scenario9();
 
         // Save all data after scenarios
         DataWriter.saveUsers(UserDirectory.getInstance().getUsers());
@@ -152,7 +148,6 @@ public class ReliefUI {
         }
 
         System.out.println("Hurricane category: " + hurricane.getHurricaneCategory());
-        System.out.println("Wind speed: " + hurricane.getWindSpeed() + " mph");
         System.out.println(hurricane.getAffectedZipCodes().size() + " affected zip code(s)");
 
         for (ZipCode zipCode : hurricane.getAffectedZipCodes()) {
@@ -161,154 +156,58 @@ public class ReliefUI {
     }
 
     /**
-     * Scenario 6: Create a household, add members and check them in.
+     * Scenario 6: Maria Rivera creates a household, adds members and checks them in.
      */
     public void scenario6() {
         System.out.println();
 
-        HouseholdMember household = new HouseholdMember(UUID.randomUUID(), "The Smiths");
-        household.addHouseholdMember("Alice");
-        household.addHouseholdMember("Bob");
-
-        if (household.getMembers().size() != 2) {
-            System.out.println("Sorry, the household members couldn't be added.");
+        // Not logged in yet, so this should be refused
+        if (reliefApp.createHousehold("Rivera Family")) {
+            System.out.println("Sorry, a household was created without anyone logged in.");
             return;
         }
 
-        System.out.println(household.getHouseHoldName() + " has "
-                + household.getMembers().size() + " member(s)");
-
-        for (String member : household.getMembers()) {
-            System.out.println("- " + member
-                    + " (status: " + household.getSafetyStatus(member)
-                    + ", last check-in: " + household.getLastCheckIn(member) + ")");
-        }
-
-        household.checkIn("Alice", SafetyStatus.SAFE);
-        household.checkIn("Bob", SafetyStatus.IN_NEED);
-
-        if (household.getSafetyStatus("Alice") != SafetyStatus.SAFE
-                || household.getSafetyStatus("Bob") != SafetyStatus.IN_NEED) {
-            System.out.println("Sorry, the members couldn't be checked in.");
+        if (reliefApp.login("mrivera", "password") == null) {
+            System.out.println("Sorry, Maria Rivera couldn't log in.");
             return;
         }
 
-        System.out.println("\nAfter check-in:");
-        System.out.println("Alice is " + household.getSafetyStatus("Alice"));
-        System.out.println("Bob is " + household.getSafetyStatus("Bob"));
-    }
+        // These return false when the household or member already exists (from an earlier run)
+        reliefApp.createHousehold("Rivera Family");
+        reliefApp.addHouseholdMember("Rivera Family", "Maria");
+        reliefApp.addHouseholdMember("Rivera Family", "Carlos");
 
-    /**
-     * Scenario 7: A volunteer accepts and completes a task for an aid request.
-     * The request is not added to the directory, so running this again
-     * doesn't change the saved data.
-     */
-    public void scenario7() {
-        System.out.println();
-
-        User user = UserDirectory.getInstance().getUser("mrivera");
-        if (!(user instanceof Volunteer)) {
-            System.out.println("Sorry, the volunteer couldn't be found.");
+        if (!reliefApp.checkInHouseholdMember("Rivera Family", "Maria", SafetyStatus.SAFE)
+                || !reliefApp.checkInHouseholdMember("Rivera Family", "Carlos", SafetyStatus.IN_NEED)) {
+            System.out.println("Sorry, the household members couldn't be checked in.");
+            reliefApp.logout();
             return;
         }
 
-        AidRequest request = new AidRequest(UUID.randomUUID(), user, RequestCategory.FOOD,
-                3, "45 Harbor Rd, Tega Cay, SC");
-        request.updateStatus(RequestStatus.ASSIGNED);
-        TaskAssignment task = new TaskAssignment(UUID.randomUUID(), request,
-                (Volunteer) user, null);
-
-        System.out.println("New task: " + task.getStatus()
-                + " | request: " + request.getStatus());
-
-        task.confirmCompletion();
-        if (task.getStatus() != TaskStatus.PENDING) {
-            System.out.println("Sorry, a task was completed before it was accepted.");
-            return;
-        }
-        System.out.println("Completing before accepting is ignored: " + task.getStatus());
-
-        task.acceptAssignment();
-        if (task.getStatus() != TaskStatus.ACCEPTED
-                || request.getStatus() != RequestStatus.IN_PROGRESS) {
-            System.out.println("Sorry, the task couldn't be accepted.");
-            return;
-        }
-        System.out.println("After accepting: " + task.getStatus()
-                + " | request: " + request.getStatus()
-                + " | accepted at: " + task.getAcceptedAt());
-
-        task.confirmCompletion();
-        if (task.getStatus() != TaskStatus.COMPLETED
-                || request.getStatus() != RequestStatus.FULFILLED) {
-            System.out.println("Sorry, the task couldn't be completed.");
-            return;
-        }
-        System.out.println("After completing: " + task.getStatus()
-                + " | request: " + request.getStatus()
-                + " | completed at: " + task.getCompletedAt());
-    }
-
-    /**
-     * Scenario 8: Find the active shelters in the hurricane's affected zip codes,
-     * and the shelters that are closed.
-     */
-    public void scenario8() {
-        System.out.println();
-
-        ShelterDirectory shelterDirectory = ShelterDirectory.getInstance();
-        ArrayList<ZipCode> affected = HurricaneDirectory.getInstance().getAffectedZipCodes();
-
-        ArrayList<Shelter> active = shelterDirectory.getActiveShelters(affected);
-        System.out.println(active.size() + " active shelter(s) in affected zip codes");
-        for (Shelter shelter : active) {
-            System.out.println("- " + shelter.getName() + " (" + shelter.getZipCode()
-                    + ", " + shelter.getStatus()
-                    + ", " + shelter.getRemainingCapacity() + " spots left)");
-        }
-
-        ArrayList<Shelter> offline = shelterDirectory.getOfflineShelters();
-        System.out.println(offline.size() + " offline shelter(s)");
-        for (Shelter shelter : offline) {
-            System.out.println("- " + shelter.getName() + " (" + shelter.getZipCode() + ")");
-        }
-    }
-
-    /**
-     * Scenario 9: Maria Rivera finds the nearest open shelter with space
-     * and gets driving directions to it. Needs MAP_API_KEY to be set.
-     */
-    public void scenario9() {
-        System.out.println();
-
-        User user = UserDirectory.getInstance().getUser("mrivera");
-        if (user == null) {
-            System.out.println("Sorry, Maria Rivera couldn't be found.");
+        // A member who was never added can't check in
+        if (reliefApp.checkInHouseholdMember("Rivera Family", "Nobody", SafetyStatus.SAFE)) {
+            System.out.println("Sorry, an unknown member was able to check in.");
+            reliefApp.logout();
             return;
         }
 
-        ShelterDirectory shelterDirectory = ShelterDirectory.getInstance();
-        try {
-            Shelter nearest = shelterDirectory.findNearestShelter(user);
-            if (nearest == null) {
-                System.out.println("Sorry, no open shelters with space were found.");
-                return;
+        System.out.println(reliefApp.getHouseholds().size() + " household(s) for Maria Rivera");
+
+        for (HouseholdMember household : reliefApp.getHouseholds()) {
+            System.out.println("\nHousehold: " + household.getHouseHoldName());
+
+            for (String member : household.getMembers()) {
+                System.out.println("- " + member
+                        + " (status: " + household.getSafetyStatus(member)
+                        + ", last check-in: " + household.getLastCheckIn(member) + ")");
             }
+        }
 
-            System.out.println("Maria lives at: " + user.getHomeAddress());
-            System.out.println("Nearest open shelter: " + nearest.getName()
-                    + " (" + nearest.getAddress() + ", "
-                    + nearest.getRemainingCapacity() + " spots left)");
+        reliefApp.logout();
 
-            System.out.println("Directions:");
-            for (String direction : shelterDirectory.getDirections(user, nearest)) {
-                System.out.println("- " + direction);
-            }
-        } catch (IllegalStateException e) {
-            System.out.println("Sorry, the map couldn't be used: " + e.getMessage()
-                    + " Run ReliefUI from the Run and Debug panel so the .env file is loaded.");
-        } catch (Exception e) {
-            System.out.println("Sorry, the nearest shelter couldn't be found: " + e.getMessage());
+        // Logged out again, so the households should no longer be available
+        if (!reliefApp.getHouseholds().isEmpty()) {
+            System.out.println("Sorry, households were visible after logging out.");
         }
     }
 
