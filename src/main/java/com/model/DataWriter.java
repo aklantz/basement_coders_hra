@@ -217,6 +217,12 @@ public class DataWriter extends DataConstants {
                 SHELTER_ZIP_CODE,
                 shelter.getZipCode());
 
+        shelterJSON.put(SHELTER_STREET_ADDRESS, shelter.getStreetAddress());
+        shelterJSON.put(SHELTER_CITY, shelter.getCity());
+        shelterJSON.put(SHELTER_STATE, shelter.getState());
+        shelterJSON.put(SHELTER_LATITUDE, shelter.getLatitude());
+        shelterJSON.put(SHELTER_LONGITUDE, shelter.getLongitude());
+
         shelterJSON.put(
                 SHELTER_LAST_UPDATED,
                 shelter.getLastUpdated()

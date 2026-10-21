@@ -147,6 +147,21 @@ public class MapTools {
         Coordinates start = getCoordinates(startingAddress);
         Coordinates end = getCoordinates(endingAddress);
 
+        return getDrivingDirections(start, end);
+    }
+
+    /**
+     * Collects thedirections between two sets of coordinates
+     * Use this when the coordinates are already known.
+     * @param start The coordinates the route starts at
+     * @param end The coordinates the route ends at
+     * @return A string array where each items represent a direction on the route
+     * @throws IOException
+     * @throws InterruptedException
+     */
+    public String[] getDrivingDirections(Coordinates start, Coordinates end)
+            throws IOException, InterruptedException {
+
         JsonNode route = getRoute(start, end);
         JsonNode steps = route.path("segments").path(0).path("steps");
 
@@ -163,7 +178,7 @@ public class MapTools {
 
     /**
      * Finds the best version of a coordinate. Based on the address we might not 
-     * be able to find the exact house, but maybe the city
+     * be able to find the exact house, but the city.
      * @param featuresThe information about the street address
      * @return The node representation of the closest address
      * @throws IOException
@@ -211,7 +226,7 @@ public class MapTools {
      * @throws IOException
      * @throws InterruptedException
      */
-    private double getDrivingTime(Coordinates start, Coordinates end)
+    public double getDrivingTime(Coordinates start, Coordinates end)
             throws IOException, InterruptedException {
 
         JsonNode route = getRoute(start, end);
@@ -351,7 +366,7 @@ public class MapTools {
     }
 
     /**
-     * Determine if we have a valid API key in our environment variable.
+     * //Test: Determine if we have a valid API key in our environment variable.
      */
     private void checkForApiKey() {
         if (apiKey == null || apiKey.isBlank()) {
