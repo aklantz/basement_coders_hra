@@ -19,6 +19,7 @@ public class ReliefUI {
         scenario6();
         scenario7();
         scenario8();
+        scenario9();
 
         // Save all data after scenarios
         DataWriter.saveUsers(UserDirectory.getInstance().getUsers());
@@ -270,6 +271,44 @@ public class ReliefUI {
         System.out.println(offline.size() + " offline shelter(s)");
         for (Shelter shelter : offline) {
             System.out.println("- " + shelter.getName() + " (" + shelter.getZipCode() + ")");
+        }
+    }
+
+    /**
+     * Scenario 9: Maria Rivera finds the nearest open shelter with space
+     * and gets driving directions to it. Needs MAP_API_KEY to be set.
+     */
+    public void scenario9() {
+        System.out.println();
+
+        User user = UserDirectory.getInstance().getUser("mrivera");
+        if (user == null) {
+            System.out.println("Sorry, Maria Rivera couldn't be found.");
+            return;
+        }
+
+        ShelterDirectory shelterDirectory = ShelterDirectory.getInstance();
+        try {
+            Shelter nearest = shelterDirectory.findNearestShelter(user);
+            if (nearest == null) {
+                System.out.println("Sorry, no open shelters with space were found.");
+                return;
+            }
+
+            System.out.println("Maria lives at: " + user.getHomeAddress());
+            System.out.println("Nearest open shelter: " + nearest.getName()
+                    + " (" + nearest.getAddress() + ", "
+                    + nearest.getRemainingCapacity() + " spots left)");
+
+            System.out.println("Directions:");
+            for (String direction : shelterDirectory.getDirections(user, nearest)) {
+                System.out.println("- " + direction);
+            }
+        } catch (IllegalStateException e) {
+            System.out.println("Sorry, the map couldn't be used: " + e.getMessage()
+                    + " Run ReliefUI from the Run and Debug panel so the .env file is loaded.");
+        } catch (Exception e) {
+            System.out.println("Sorry, the nearest shelter couldn't be found: " + e.getMessage());
         }
     }
 

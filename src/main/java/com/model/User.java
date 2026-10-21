@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.UUID;
 
+import com.location.Address;
+
 /**
  * A user of the hurricane relief application.
  */
@@ -84,6 +86,28 @@ public abstract class User {
      */
     public Date getDateOfBirth() {
         return dateOfBirth;
+    }
+
+    /**
+     * Turns the home address into an address the map tools can use.
+     * The home address should look like "142 Riverbend Dr, Tega Cay, SC 29708".
+     *
+     * @return the address, or null if the home address isn't in that format
+     */
+    public Address getAddress() {
+        if (homeAddress == null) {
+            return null;
+        }
+        String[] parts = homeAddress.split(",");
+        if (parts.length < 3) {
+            return null;
+        }
+        String street = parts[0].trim();
+        String city = parts[1].trim();
+        String[] stateAndZip = parts[2].trim().split("\\s+");
+        String state = stateAndZip[0];
+        String zip = stateAndZip.length > 1 ? stateAndZip[1] : "";
+        return new Address(street, city, state, zip);
     }
 
     public String getHomeAddress() {

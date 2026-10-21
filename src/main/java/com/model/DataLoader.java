@@ -137,6 +137,15 @@ public class DataLoader extends DataConstants {
                         status,
                         lastUpdated);
                 shelter.setZipCode((String) shelterJSON.get(SHELTER_ZIP_CODE));
+                shelter.setAddress(
+                        (String) shelterJSON.get(SHELTER_STREET_ADDRESS),
+                        (String) shelterJSON.get(SHELTER_CITY),
+                        (String) shelterJSON.get(SHELTER_STATE));
+                Number latitude = (Number) shelterJSON.get(SHELTER_LATITUDE);
+                Number longitude = (Number) shelterJSON.get(SHELTER_LONGITUDE);
+                if (latitude != null && longitude != null) {
+                    shelter.setCoordinates(latitude.doubleValue(), longitude.doubleValue());
+                }
 
                 JSONArray inventoryJSON =
                         (JSONArray) shelterJSON.get("inventoryItems");

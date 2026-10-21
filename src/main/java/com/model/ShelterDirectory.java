@@ -1,6 +1,11 @@
 package com.model;
 
+import java.io.IOException;
 import java.util.ArrayList;
+
+import com.location.Address;
+import com.location.Coordinates;
+import com.location.MapTools;
 
 /**
  * Holds all shelters in the relief application
@@ -71,6 +76,63 @@ public class ShelterDirectory {
             }
         }
         return offline;
+    }
+
+    /**
+     * Finds the open shelter with space that is the shortest drive from the user's home.
+     * Closed and full shelters are skipped, and so are shelters without an address.
+     *
+     * @param user the user looking for a shelter
+     * @return the nearest shelter, or null if none have space or the user has no address
+     * @throws IOException if the map API can't be reached or can't find an address
+     * @throws InterruptedException if the map request is interrupted
+     */
+    public Shelter findNearestShelter(User user) throws IOException, InterruptedException {
+        if (user == null || user.getAddress() == null) {
+            return null;
+        }
+
+        MapTools mapTools = MapTools.getInstance();
+        Coordinates home = mapTools.getCoordinates(user.getAddress());
+
+        Shelter nearest = null;
+        double shortestTime = Double.MAX_VALUE;
+
+        for (Shelter shelter : shelters) {
+            if (shelter.getStatus() == ShelterStatus.CLOSED
+                    || shelter.getRemainingCapacity() == 0
+                    || !shelter.hasAddress()) {
+                continue;
+            }
+            double drivingTime = mapTools.getDrivingTime(home, shelter.getCoordinates());
+            if (drivingTime < shortestTime) {
+                shortestTime = drivingTime;
+                nearest = shelter;
+            }
+        }
+        return nearest;
+    }
+
+    /**
+     * Gets turn-by-turn driving directions from the user's home to a shelter.
+     *
+     * @param user the user who is driving
+     * @param shelter the shelter they are driving to
+     * @return one direction per step, or an empty list if either has no address
+     * @throws IOException if the map API can't be reached
+     * @throws InterruptedException if the map request is interrupted
+     */
+    public String[] getDirections(User user, Shelter shelter)
+            throws IOException, InterruptedException {
+        if (user == null || shelter == null) {
+            return new String[0];
+        }
+        Address home = user.getAddress();
+        if (home == null || !shelter.hasAddress()) {
+            return new String[0];
+        }
+        MapTools mapTools = MapTools.getInstance();
+        return mapTools.getDrivingDirections(mapTools.getCoordinates(home), shelter.getCoordinates());
     }
 
     /**

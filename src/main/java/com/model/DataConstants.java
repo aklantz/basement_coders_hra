@@ -19,6 +19,11 @@ public class DataConstants {
     public static final String SHELTER_STATUS = "status";
     public static final String SHELTER_LAST_UPDATED = "lastUpdated";
     public static final String SHELTER_ZIP_CODE = "zipCode";
+    public static final String SHELTER_STREET_ADDRESS = "streetAddress";
+    public static final String SHELTER_CITY = "city";
+    public static final String SHELTER_STATE = "state";
+    public static final String SHELTER_LATITUDE = "latitude";
+    public static final String SHELTER_LONGITUDE = "longitude";
 
     protected static final String USER_ID = "userId";
     protected static final String USER_USERNAME = "username";
