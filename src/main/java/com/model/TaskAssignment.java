@@ -56,6 +56,7 @@ public class TaskAssignment {
      * Marks the task as done. Only works after the volunteer has accepted it.
      * The aid request moves to FULFILLED.
      */
+    
     public void confirmCompletion() {
         if (status != TaskStatus.ACCEPTED) {
             return;
@@ -77,6 +78,7 @@ public class TaskAssignment {
      *
      * @param volunteerId the id of the new volunteer
      */
+    
     public void reassign(UUID volunteerId) {
         if (status == TaskStatus.COMPLETED || status == TaskStatus.CANCELLED) {
             return;
