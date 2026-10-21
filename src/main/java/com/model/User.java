@@ -217,7 +217,8 @@ public abstract class User {
     public boolean addHouseholdMember(String householdName, String memberName) {
         Household household = getHousehold(householdName);
         if (household == null || memberName == null || memberName.trim().isEmpty()
-                || household.getMembers().contains(memberName)) {
+                || household.getMembers().stream()
+                        .anyMatch(member -> memberName.equals(member.getName()))) {
             return false;
         }
         return household.addHouseholdMember(memberName);
@@ -231,8 +232,9 @@ public abstract class User {
     public boolean checkInHouseholdMember(String householdName, String memberName,
             SafetyStatus safetyStatus) {
         Household household = getHousehold(householdName);
-        if (household == null || safetyStatus == null
-                || !household.getMembers().contains(memberName)) {
+        if (household == null || safetyStatus == null || memberName == null
+                || household.getMembers().stream()
+                        .noneMatch(member -> memberName.equals(member.getName()))) {
             return false;
         }
         return household.checkIn(memberName, safetyStatus);

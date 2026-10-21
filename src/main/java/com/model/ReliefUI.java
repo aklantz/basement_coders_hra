@@ -204,10 +204,10 @@ public class ReliefUI {
         for (Household household : reliefApp.getHouseholds()) {
             System.out.println("\nHousehold: " + household.getHouseholdName());
 
-            for (String member : household.getMembers()) {
-                System.out.println("- " + member
-                        + " (status: " + household.getSafetyStatus(member)
-                        + ", last check-in: " + household.getLastCheckIn(member) + ")");
+            for (HouseholdMember member : household.getMembers()) {
+                System.out.println("- " + member.getName()
+                        + " (status: " + member.getSafetyStatus()
+                        + ", last check-in: " + member.getLastCheckIn() + ")");
             }
         }
 
