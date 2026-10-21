@@ -17,8 +17,6 @@ public class ReliefUI {
         scenario4();
         scenario5();
         scenario6();
-        scenario7();
-        scenario8();
 
         // Save all data after scenarios
         DataWriter.saveUsers(UserDirectory.getInstance().getUsers());
@@ -151,7 +149,6 @@ public class ReliefUI {
         }
 
         System.out.println("Hurricane category: " + hurricane.getHurricaneCategory());
-        System.out.println("Wind speed: " + hurricane.getWindSpeed() + " mph");
         System.out.println(hurricane.getAffectedZipCodes().size() + " affected zip code(s)");
 
         for (ZipCode zipCode : hurricane.getAffectedZipCodes()) {
@@ -195,82 +192,6 @@ public class ReliefUI {
         System.out.println("\nAfter check-in:");
         System.out.println("Alice is " + household.getSafetyStatus("Alice"));
         System.out.println("Bob is " + household.getSafetyStatus("Bob"));
-    }
-
-    /**
-     * Scenario 7: A volunteer accepts and completes a task for an aid request.
-     * The request is not added to the directory, so running this again
-     * doesn't change the saved data.
-     */
-    public void scenario7() {
-        System.out.println();
-
-        User user = UserDirectory.getInstance().getUser("mrivera");
-        if (!(user instanceof Volunteer)) {
-            System.out.println("Sorry, the volunteer couldn't be found.");
-            return;
-        }
-
-        AidRequest request = new AidRequest(UUID.randomUUID(), user, RequestCategory.FOOD,
-                3, "45 Harbor Rd, Tega Cay, SC");
-        request.updateStatus(RequestStatus.ASSIGNED);
-        TaskAssignment task = new TaskAssignment(UUID.randomUUID(), request,
-                (Volunteer) user, null);
-
-        System.out.println("New task: " + task.getStatus()
-                + " | request: " + request.getStatus());
-
-        task.confirmCompletion();
-        if (task.getStatus() != TaskStatus.PENDING) {
-            System.out.println("Sorry, a task was completed before it was accepted.");
-            return;
-        }
-        System.out.println("Completing before accepting is ignored: " + task.getStatus());
-
-        task.acceptAssignment();
-        if (task.getStatus() != TaskStatus.ACCEPTED
-                || request.getStatus() != RequestStatus.IN_PROGRESS) {
-            System.out.println("Sorry, the task couldn't be accepted.");
-            return;
-        }
-        System.out.println("After accepting: " + task.getStatus()
-                + " | request: " + request.getStatus()
-                + " | accepted at: " + task.getAcceptedAt());
-
-        task.confirmCompletion();
-        if (task.getStatus() != TaskStatus.COMPLETED
-                || request.getStatus() != RequestStatus.FULFILLED) {
-            System.out.println("Sorry, the task couldn't be completed.");
-            return;
-        }
-        System.out.println("After completing: " + task.getStatus()
-                + " | request: " + request.getStatus()
-                + " | completed at: " + task.getCompletedAt());
-    }
-
-    /**
-     * Scenario 8: Find the active shelters in the hurricane's affected zip codes,
-     * and the shelters that are closed.
-     */
-    public void scenario8() {
-        System.out.println();
-
-        ShelterDirectory shelterDirectory = ShelterDirectory.getInstance();
-        ArrayList<ZipCode> affected = HurricaneDirectory.getInstance().getAffectedZipCodes();
-
-        ArrayList<Shelter> active = shelterDirectory.getActiveShelters(affected);
-        System.out.println(active.size() + " active shelter(s) in affected zip codes");
-        for (Shelter shelter : active) {
-            System.out.println("- " + shelter.getName() + " (" + shelter.getZipCode()
-                    + ", " + shelter.getStatus()
-                    + ", " + shelter.getRemainingCapacity() + " spots left)");
-        }
-
-        ArrayList<Shelter> offline = shelterDirectory.getOfflineShelters();
-        System.out.println(offline.size() + " offline shelter(s)");
-        for (Shelter shelter : offline) {
-            System.out.println("- " + shelter.getName() + " (" + shelter.getZipCode() + ")");
-        }
     }
 
     public static void main(String[] args) {

@@ -47,8 +47,6 @@ public class AidRequest {
         updateStatus(RequestStatus.EXPIRED);
     }
 
-<<<<<<< HEAD
-=======
     /**
      * @return when this request was created
      */
@@ -69,7 +67,6 @@ public class AidRequest {
         this.assignments = assignments;
     }
 
->>>>>>> c49fd4184d7c9a31897a03ac7e72f130889e1a11
     public boolean isLocationReliable() {
         return true;
     }

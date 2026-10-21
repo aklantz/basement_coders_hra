@@ -3,6 +3,13 @@
   "configurations": [
     {
         "type": "java",
+        "name": "ReliefUI",
+        "request": "launch",
+        "mainClass": "com.hurricane/com.model.ReliefUI",
+        "projectName": "basement_coders_hra"
+    },
+    {
+        "type": "java",
         "name": "UI",
         "request": "launch",
         "mainClass": "com.hurricane/com.model.UI",
