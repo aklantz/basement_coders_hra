@@ -119,9 +119,9 @@ public class DataWriter extends DataConstants {
         userJSON.put(USER_SAFETY_STATUS, user.getSafetyStatus().name());
 
         JSONArray householdsJSON = new JSONArray();
-        for (HouseholdMember household : user.getHouseHoldMembers()) {
+        for (Household household : user.getHouseholds()) {
             JSONObject householdJSON = new JSONObject();
-            householdJSON.put("householdName", household.getHouseHoldName());
+            householdJSON.put("householdName", household.getHouseholdName());
             householdJSON.put("householdOwnerUUID", household.getHouseholdOwnerUUID().toString());
 
             JSONArray membersJSON = new JSONArray();
@@ -134,7 +134,7 @@ public class DataWriter extends DataConstants {
             householdJSON.put("members", membersJSON);
             householdsJSON.add(householdJSON);
         }
-        userJSON.put("houseHoldMembers", householdsJSON);
+        userJSON.put("households", householdsJSON);
         return userJSON;
     }
 

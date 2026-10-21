@@ -201,8 +201,8 @@ public class ReliefUI {
 
         System.out.println(reliefApp.getHouseholds().size() + " household(s)");
 
-        for (HouseholdMember household : reliefApp.getHouseholds()) {
-            System.out.println("\nHousehold: " + household.getHouseHoldName());
+        for (Household household : reliefApp.getHouseholds()) {
+            System.out.println("\nHousehold: " + household.getHouseholdName());
 
             for (String member : household.getMembers()) {
                 System.out.println("- " + member

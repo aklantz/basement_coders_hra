@@ -49,7 +49,14 @@ public class DataLoader extends DataConstants {
                 if (user != null) {
                     user.setAccountStatus(AccountStatus.valueOf((String) userJSON.get(USER_ACCOUNT_STATUS)));
                     user.setSafetyStatus(SafetyStatus.valueOf((String) userJSON.get(USER_SAFETY_STATUS)));
-                    loadHouseholds(user, (JSONArray) userJSON.get("houseHoldMembers"));
+                    JSONArray householdsJSON = (JSONArray) userJSON.get("households");
+                    if (householdsJSON == null) {
+                        // Accept user files saved before the Household refactor.
+                        householdsJSON = (JSONArray) userJSON.get("houseHoldMembers");
+                    }
+                    if (householdsJSON != null) {
+                        loadHouseholds(user, householdsJSON);
+                    }
                     users.add(user);
                 }
             }
@@ -69,7 +76,7 @@ public class DataLoader extends DataConstants {
     private static void loadHouseholds(User user, JSONArray householdsJSON) {
         for (Object householdObj : householdsJSON) {
             JSONObject householdJSON = (JSONObject) householdObj;
-            HouseholdMember household = new HouseholdMember(
+            Household household = new Household(
                     UUID.fromString((String) householdJSON.get("householdOwnerUUID")),
                     (String) householdJSON.get("householdName"));
 
@@ -79,7 +86,7 @@ public class DataLoader extends DataConstants {
                 household.addHouseholdMember(name);
                 household.checkIn(name, SafetyStatus.valueOf((String) memberJSON.get("safetyStatus")));
             }
-            user.getHouseHoldMembers().add(household);
+            user.getHouseholds().add(household);
         }
     }
 

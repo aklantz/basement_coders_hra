@@ -89,8 +89,8 @@ public class ReliefApplication {
 				&& userDirectory.save();
 	}
 
-	public ArrayList<HouseholdMember> getHouseholds() {
-		return isLoggedIn() ? currentUser.getHouseHoldMembers() : new ArrayList<HouseholdMember>();
+	public ArrayList<Household> getHouseholds() {
+		return isLoggedIn() ? currentUser.getHouseholds() : new ArrayList<Household>();
 	}
 
 	public void logAction(String action, String entityType, UUID entityId) {

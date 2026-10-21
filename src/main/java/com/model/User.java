@@ -20,7 +20,7 @@ public abstract class User {
     private String phoneNumber;
     private String emailAddress;
     private AccountStatus accountStatus;
-    private ArrayList<HouseholdMember> houseHoldMembers;
+    private ArrayList<Household> households;
     private SafetyStatus safetyStatus;
 
     public User(UUID userId, String username, String password, String fullName,
@@ -34,7 +34,7 @@ public abstract class User {
         this.homeAddress = homeAddress;
         this.emailAddress = emailAddress;
         this.phoneNumber = phoneNumber;
-        this.houseHoldMembers = new ArrayList<HouseholdMember>();
+        this.households = new ArrayList<Household>();
         this.accountStatus = AccountStatus.ACTIVE;
         this.safetyStatus = SafetyStatus.UNKNOWN;
     }
@@ -160,8 +160,8 @@ public abstract class User {
         this.accountStatus = accountStatus;
     }
 
-    public ArrayList<HouseholdMember> getHouseHoldMembers() {
-        return houseHoldMembers;
+    public ArrayList<Household> getHouseholds() {
+        return households;
     }
 
     public SafetyStatus getSafetyStatus() {
@@ -173,7 +173,7 @@ public abstract class User {
     }
 
     // Add these methods inside your existing User class
-// (needs: import java.util.ArrayList; uses getHouseHoldMembers() and the userId field)
+// (needs: import java.util.ArrayList; uses getHouseholds() and the userId field)
 
     /**
      * Creates a household owned by this user.
@@ -186,7 +186,7 @@ public abstract class User {
                 || getHousehold(householdName) != null) {
             return false;
         }
-        getHouseHoldMembers().add(new HouseholdMember(userId, householdName));
+        getHouseholds().add(new Household(userId, householdName));
         return true;
     }
 
@@ -196,12 +196,12 @@ public abstract class User {
      * @param householdName the name of the household
      * @return the household, or null if not found
      */
-    public HouseholdMember getHousehold(String householdName) {
+    public Household getHousehold(String householdName) {
         if (householdName == null) {
             return null;
         }
-        for (HouseholdMember household : getHouseHoldMembers()) {
-            if (householdName.equals(household.getHouseHoldName())) {
+        for (Household household : getHouseholds()) {
+            if (householdName.equals(household.getHouseholdName())) {
                 return household;
             }
         }
@@ -215,7 +215,7 @@ public abstract class User {
      *         or the person is already in the household
      */
     public boolean addHouseholdMember(String householdName, String memberName) {
-        HouseholdMember household = getHousehold(householdName);
+        Household household = getHousehold(householdName);
         if (household == null || memberName == null || memberName.trim().isEmpty()
                 || household.getMembers().contains(memberName)) {
             return false;
@@ -230,7 +230,7 @@ public abstract class User {
      */
     public boolean checkInHouseholdMember(String householdName, String memberName,
             SafetyStatus safetyStatus) {
-        HouseholdMember household = getHousehold(householdName);
+        Household household = getHousehold(householdName);
         if (household == null || safetyStatus == null
                 || !household.getMembers().contains(memberName)) {
             return false;
