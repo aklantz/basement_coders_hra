@@ -136,6 +136,7 @@ public class DataLoader extends DataConstants {
                         occupancy,
                         status,
                         lastUpdated);
+                shelter.setZipCode((String) shelterJSON.get(SHELTER_ZIP_CODE));
 
                 JSONArray inventoryJSON =
                         (JSONArray) shelterJSON.get("inventoryItems");
@@ -206,20 +207,21 @@ public class DataLoader extends DataConstants {
                 UUID requesterId = UUID.fromString((String) requestJSON.get(REQUEST_REQUESTER));
                 User requester = userDirectory.getUserById(requesterId);
                 RequestCategory category = RequestCategory.valueOf((String) requestJSON.get(REQUEST_CATEGORY));
-                UrgencyLevel urgency = UrgencyLevel.valueOf((String) requestJSON.get(REQUEST_URGENCY));
                 RequestStatus status = RequestStatus.valueOf((String) requestJSON.get(REQUEST_STATUS));
                 int householdSize = ((Number) requestJSON.get(REQUEST_HOUSEHOLD_SIZE)).intValue();
                 String streetAddress = (String) requestJSON.get(REQUEST_STREET_ADDRESS);
                 boolean isDuplicate = Boolean.TRUE.equals(requestJSON.get(REQUEST_IS_DUPLICATE));
 
-                AidRequest request = new AidRequest(requestId, requester, category, urgency,
+                AidRequest request = new AidRequest(requestId, requester, category,
                         householdSize, streetAddress);
                 request.updateStatus(status);
                 if (isDuplicate) {
                     request.markDuplicate();
                 }
-                request.setStatusHistory(loadStatusHistory(
-                        (JSONArray) requestJSON.get(REQUEST_STATUS_HISTORY)));
+                LocalDateTime createdAt = parseTime((String) requestJSON.get(REQUEST_CREATED_AT));
+                if (createdAt != null) {
+                    request.setCreatedAt(createdAt);
+                }
                 request.setAssignments(loadAssignments(request,
                         (JSONArray) requestJSON.get(REQUEST_ASSIGNMENTS), userDirectory));
 
@@ -230,23 +232,6 @@ public class DataLoader extends DataConstants {
         }
 
         return requests;
-    }
-
-    /**
-     * Loads a request's status history from JSON.
-     *
-     * @param historyJSON the saved history
-     * @return the status changes in saved order
-     */
-    private static ArrayList<StatusChange> loadStatusHistory(JSONArray historyJSON) {
-        ArrayList<StatusChange> history = new ArrayList<>();
-        for (Object changeObj : historyJSON) {
-            JSONObject changeJSON = (JSONObject) changeObj;
-            history.add(new StatusChange(
-                    RequestStatus.valueOf((String) changeJSON.get("status")),
-                    parseTime((String) changeJSON.get("changedAt"))));
-        }
-        return history;
     }
 
     /**

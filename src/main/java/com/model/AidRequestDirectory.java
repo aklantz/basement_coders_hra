@@ -1,9 +1,13 @@
 package com.model;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.UUID;
 
 public class AidRequestDirectory {
+
+    /** How long a submitted request can go unassigned before it expires. */
+    private static final int STALE_HOURS = 72;
 
     private static AidRequestDirectory aidRequestDirectory;
     private ArrayList<AidRequest> requests;
@@ -101,13 +105,17 @@ public class AidRequestDirectory {
     }
 
     /**
-     * Expires stale requests (placeholder logic)
+     * Expires submitted requests that are older than STALE_HOURS
+     *
+     * @return how many requests were expired
      */
     public int expireStaleRequest() {
         int count = 0;
+        LocalDateTime cutoff = LocalDateTime.now().minusHours(STALE_HOURS);
         for (AidRequest request : requests) {
             if (request.getStatus() == RequestStatus.SUBMITTED &&
-                request.isDuplicate()) {
+                request.getCreatedAt() != null &&
+                request.getCreatedAt().isBefore(cutoff)) {
                 request.expire();
                 count++;
             }

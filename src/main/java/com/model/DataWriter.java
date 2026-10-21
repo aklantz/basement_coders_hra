@@ -149,11 +149,11 @@ public class DataWriter extends DataConstants {
         requestJSON.put("requestId", request.getRequestId().toString());
         requestJSON.put("requester", request.getRequester().getUserId().toString());
         requestJSON.put("category", request.getCategory().name());
-        requestJSON.put("urgency", request.getUrgency().name());
         requestJSON.put("status", request.getStatus().name());
         requestJSON.put("householdSize", request.getHouseholdSize());
         requestJSON.put("streetAddress", request.getStreetAddress());
         requestJSON.put("isDuplicate", request.isDuplicate());
+        requestJSON.put(REQUEST_CREATED_AT, formatTime(request.getCreatedAt()));
 
         JSONArray assignmentsJSON = new JSONArray();
         for (TaskAssignment assignment : request.getAssignments()) {
@@ -170,16 +170,6 @@ public class DataWriter extends DataConstants {
             assignmentsJSON.add(assignmentJSON);
         }
         requestJSON.put("assignments", assignmentsJSON);
-
-        JSONArray historyJSON = new JSONArray();
-        for (StatusChange change : request.getStatusHistory()) {
-            JSONObject changeJSON = new JSONObject();
-            changeJSON.put("status", change.getStatus().name());
-            changeJSON.put("changedAt", change.getChangedAt()
-                    .atOffset(ZoneOffset.UTC).toString());
-            historyJSON.add(changeJSON);
-        }
-        requestJSON.put("statusHistory", historyJSON);
         return requestJSON;
     }
 
@@ -222,6 +212,10 @@ public class DataWriter extends DataConstants {
         shelterJSON.put(
                 SHELTER_STATUS,
                 shelter.getStatus().name());
+
+        shelterJSON.put(
+                SHELTER_ZIP_CODE,
+                shelter.getZipCode());
 
         shelterJSON.put(
                 SHELTER_LAST_UPDATED,

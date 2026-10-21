@@ -15,6 +15,7 @@ public class Shelter {
     private ShelterStatus status;
     private LocalDateTime lastUpdated;
     private ArrayList<InventoryItem> inventoryItems;
+    private String zipCode;
 
     /**
      * Creates a new shelter and sets status based on occupancy.
@@ -150,6 +151,20 @@ public class Shelter {
 
     public void setInventoryItems(ArrayList<InventoryItem> inventoryItems) {
         this.inventoryItems = inventoryItems;
+    }
+
+    /**
+     * @return the zip code the shelter is in
+     */
+    public String getZipCode() {
+        return zipCode;
+    }
+
+    /**
+     * @param zipCode the zip code the shelter is in, such as 29708
+     */
+    public void setZipCode(String zipCode) {
+        this.zipCode = zipCode;
     }
 
     @Override
