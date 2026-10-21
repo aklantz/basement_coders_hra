@@ -11,21 +11,18 @@ public class AidRequest {
     private UUID requestId;
     private User requester;
     private RequestCategory category;
-    private UrgencyLevel urgency;
     private RequestStatus status;
     private int householdSize;
     private String streetAddress;
     private boolean isDuplicate;
 
     private ArrayList<TaskAssignment> assignments = new ArrayList<>();
-    private ArrayList<StatusChange> statusHistory = new ArrayList<>();
 
-    public AidRequest(UUID requestId, User requester, RequestCategory category, UrgencyLevel urgency,
+    public AidRequest(UUID requestId, User requester, RequestCategory category,
                       int householdSize, String streetAddress) {
         this.requestId = requestId;
         this.requester = requester;
         this.category = category;
-        this.urgency = urgency;
         this.householdSize = householdSize;
         this.streetAddress = streetAddress;
         this.status = RequestStatus.SUBMITTED;
@@ -42,10 +39,6 @@ public class AidRequest {
 
     public void setAssignments(ArrayList<TaskAssignment> assignments) {
         this.assignments = assignments;
-    }
-
-    public void setStatusHistory(ArrayList<StatusChange> statusHistory) {
-        this.statusHistory = statusHistory;
     }
 
     public boolean isLocationReliable() {
@@ -68,10 +61,6 @@ public class AidRequest {
         return status;
     }
 
-    public UrgencyLevel getUrgency() {
-        return urgency;
-    }
-
     public int getHouseholdSize() {
         return householdSize;
     }
@@ -86,9 +75,5 @@ public class AidRequest {
 
     public ArrayList<TaskAssignment> getAssignments() {
         return assignments;
-    }
-
-    public ArrayList<StatusChange> getStatusHistory() {
-        return statusHistory;
     }
 }
