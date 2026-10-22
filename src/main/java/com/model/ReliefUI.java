@@ -6,6 +6,7 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.time.LocalDate;
 
 /**
  * Text-based UI that runs demo scenarios against the relief application.
@@ -20,6 +21,20 @@ public class ReliefUI {
     private static final String ROSA_PASSWORD = "password";
     /** The username of the Carter family's account (adjust to match). */
     private static final String CARTER_USERNAME = "carter";
+    /** The password of the Carter family' account */
+    private static final String CARTER_PASSWORD = "password";
+    /** The first name of the father in the Carter family */
+    private static final String CARTER_FIRSTNAME = "John";
+    /** The last name of the father in the Carter family */
+    private static final String CARTER_LASTNAME = "Carter";
+    /** The DOB of the father in the Carter family */
+    private static final LocalDate CARTER_DOB = LocalDate.of(1970, 3, 1);
+    /** The home address of the Carter family */
+    private static final String CARTER_HOMEADDRESS = "300 Main Street, Columbia, SC, 29201";
+    /** The email address of the father in the Carter family */
+    private static final String CARTER_EMAIL = "carterj@email.sc.edu";
+    /** The phone number of the father in the Carter family */
+    private static final String CARTER_PHONE = "803-888-9999";
     /** Where the exported trip information is saved. */
     private static final String TRIP_FILE = "carter_trip_information.txt";
 
@@ -395,9 +410,24 @@ public class ReliefUI {
     }
 
     /**
-     * Scenario 10: Rosa exports the Carter family's trip information to a printable .txt file.
+     * Scenario 10: Carter makes an account and submits an aid request
      */
+
     public void scenario10() {
+        System.out.println();
+
+        User Carter = reliefApp.createAccount(CARTER_USERNAME, CARTER_PASSWORD, CARTER_FIRSTNAME, CARTER_LASTNAME, CARTER_DOB, CARTER_HOMEADDRESS, CARTER_EMAIL, CARTER_PHONE, USERTYPE.RESIDENT);
+        reliefApp.login(CARTER_USERNAME, CARTER_PASSWORD);
+        /** Austin changing now
+        reliefApp.createAidRequest();
+        */
+       
+    }
+
+    /**
+     * Scenario 11: Rosa exports the Carter family's trip information to a printable .txt file.
+     */
+    public void scenario11() {
         System.out.println();
 
         User rosa = reliefApp.login(ROSA_USERNAME, ROSA_PASSWORD);
@@ -460,9 +490,9 @@ public class ReliefUI {
     }
 
     /**
-     * Scenario 11: Rosa (volunteer) tries to mark the request complete and is refused.
+     * Scenario 12: Rosa (volunteer) tries to mark the request complete and is refused.
      */
-    public void scenario11() {
+    public void scenario12() {
         System.out.println();
 
         User rosa = reliefApp.login(ROSA_USERNAME, ROSA_PASSWORD);
