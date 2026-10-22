@@ -1,15 +1,40 @@
 package com.model;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
+/**
+ * Text-based UI that runs demo scenarios against the relief application.
+ * Talks to the system through the facade, except where a scenario loads data directly.
+ *
+ * @author Austin Lantz
+ */
 public class ReliefUI {
+    /** Rosa's username in the users file (adjust to match). */
+    private static final String ROSA_USERNAME = "rosa";
+    /** Rosa's password in the users file (adjust to match). */
+    private static final String ROSA_PASSWORD = "password";
+    /** The username of the Carter family's account (adjust to match). */
+    private static final String CARTER_USERNAME = "carter";
+    /** Where the exported trip information is saved. */
+    private static final String TRIP_FILE = "carter_trip_information.txt";
+
     private ReliefApplication reliefApp;
 
+    /**
+     * Creates the UI and gets the facade it will use.
+     */
     ReliefUI() {
         reliefApp = ReliefApplication.getInstance();
     }
 
+    /**
+     * Runs every scenario in order, then saves the users, aid requests and shelters.
+     */
     public void run() {
         scenario1();
         scenario2();
@@ -20,6 +45,8 @@ public class ReliefUI {
         scenario7();
         scenario8();
         scenario9();
+        scenario10();
+        scenario11();
 
         DataWriter.saveUsers(UserDirectory.getInstance().getUsers());
         DataWriter.saveAidRequests(AidRequestDirectory.getInstance().getRequests());
@@ -165,9 +192,8 @@ public class ReliefUI {
     }
 
     /**
-     * Scenario 6: Household management
+     * Scenario 6: Household management.
      */
-
     public void scenario6() {
         System.out.println();
 
@@ -221,7 +247,6 @@ public class ReliefUI {
     /**
      * Scenario 7: Volunteer task.
      */
-
     public void scenario7() {
         System.out.println();
 
@@ -284,9 +309,8 @@ public class ReliefUI {
     }
 
     /**
-     * Scenario 8: Shelter lookup
+     * Scenario 8: Shelter lookup.
      */
-    
     public void scenario8() {
         System.out.println();
 
@@ -366,6 +390,248 @@ public class ReliefUI {
         }
     }
 
+    /**
+     * Scenario 10: Rosa exports the Carter family's trip information to a printable .txt file.
+     */
+    public void scenario10() {
+        System.out.println();
+
+        User rosa = reliefApp.login(ROSA_USERNAME, ROSA_PASSWORD);
+
+        if (rosa == null) {
+            System.out.println("Login failed.");
+            return;
+        }
+
+        try {
+            AidRequest request = findAssignedRequestFrom(CARTER_USERNAME);
+
+            if (request == null) {
+                System.out.println("No assigned request from the Carter family.");
+                return;
+            }
+
+            Shelter shelter = reliefApp.findNearestShelter(request);
+
+            if (shelter == null) {
+                System.out.println("No available shelters found.");
+                return;
+            }
+
+            if (!reliefApp.exportTripInformation(request, shelter, TRIP_FILE)) {
+                System.out.println("Export failed.");
+                return;
+            }
+
+            System.out.println("Trip information exported to " + TRIP_FILE);
+            System.out.println("----------------------------------------");
+
+            List<String> lines = Files.readAllLines(Paths.get(TRIP_FILE));
+
+            for (String line : lines) {
+                System.out.println(line);
+            }
+
+            System.out.println("----------------------------------------");
+
+            ArrayList<String> missing =
+                    findMissingFromExport(rosa, request, shelter, lines);
+
+            if (missing.isEmpty()) {
+                System.out.println("Export includes everything required.");
+            } else {
+                System.out.println("Export is missing:");
+
+                for (String item : missing) {
+                    System.out.println("- " + item);
+                }
+            }
+        } catch (IOException e) {
+            System.out.println("Couldn't read the exported file.");
+        } catch (IllegalStateException e) {
+            System.out.println("Map error: " + e.getMessage());
+        } finally {
+            reliefApp.logout();
+        }
+    }
+
+    /**
+     * Scenario 11: Rosa (volunteer) tries to mark the request complete and is refused.
+     */
+    public void scenario11() {
+        System.out.println();
+
+        User rosa = reliefApp.login(ROSA_USERNAME, ROSA_PASSWORD);
+
+        if (rosa == null) {
+            System.out.println("Login failed.");
+            return;
+        }
+
+        try {
+            AidRequest request = findAssignedRequestFrom(CARTER_USERNAME);
+
+            if (request == null) {
+                System.out.println("No assigned request from the Carter family.");
+                return;
+            }
+
+            RequestStatus before = request.getStatus();
+
+            try {
+                reliefApp.completeRequest(request.getRequestId());
+                System.out.println("Rosa was able to complete the request.");
+                return;
+            } catch (SecurityException e) {
+                System.out.println("Blocked: " + e.getMessage());
+
+                if (e.getMessage() == null
+                        || !e.getMessage().toLowerCase().contains("volunteer")) {
+                    System.out.println("The message doesn't explain the volunteer role.");
+                }
+            }
+
+            boolean stillAssigned = false;
+
+            for (TaskAssignment task : request.getAssignments()) {
+                if (task.getVolunteer() != null
+                        && task.getVolunteer().getUserId().equals(rosa.getUserId())) {
+                    stillAssigned = true;
+                }
+            }
+
+            if (request.getStatus() != before || !stillAssigned) {
+                System.out.println("The request changed even though completion was blocked.");
+                return;
+            }
+
+            System.out.println("Request status is still " + request.getStatus()
+                    + " and remains assigned to " + rosa.getUsername());
+        } finally {
+            reliefApp.logout();
+        }
+    }
+
+    /**
+     * Finds a request from the given requester that is assigned to the logged-in volunteer.
+     *
+     * @param requesterUsername the username of the person who made the request
+     * @return the request, or null if there isn't one
+     */
+    private AidRequest findAssignedRequestFrom(String requesterUsername) {
+        for (AidRequest request : reliefApp.getAssignedRequests()) {
+            if (request.getRequester() != null
+                    && requesterUsername.equals(request.getRequester().getUsername())) {
+                return request;
+            }
+        }
+        return null;
+    }
+
+    /**
+     * Checks the exported lines for everything the trip sheet is required to contain.
+     *
+     * @param rosa the volunteer making the trip
+     * @param request the request being handled
+     * @param shelter the shelter the family is going to
+     * @param lines the lines of the exported file
+     * @return a description of each missing item (empty if nothing is missing)
+     */
+    private ArrayList<String> findMissingFromExport(User rosa, AidRequest request,
+            Shelter shelter, List<String> lines) {
+        ArrayList<String> missing = new ArrayList<String>();
+        User requester = request.getRequester();
+
+        // family members (name and age), the dog (name and type), and any medical note
+        for (Household household : requester.getHouseHoldMembers()) {
+            for (HouseholdMember member : household.getMembers()) {
+                String detail = (member.getPetType() == null)
+                        ? String.valueOf(member.getAge())
+                        : member.getPetType();
+
+                if (!hasLine(lines, member.getName(), detail)) {
+                    missing.add(member.getName() + " (" + detail + ")");
+                }
+
+                if (member.getMedicalNote() != null
+                        && !hasText(lines, member.getMedicalNote())) {
+                    missing.add("medical note for " + member.getName());
+                }
+            }
+        }
+
+        // contact information, pickup address, and shelter name and address
+        String[] labels = {"phone number", "email address", "pickup address",
+                "shelter name", "shelter address"};
+        String[] required = {requester.getPhoneNumber(), requester.getEmailAddress(),
+                request.getStreetAddress(), shelter.getName(), shelter.getAddress()};
+
+        for (int i = 0; i < required.length; i++) {
+            if (!hasText(lines, required[i])) {
+                missing.add(labels[i]);
+            }
+        }
+
+        // directions: Rosa to the Carter home, then the Carter home to the shelter
+        for (String step : reliefApp.getDirections(rosa.getHomeAddress(),
+                request.getStreetAddress())) {
+            if (!hasText(lines, step)) {
+                missing.add("direction to the Carter home: " + step);
+            }
+        }
+
+        for (String step : reliefApp.getDirections(request.getStreetAddress(),
+                shelter.getAddress())) {
+            if (!hasText(lines, step)) {
+                missing.add("direction to the shelter: " + step);
+            }
+        }
+
+        return missing;
+    }
+
+    /**
+     * Checks whether any line contains some text.
+     *
+     * @param lines the lines to search
+     * @param text the text to look for
+     * @return true if any line contains the text (ignoring case)
+     */
+    private boolean hasText(List<String> lines, String text) {
+        if (text == null) {
+            return false;
+        }
+        for (String line : lines) {
+            if (line.toLowerCase().contains(text.toLowerCase())) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Checks whether a single line contains two pieces of text.
+     *
+     * @param lines the lines to search
+     * @param first the first text to look for
+     * @param second the second text to look for
+     * @return true if one line contains both (ignoring case)
+     */
+    private boolean hasLine(List<String> lines, String first, String second) {
+        for (String line : lines) {
+            String lower = line.toLowerCase();
+            if (lower.contains(first.toLowerCase()) && lower.contains(second.toLowerCase())) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Starts the UI and runs all the scenarios.
+     *
+     * @param args not used
+     */
     public static void main(String[] args) {
         ReliefUI reliefInterface = new ReliefUI();
         reliefInterface.run();
