@@ -33,6 +33,35 @@ public class AidRequestDirectory {
     }
 
     /**
+     * Creates and saves an aid request.
+     *
+     * @param requester the user requesting aid
+     * @param category the kind of aid needed
+     * @param householdSize how many people need aid
+     * @param streetAddress where the aid is needed
+     * @return the new request, or null if input is invalid or saving fails
+     */
+    public AidRequest createAidRequest(User requester, RequestCategory category,
+                                    int householdSize, String streetAddress) {
+        if (requester == null || category == null || householdSize <= 0
+                || streetAddress == null || streetAddress.trim().isEmpty()) {
+            return null;
+        }
+        AidRequest request = new AidRequest(
+                UUID.randomUUID(), requester, category,
+                householdSize, streetAddress.trim());
+
+        if (!addRequest(request)) {
+            return null;
+        }
+        if (!save()) {
+            requests.remove(request);
+            return null;
+        }
+        return request;
+    }
+
+    /**
      * Returns ALL aid requests,required for DataWriter
      */
     public ArrayList<AidRequest> getRequests() {

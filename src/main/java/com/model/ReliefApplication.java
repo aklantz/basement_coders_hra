@@ -186,6 +186,20 @@ public class ReliefApplication {
 		return isLoggedIn() && tripExporter.export(currentUser, request, shelter, filePath);
 	}
 
+    /**
+     * Creates an aid request for the logged-in user.
+     *
+     * @param category the kind of aid needed
+     * @param householdSize how many people need aid
+     * @param streetAddress where the aid is needed
+     * @return the new request, or null if creation fails
+     */
+    public AidRequest createAidRequest(RequestCategory category, int householdSize,
+                                    String streetAddress) {
+        return aidRequestDirectory.createAidRequest(
+                currentUser, category, householdSize, streetAddress);
+    }
+
 	/**
 	 * Marks a request complete if the logged-in user's role allows it.
 	 *
