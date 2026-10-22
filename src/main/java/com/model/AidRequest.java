@@ -19,6 +19,7 @@ public class AidRequest {
     private String streetAddress;
     private boolean isDuplicate;
     private LocalDateTime createdAt;
+    private String note;
 
     private ArrayList<TaskAssignment> assignments = new ArrayList<>();
 
@@ -42,7 +43,21 @@ public class AidRequest {
         this.status = RequestStatus.SUBMITTED;
         this.isDuplicate = false;
         this.createdAt = LocalDateTime.now();
+        this.note = "";
     }
+
+    public AidRequest(UUID requestId, User requester, RequestCategory category,
+                      int householdSize, String streetAddress, String note) {
+        this.requestId = requestId;
+        this.requester = requester;
+        this.category = category;
+        this.householdSize = householdSize;
+        this.streetAddress = streetAddress;
+        this.status = RequestStatus.SUBMITTED;
+        this.isDuplicate = false;
+        this.createdAt = LocalDateTime.now();
+        this.note = note;
+                      }
 
     /**
      * Changes the request's status. This does not check who is asking, so a role
@@ -175,6 +190,14 @@ public class AidRequest {
      */
     public String getStreetAddress() {
         return streetAddress;
+    }
+
+    /**
+     * Gets the note created by the requester
+     * @return the note
+     */
+    public String getNote() {
+        return note;
     }
 
     /**
