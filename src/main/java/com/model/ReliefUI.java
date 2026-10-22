@@ -29,8 +29,8 @@ public class ReliefUI {
     private static final String CARTER_LASTNAME = "Carter";
     /** The DOB of the father in the Carter family */
     private static final LocalDate CARTER_DOB = LocalDate.of(1970, 3, 1);
-    /** The home address of the Carter family */
-    private static final String CARTER_HOMEADDRESS = "300 Main Street, Columbia, SC, 29201";
+    /** The home address of the Carter family (Charleston Museum address) */
+    private static final String CARTER_HOMEADDRESS = "360 Meeting Street Charleston, SC 29403";
     /** The email address of the father in the Carter family */
     private static final String CARTER_EMAIL = "carterj@email.sc.edu";
     /** The phone number of the father in the Carter family */
@@ -418,9 +418,9 @@ public class ReliefUI {
 
         User Carter = reliefApp.createAccount(CARTER_USERNAME, CARTER_PASSWORD, CARTER_FIRSTNAME, CARTER_LASTNAME, CARTER_DOB, CARTER_HOMEADDRESS, CARTER_EMAIL, CARTER_PHONE, USERTYPE.RESIDENT);
         reliefApp.login(CARTER_USERNAME, CARTER_PASSWORD);
-        /** Austin changing now
-        reliefApp.createAidRequest();
-        */
+        
+        reliefApp.createAidRequest(RequestCategory.MEDICAL, 3, CARTER_HOMEADDRESS, "We have a dog with us too.");
+
        
     }
 
