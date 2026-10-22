@@ -201,6 +201,21 @@ public class ReliefApplication {
     }
 
 	/**
+     * Creates an aid request for the logged-in user.
+     *
+     * @param category the kind of aid needed
+     * @param householdSize how many people need aid
+     * @param streetAddress where the aid is needed
+	 * @param note a note to leave in the aid request
+     * @return the new request, or null if creation fails
+     */
+	public AidRequest createAidRequest(RequestCategory category, int householdSize,
+                                    String streetAddress, String note) {
+        return aidRequestDirectory.createAidRequest(
+                currentUser, category, householdSize, streetAddress, note);
+    }
+
+	/**
 	 * Marks a request complete if the logged-in user's role allows it.
 	 *
 	 * @param requestId the id of the request
