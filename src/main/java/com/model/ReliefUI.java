@@ -245,7 +245,7 @@ public class ReliefUI {
     }
 
     /**
-     * Scenario 7: Volunteer task.
+     * Scenario 7: Volunteer task. Finishing the task leaves the request in progress.
      */
     public void scenario7() {
         System.out.println();
@@ -271,6 +271,8 @@ public class ReliefUI {
                 request,
                 (Volunteer) user,
                 null);
+
+        request.addAssignment(task);
 
         System.out.println("New task: " + task.getStatus()
                 + " | request: " + request.getStatus());
@@ -298,14 +300,16 @@ public class ReliefUI {
 
         task.confirmCompletion();
 
+        // The volunteer finishing the task does not complete the request
         if (task.getStatus() != TaskStatus.COMPLETED
-                || request.getStatus() != RequestStatus.FULFILLED) {
+                || request.getStatus() != RequestStatus.IN_PROGRESS) {
             System.out.println("Task completion failed.");
             return;
         }
 
         System.out.println("Completed: " + task.getStatus()
-                + " | request: " + request.getStatus());
+                + " | request: " + request.getStatus()
+                + " (a coordinator or admin completes the request)");
     }
 
     /**
