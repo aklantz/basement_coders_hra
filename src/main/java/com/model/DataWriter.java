@@ -8,7 +8,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
-import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.ArrayList;
@@ -110,7 +109,7 @@ public class DataWriter extends DataConstants {
         userJSON.put(USER_USERNAME, user.getUsername());
         userJSON.put(USER_PASSWORD, user.getPassword());
         userJSON.put(USER_FULL_NAME, user.getFullName());
-        userJSON.put(USER_DOB, new SimpleDateFormat("yyyy-MM-dd").format(user.getDateOfBirth()));
+        userJSON.put(USER_DOB, user.getDateOfBirth().toString());
         userJSON.put(USER_ADDRESS, user.getHomeAddress());
         userJSON.put(USER_EMAIL, user.getEmailAddress());
         userJSON.put(USER_PHONE, user.getPhoneNumber());

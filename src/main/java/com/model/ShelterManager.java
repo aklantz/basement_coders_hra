@@ -1,6 +1,6 @@
 package com.model;
 
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.UUID;
 
 /**
@@ -15,7 +15,7 @@ public class ShelterManager extends User {
      * @param shelterId the id of the shelter this manager runs
      */
     public ShelterManager(UUID userId, String username, String passwordHash,
-            String fullName, Date dateOfBirth, String homeAddress,
+            String fullName, LocalDate dateOfBirth, String homeAddress,
             String emailAddress, String phoneNumber, String login,
             String shelterId) {
         super(userId, username, passwordHash, fullName, dateOfBirth,

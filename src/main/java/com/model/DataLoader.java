@@ -1,11 +1,10 @@
 package com.model;
 
 import java.io.FileReader;
-import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.UUID;
 
 import org.json.simple.JSONArray;
@@ -24,7 +23,6 @@ public class DataLoader extends DataConstants {
      */
     public static ArrayList<User> getUsers() {
         ArrayList<User> users = new ArrayList<User>();
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
         try (FileReader reader = new FileReader(USER_FILE)) {
             JSONParser parser = new JSONParser();
@@ -37,7 +35,7 @@ public class DataLoader extends DataConstants {
                 String username = (String) userJSON.get(USER_USERNAME);
                 String password = (String) userJSON.get(USER_PASSWORD);
                 String fullName = (String) userJSON.get(USER_FULL_NAME);
-                Date dateOfBirth = dateFormat.parse((String) userJSON.get(USER_DOB));
+                LocalDate dateOfBirth = LocalDate.parse((String) userJSON.get(USER_DOB));
                 String address = (String) userJSON.get(USER_ADDRESS);
                 String email = (String) userJSON.get(USER_EMAIL);
                 String phone = (String) userJSON.get(USER_PHONE);
@@ -96,7 +94,7 @@ public class DataLoader extends DataConstants {
      * @return the new user, or null if the type is not recognized
      */
     private static User createUser(USERTYPE type, UUID id, String username, String password,
-                                   String fullName, Date dateOfBirth, String address,
+                                   String fullName, LocalDate dateOfBirth, String address,
                                    String email, String phone) {
         switch (type) {
             case VOLUNTEER:

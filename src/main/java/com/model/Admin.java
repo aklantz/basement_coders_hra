@@ -1,6 +1,6 @@
 package com.model;
 
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.UUID;
 
 public class Admin extends User {
@@ -9,7 +9,7 @@ public class Admin extends User {
                  String username,
                  String password,
                  String fullName,
-                 Date dateOfBirth,
+                 LocalDate dateOfBirth,
                  String homeAddress,
                  String emailAddress,
                  String phoneNumber,

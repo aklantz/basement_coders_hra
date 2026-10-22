@@ -1,7 +1,7 @@
 package com.model;
 
 import java.util.ArrayList;
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.UUID;
 
 /**
@@ -73,7 +73,7 @@ public class UserDirectory {
     /**
      * Creates a new user, adds it to the directory and saves
      */
-    public User createUser(String username, String password, String fullName, Date dateOfBirth,
+    public User createUser(String username, String password, String fullName, LocalDate dateOfBirth,
                            String homeAddress, String emailAddress, String phoneNumber,
                            USERTYPE userType) {
         if (isBlank(username) || isBlank(password) || isBlank(fullName) || userType == null) {

@@ -1,7 +1,7 @@
 package com.model;
 
 import java.util.ArrayList;
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.UUID;
 
 import com.location.Address;
@@ -15,7 +15,7 @@ public abstract class User {
     private String username;
     private String password;
     private String fullName;
-    private Date dateOfBirth;
+    private LocalDate dateOfBirth;
     private String homeAddress;
     private String phoneNumber;
     private String emailAddress;
@@ -24,7 +24,7 @@ public abstract class User {
     private SafetyStatus safetyStatus;
 
     public User(UUID userId, String username, String password, String fullName,
-                Date dateOfBirth, String homeAddress, String emailAddress,
+                LocalDate dateOfBirth, String homeAddress, String emailAddress,
                 String phoneNumber, String login) {
         this.userId = userId;
         this.username = username;
@@ -84,7 +84,7 @@ public abstract class User {
     /**
      * @return the user's date of birth
      */
-    public Date getDateOfBirth() {
+    public LocalDate getDateOfBirth() {
         return dateOfBirth;
     }
 

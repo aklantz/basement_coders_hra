@@ -1,7 +1,7 @@
 package com.model;
 
 import java.util.ArrayList;
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.UUID;
 
 /**
@@ -58,7 +58,7 @@ public class ReliefApplication {
 	 * @return the new user, or null if the account could not be created
 	 */
 	public User createAccount(String username, String password, String firstName, String lastName,
-			Date dateOfBirth, String homeAddress, String emailAddress, String phoneNumber,
+			LocalDate dateOfBirth, String homeAddress, String emailAddress, String phoneNumber,
 			USERTYPE userType) {
 		return userDirectory.createUser(username, password, firstName + " " + lastName,
 				dateOfBirth, homeAddress, emailAddress, phoneNumber, userType);
