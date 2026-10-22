@@ -114,6 +114,113 @@ public class ShelterDirectory {
     }
 
     /**
+     * Finds the available shelter with the shortest driving time.
+     *
+     * @param streetAddress the starting address, formatted as street, city, state zip
+     * @return the nearest available shelter, or null if the address is invalid
+     *         or no shelter is available
+     * @throws IOException if a map lookup fails
+     * @throws InterruptedException if a map request is interrupted
+     */
+    public Shelter findNearestShelter(String streetAddress)
+            throws IOException, InterruptedException {
+        Address address = parseAddress(streetAddress);
+        if (address == null) {
+            return null;
+        }
+        MapTools mapTools = MapTools.getInstance();
+        Coordinates start = mapTools.getCoordinates(address);
+        Shelter nearest = null;
+        double shortestTime = Double.MAX_VALUE;
+        for (Shelter shelter : shelters) {
+            if (shelter.getStatus() != ShelterStatus.OPEN
+                    || shelter.getRemainingCapacity() == 0
+                    || !shelter.hasAddress()) {
+                continue;
+            }
+            double drivingTime = mapTools.getDrivingTime(
+                    start, shelter.getCoordinates());
+            if (drivingTime < shortestTime) {
+                shortestTime = drivingTime;
+                nearest = shelter;
+            }
+        }
+        return nearest;
+    }
+
+    /**
+     * Finds the nearest available shelter for an aid request.
+     *
+     * @param request the request needing a shelter
+     * @return the nearest shelter, or null if the request is null
+     *         or no available shelter is found
+     * @throws IOException if a map lookup fails
+     * @throws InterruptedException if a map request is interrupted
+     */
+    public Shelter findNearestShelter(AidRequest request)
+            throws IOException, InterruptedException {
+        if (request == null) {
+            return null;
+        }
+
+        return findNearestShelter(request.getStreetAddress());
+    }
+
+/**
+ * Gets driving directions between two addresses.
+ *
+ * @param fromAddress the starting address
+ * @param toAddress the destination address
+ * @return one direction per entry, or an empty list if either address is invalid
+ * @throws IOException if a map lookup fails
+ * @throws InterruptedException if a map request is interrupted
+ */
+public ArrayList<String> getDirections(String fromAddress, String toAddress)
+        throws IOException, InterruptedException {
+    Address start = parseAddress(fromAddress);
+    Address end = parseAddress(toAddress);
+    ArrayList<String> directions = new ArrayList<>();
+
+    if (start == null || end == null) {
+        return directions;
+    }
+
+    String[] steps = MapTools.getInstance().getDrivingDirections(start, end);
+    for (String step : steps) {
+        directions.add(step);
+    }
+
+    return directions;
+}
+
+    /**
+     * Converts an address string into an Address.
+     *
+     * @param address the address, such as "142 Riverbend Dr, Tega Cay, SC 29708"
+     * @return the address, or null if its format is invalid
+     */
+    private Address parseAddress(String address) {
+        if (address == null || address.trim().isEmpty()) {
+            return null;
+        }
+
+        String[] parts = address.split(",", -1);
+        if (parts.length != 3) {
+            return null;
+        }
+
+        String street = parts[0].trim();
+        String city = parts[1].trim();
+        String[] stateAndZip = parts[2].trim().split("\\s+");
+
+        if (street.isEmpty() || city.isEmpty() || stateAndZip.length != 2) {
+            return null;
+        }
+
+        return new Address(street, city, stateAndZip[0], stateAndZip[1]);
+    }
+
+    /**
      * Gets turn-by-turn driving directions from the user's home to a shelter.
      *
      * @param user the user who is driving
