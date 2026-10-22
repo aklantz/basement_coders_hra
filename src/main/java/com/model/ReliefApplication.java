@@ -1,5 +1,6 @@
 package com.model;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.time.LocalDate;
 import java.util.UUID;
@@ -153,26 +154,35 @@ public class ReliefApplication {
 				: new ArrayList<AidRequest>();
 	}
 
-	/**
-	 * Finds the shelter closest to a request's address.
-	 *
-	 * @param request the request to find a shelter for
-	 * @return the nearest available shelter, or null if there is none
-	 */
-	public Shelter findNearestShelter(AidRequest request) {
-		return shelterDirectory.findNearestShelter(request.getStreetAddress());
-	}
 
-	/**
-	 * Gets step-by-step directions between two addresses.
-	 *
-	 * @param fromAddress where the trip starts
-	 * @param toAddress where the trip ends
-	 * @return the directions, one step per entry
-	 */
-	public ArrayList<String> getDirections(String fromAddress, String toAddress) {
-		return shelterDirectory.getDirections(fromAddress, toAddress);
-	}
+
+    /**
+     * Finds the nearest available shelter for an aid request.
+     *
+     * @param request the request to find a shelter for
+     * @return the nearest available shelter, or null if the request is null
+     *         or no shelter is found
+     * @throws IOException if a map lookup fails
+     * @throws InterruptedException if a map request is interrupted
+     */
+    public Shelter findNearestShelter(AidRequest request)
+            throws IOException, InterruptedException {
+        return shelterDirectory.findNearestShelter(request);
+    }
+
+    /**
+     * Gets driving directions between two addresses.
+     *
+     * @param fromAddress where the trip starts
+     * @param toAddress where the trip ends
+     * @return one direction per entry, or an empty list if either address is invalid
+     * @throws IOException if a map lookup fails
+     * @throws InterruptedException if a map request is interrupted
+     */
+    public ArrayList<String> getDirections(String fromAddress, String toAddress)
+            throws IOException, InterruptedException {
+        return shelterDirectory.getDirections(fromAddress, toAddress);
+    }
 
 	/**
 	 * Writes a printable .txt file with the trip information for a request.
@@ -265,13 +275,14 @@ public class ReliefApplication {
 	}
 
 	/**
-	 * Gets the logged-in user's households.
-	 *
-	 * @return the households, or an empty list if nobody is logged in
-	 */
-	public ArrayList<Household> getHouseholds() {
-		return isLoggedIn() ? currentUser.getHouseHoldMembers() : new ArrayList<Household>();
-	}
+     * Gets the logged-in user's households.
+     *
+     * @return the households, or an empty list if nobody is logged in
+     */
+    public ArrayList<Household> getHouseholds() {
+        return isLoggedIn() ? currentUser.getHouseholds()
+            : new ArrayList<Household>();
+    }
 
 	/**
 	 * Records who did what to which item.

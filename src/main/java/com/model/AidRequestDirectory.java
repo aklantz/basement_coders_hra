@@ -144,6 +144,62 @@ public class AidRequestDirectory {
     }
 
     /**
+     * Completes and saves an aid request.
+     *
+     * @param user the user completing the request
+     * @param requestId the id of the request
+     * @return true if the request was completed and saved
+     * @throws SecurityException if the user's role cannot complete requests
+     */
+    public boolean completeRequest(User user, UUID requestId) {
+        if (user == null) {
+            return false;
+        }
+        if (user.getType() != USERTYPE.VOLUNTEER
+                && user.getType() != USERTYPE.SHELTER_MANAGER) {
+            throw new SecurityException(
+                    "Only volunteers and shelter managers can complete requests.");
+        }
+        AidRequest request = getRequestById(requestId);
+        if (request == null || request.getStatus() == RequestStatus.FULFILLED
+                || request.getStatus() == RequestStatus.EXPIRED) {
+            return false;
+        }
+        RequestStatus previousStatus = request.getStatus();
+        request.complete();
+        if (!save()) {
+            request.updateStatus(previousStatus);
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * Gets the aid requests assigned to a volunteer.
+     *
+     * @param user the volunteer whose requests to find
+     * @return the assigned requests, or an empty list if none are found
+     */
+    public ArrayList<AidRequest> getRequestsAssignedTo(User user) {
+        ArrayList<AidRequest> assignedRequests = new ArrayList<>();
+        if (!(user instanceof Volunteer)) {
+            return assignedRequests;
+        }
+        for (AidRequest request : requests) {
+            for (TaskAssignment assignment : request.getAssignments()) {
+                Volunteer volunteer = assignment.getVolunteer();
+                if (volunteer != null
+                        && volunteer.getUserId().equals(user.getUserId())) {
+                    assignedRequests.add(request);
+                    break;
+                }
+            }
+        }
+        return assignedRequests;
+    }
+
+    /**
      * Checks if a request is a duplicate
      */
     public AidRequest findDuplicate(AidRequest request) {
