@@ -125,6 +125,14 @@ public class DataWriter extends DataConstants {
             }
         }
 
+        // saving a volunteer's specialty
+        if (user instanceof Volunteer) {
+            Volunteer volunteer = (Volunteer) user;
+            if (volunteer.getSpecialty() != null) {
+                userJSON.put(USER_SPECIALTY, volunteer.getSpecialty().name());
+            }
+        }
+
         JSONArray householdsJSON = new JSONArray();
         for (Household household : user.getHouseholds()) {
             JSONObject householdJSON = new JSONObject();
@@ -136,6 +144,9 @@ public class DataWriter extends DataConstants {
                 JSONObject memberJSON = new JSONObject();
                 memberJSON.put("name", member.getName());
                 memberJSON.put("safetyStatus", member.getSafetyStatus().name());
+                memberJSON.put(MEMBER_AGE, member.getAge());
+                memberJSON.put(MEMBER_PET_TYPE, member.getPetType());
+                memberJSON.put(MEMBER_MEDICAL_NOTE, member.getMedicalNote());
                 membersJSON.add(memberJSON);
             }
             householdJSON.put("members", membersJSON);
@@ -161,6 +172,10 @@ public class DataWriter extends DataConstants {
         requestJSON.put("streetAddress", request.getStreetAddress());
         requestJSON.put("isDuplicate", request.isDuplicate());
         requestJSON.put(REQUEST_CREATED_AT, formatTime(request.getCreatedAt()));
+        requestJSON.put(REQUEST_NOTE, request.getNote());
+        if (request.getShelterId() != null) {
+            requestJSON.put(REQUEST_SHELTER_ID, request.getShelterId().toString());
+        }
 
         JSONArray assignmentsJSON = new JSONArray();
         for (TaskAssignment assignment : request.getAssignments()) {
@@ -229,6 +244,8 @@ public class DataWriter extends DataConstants {
         shelterJSON.put(SHELTER_STATE, shelter.getState());
         shelterJSON.put(SHELTER_LATITUDE, shelter.getLatitude());
         shelterJSON.put(SHELTER_LONGITUDE, shelter.getLongitude());
+        shelterJSON.put(SHELTER_MEDICAL_STAFF, shelter.hasMedicalStaff());
+        shelterJSON.put(SHELTER_DOGS_ALLOWED, shelter.acceptsDogs());
 
         shelterJSON.put(
                 SHELTER_LAST_UPDATED,

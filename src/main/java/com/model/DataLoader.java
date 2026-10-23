@@ -49,6 +49,12 @@ public class DataLoader extends DataConstants {
                             UUID.fromString((String) userJSON.get(USER_SHELTER_ID)));
                 }
 
+                // loading a volunteer's specialty
+                if (user instanceof Volunteer && userJSON.get(USER_SPECIALTY) != null) {
+                    ((Volunteer) user).setSpecialty(
+                            RequestCategory.valueOf((String) userJSON.get(USER_SPECIALTY)));
+                }
+
                 if (user != null) {
                     user.setAccountStatus(AccountStatus.valueOf((String) userJSON.get(USER_ACCOUNT_STATUS)));
                     user.setSafetyStatus(SafetyStatus.valueOf((String) userJSON.get(USER_SAFETY_STATUS)));
@@ -86,7 +92,16 @@ public class DataLoader extends DataConstants {
             for (Object memberObj : (JSONArray) householdJSON.get("members")) {
                 JSONObject memberJSON = (JSONObject) memberObj;
                 String name = (String) memberJSON.get("name");
-                household.addHouseholdMember(name);
+
+                // age is 0 if it wasn't saved
+                int age = 0;
+                if (memberJSON.get(MEMBER_AGE) != null) {
+                    age = ((Number) memberJSON.get(MEMBER_AGE)).intValue();
+                }
+                String petType = (String) memberJSON.get(MEMBER_PET_TYPE);
+                String medicalNote = (String) memberJSON.get(MEMBER_MEDICAL_NOTE);
+
+                household.addHouseholdMember(name, age, petType, medicalNote);
                 household.checkIn(name, SafetyStatus.valueOf((String) memberJSON.get("safetyStatus")));
             }
             user.getHouseholds().add(household);
@@ -208,6 +223,11 @@ public class DataLoader extends DataConstants {
                 shelter.setOccupants(loadStringList((JSONArray) shelterJSON.get(SHELTER_OCCUPANTS)));
                 shelter.setPets(loadStringList((JSONArray) shelterJSON.get(SHELTER_PETS)));
 
+                
+                
+                shelter.setMedicalStaff(Boolean.TRUE.equals(shelterJSON.get(SHELTER_MEDICAL_STAFF)));
+                shelter.setDogsAllowed(Boolean.TRUE.equals(shelterJSON.get(SHELTER_DOGS_ALLOWED)));
+
                 shelters.add(shelter);
             }
         } catch (Exception e) {
@@ -261,9 +281,13 @@ public class DataLoader extends DataConstants {
                 int householdSize = ((Number) requestJSON.get(REQUEST_HOUSEHOLD_SIZE)).intValue();
                 String streetAddress = (String) requestJSON.get(REQUEST_STREET_ADDRESS);
                 boolean isDuplicate = Boolean.TRUE.equals(requestJSON.get(REQUEST_IS_DUPLICATE));
+                String note = (String) requestJSON.get(REQUEST_NOTE);
 
                 AidRequest request = new AidRequest(requestId, requester, category,
-                        householdSize, streetAddress);
+                        householdSize, streetAddress, note);
+                if (requestJSON.get(REQUEST_SHELTER_ID) != null) {
+                    request.setShelterId(UUID.fromString((String) requestJSON.get(REQUEST_SHELTER_ID)));
+                }
                 request.updateStatus(status);
                 if (isDuplicate) {
                     request.markDuplicate();
