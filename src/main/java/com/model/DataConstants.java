@@ -26,6 +26,8 @@ public class DataConstants {
     public static final String SHELTER_LONGITUDE = "longitude";
     public static final String SHELTER_OCCUPANTS = "occupants";
     public static final String SHELTER_PETS = "pets";
+    public static final String SHELTER_MEDICAL_STAFF = "medicalStaff";
+    public static final String SHELTER_DOGS_ALLOWED = "dogsAllowed";
 
     protected static final String USER_ID = "userId";
     protected static final String USER_USERNAME = "username";
@@ -39,6 +41,12 @@ public class DataConstants {
     protected static final String USER_ACCOUNT_STATUS = "accountStatus";
     protected static final String USER_SAFETY_STATUS = "safetyStatus";
     protected static final String USER_SHELTER_ID = "shelterId";
+    protected static final String USER_SPECIALTY = "specialty";
+
+    // household member keys
+    protected static final String MEMBER_AGE = "age";
+    protected static final String MEMBER_PET_TYPE = "petType";
+    protected static final String MEMBER_MEDICAL_NOTE = "medicalNote";
 
     // aid request keys
     protected static final String REQUEST_ID = "requestId";
@@ -52,4 +60,6 @@ public class DataConstants {
     protected static final String REQUEST_STATUS_HISTORY = "statusHistory";
     protected static final String REQUEST_IS_DUPLICATE = "isDuplicate";
     protected static final String REQUEST_CREATED_AT = "createdAt";
+    protected static final String REQUEST_NOTE = "note";
+    protected static final String REQUEST_SHELTER_ID = "shelterId";
 }
