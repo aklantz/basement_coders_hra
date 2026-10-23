@@ -1,0 +1,165 @@
+[
+  {
+    "userId": "550e8400-e29b-41d4-a716-446655440001",
+    "username": "jsmith",
+    "password": "password",
+    "fullName": "Jordan Smith",
+    "dateOfBirth": "1990-04-12",
+    "homeAddress": "142 Ashley Ave, Charleston, SC 29401",
+    "emailAddress": "jsmith@example.com",
+    "phoneNumber": "843-555-0142",
+    "type": "ADMIN",
+    "accountStatus": "ACTIVE",
+    "safetyStatus": "SAFE",
+    "households": []
+  },
+  {
+    "userId": "550e8400-e29b-41d4-a716-446655440002",
+    "username": "mrivera",
+    "password": "password",
+    "fullName": "Maria Rivera",
+    "dateOfBirth": "1988-11-02",
+    "homeAddress": "88 Spring St, Charleston, SC 29403",
+    "emailAddress": "mrivera@example.com",
+    "phoneNumber": "843-555-0198",
+    "type": "VOLUNTEER",
+    "accountStatus": "ACTIVE",
+    "safetyStatus": "UNKNOWN",
+    "households": [
+      {
+        "householdName": "Rivera Family",
+        "householdOwnerUUID": "550e8400-e29b-41d4-a716-446655440002",
+        "members": [
+          {
+            "name": "Maria",
+            "safetyStatus": "SAFE",
+            "age": 37,
+            "petType": null,
+            "medicalNote": null
+          },
+          {
+            "name": "Carlos",
+            "safetyStatus": "IN_NEED",
+            "age": 12,
+            "petType": null,
+            "medicalNote": null
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "userId": "550e8400-e29b-41d4-a716-446655440003",
+    "username": "rosa",
+    "password": "password",
+    "fullName": "Rosa Delgado",
+    "dateOfBirth": "1984-07-19",
+    "homeAddress": "45 Wentworth St, Charleston, SC 29401",
+    "emailAddress": "rdelgado@example.com",
+    "phoneNumber": "843-555-0177",
+    "type": "VOLUNTEER",
+    "accountStatus": "ACTIVE",
+    "safetyStatus": "SAFE",
+    "households": [],
+    "specialty": "TRANSPORT"
+  },
+  {
+    "userId": "550e8400-e29b-41d4-a716-446655440010",
+    "username": "felix",
+    "password": "password",
+    "fullName": "Felix Jones",
+    "dateOfBirth": "1981-06-14",
+    "homeAddress": "15 Rutledge Ave, Charleston, SC 29401",
+    "emailAddress": "fjones@example.com",
+    "phoneNumber": "843-555-0123",
+    "type": "SHELTER_MANAGER",
+    "accountStatus": "ACTIVE",
+    "safetyStatus": "SAFE",
+    "households": [],
+    "shelterId": "a7c3e2b0-5d1f-4e8a-9b6c-2f4d8e1a7c30"
+  },
+  {
+    "userId": "550e8400-e29b-41d4-a716-446655440021",
+    "username": "dbrown",
+    "password": "password",
+    "fullName": "Denise Brown",
+    "dateOfBirth": "1975-02-08",
+    "homeAddress": "112 Coming St, Charleston, SC 29403",
+    "emailAddress": "dbrown@example.com",
+    "phoneNumber": "843-555-0121",
+    "type": "RESIDENT",
+    "accountStatus": "ACTIVE",
+    "safetyStatus": "UNKNOWN",
+    "households": []
+  },
+  {
+    "userId": "550e8400-e29b-41d4-a716-446655440022",
+    "username": "tnguyen",
+    "password": "password",
+    "fullName": "Thanh Nguyen",
+    "dateOfBirth": "1962-09-30",
+    "homeAddress": "29 Cannon St, Charleston, SC 29403",
+    "emailAddress": "tnguyen@example.com",
+    "phoneNumber": "843-555-0122",
+    "type": "RESIDENT",
+    "accountStatus": "ACTIVE",
+    "safetyStatus": "UNKNOWN",
+    "households": []
+  },
+  {
+    "userId": "550e8400-e29b-41d4-a716-446655440023",
+    "username": "kwhite",
+    "password": "password",
+    "fullName": "Karen White",
+    "dateOfBirth": "1949-12-14",
+    "homeAddress": "640 Rutledge Ave, Charleston, SC 29403",
+    "emailAddress": "kwhite@example.com",
+    "phoneNumber": "843-555-0123",
+    "type": "RESIDENT",
+    "accountStatus": "ACTIVE",
+    "safetyStatus": "UNKNOWN",
+    "households": []
+  },
+  {
+    "userId": "550e8400-e29b-41d4-a716-446655440024",
+    "username": "mjames",
+    "password": "password",
+    "fullName": "Marcus James",
+    "dateOfBirth": "1983-05-21",
+    "homeAddress": "1810 Folly Rd, Charleston, SC 29412",
+    "emailAddress": "mjames@example.com",
+    "phoneNumber": "843-555-0124",
+    "type": "RESIDENT",
+    "accountStatus": "ACTIVE",
+    "safetyStatus": "UNKNOWN",
+    "households": []
+  },
+  {
+    "userId": "550e8400-e29b-41d4-a716-446655440025",
+    "username": "lpatel",
+    "password": "password",
+    "fullName": "Lena Patel",
+    "dateOfBirth": "1991-03-03",
+    "homeAddress": "2275 Ashley River Rd, Charleston, SC 29414",
+    "emailAddress": "lpatel@example.com",
+    "phoneNumber": "843-555-0125",
+    "type": "RESIDENT",
+    "accountStatus": "ACTIVE",
+    "safetyStatus": "UNKNOWN",
+    "households": []
+  },
+  {
+    "userId": "550e8400-e29b-41d4-a716-446655440026",
+    "username": "rgreen",
+    "password": "password",
+    "fullName": "Robert Green",
+    "dateOfBirth": "1958-08-11",
+    "homeAddress": "118 E Main St, Moncks Corner, SC 29461",
+    "emailAddress": "rgreen@example.com",
+    "phoneNumber": "843-555-0126",
+    "type": "RESIDENT",
+    "accountStatus": "ACTIVE",
+    "safetyStatus": "UNKNOWN",
+    "households": []
+  }
+]
