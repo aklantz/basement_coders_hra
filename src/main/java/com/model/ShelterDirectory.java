@@ -2,6 +2,7 @@ package com.model;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.UUID;
 
 import com.location.Address;
 import com.location.Coordinates;
@@ -33,6 +34,25 @@ public class ShelterDirectory {
             shelterDirectory = new ShelterDirectory();
         }
         return shelterDirectory;
+    }
+
+    /**
+     * Finds a shelter by ID
+     *
+     * @param shelterId the shelter's id
+     * @return the shelter, or null
+     */
+    public Shelter getShelterById(UUID shelterId) {
+        if (shelterId == null) {
+            return null;
+        }
+        
+        for (Shelter shelter : shelters) {
+            if (shelterId.equals(shelter.getResourceId())) {
+                return shelter;
+            }
+        }
+        return null;
     }
 
     /**

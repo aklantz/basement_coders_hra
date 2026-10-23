@@ -45,6 +45,15 @@ public abstract class User {
     public abstract USERTYPE getType();
 
     /**
+     * Checks if this user is allowed to mark aid requests complete, only Shelter Managers can do this
+     *
+     * @return false for most users
+     */
+    public boolean canCompleteRequests() {
+        return false;
+    }
+
+    /**
      * Prints a message to the user.
      */
     public void sendNotification(String message) {

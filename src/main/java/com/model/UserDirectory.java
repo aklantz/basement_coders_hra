@@ -87,6 +87,11 @@ public class UserDirectory {
                         homeAddress, emailAddress, phoneNumber, username);
                 user.setAccountStatus(AccountStatus.ACTIVE);
                 break;
+            case RESIDENT:
+                user = new Resident(userId, username, password, fullName, dateOfBirth,
+                        homeAddress, emailAddress, phoneNumber, username);
+                user.setAccountStatus(AccountStatus.ACTIVE);
+                break;
             case COORDINATOR:
                 user = new Coordinator(userId, username, password, fullName, dateOfBirth,
                         homeAddress, emailAddress, phoneNumber, username);

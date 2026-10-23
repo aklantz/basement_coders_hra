@@ -1,1 +1,90 @@
-[{"zipCode":"29708","resourceId":"c3d4e5f6-0001-4000-8000-000000000001","occupancy":92,"city":"Tega Cay","latitude":35.051683,"capacity":150,"lastUpdated":"2026-09-27T07:00Z","inventoryItems":[{"reorderThreshold":100,"itemId":"d4e5f6a7-0001-4000-8000-000000000001","quantity":480,"supplyType":"Bottled Water (cases)"},{"reorderThreshold":20,"itemId":"d4e5f6a7-0002-4000-8000-000000000002","quantity":35,"supplyType":"First Aid Kits"}],"streetAddress":"7725 Tega Cay Dr","name":"Tega Cay City Hall","state":"SC","status":"OPEN","longitude":-81.010111},{"zipCode":"29715","resourceId":"c3d4e5f6-0002-4000-8000-000000000002","occupancy":300,"city":"Fort Mill","latitude":null,"capacity":300,"lastUpdated":"2026-09-27T06:45Z","inventoryItems":[],"streetAddress":"215 N Highway 21 Bypass","name":"Fort Mill High School Gym","state":"SC","status":"FULL","longitude":null},{"zipCode":"29730","resourceId":"c3d4e5f6-0003-4000-8000-000000000003","occupancy":0,"city":"Rock Hill","latitude":null,"capacity":200,"lastUpdated":"2026-09-27T08:15Z","inventoryItems":[],"streetAddress":"801 Crawford Rd","name":"Emmett Scott Recreation Center","state":"SC","status":"CLOSED","longitude":null},{"zipCode":"29732","resourceId":"c3d4e5f6-0004-4000-8000-000000000004","occupancy":40,"city":"Rock Hill","latitude":34.949669,"capacity":120,"lastUpdated":"2026-09-27T08:30Z","inventoryItems":[],"streetAddress":"1204 Alexander Rd","name":"Fewell Park Recreation Center","state":"SC","status":"OPEN","longitude":-81.037266}]
+[
+  {
+    "zipCode": "29708",
+    "resourceId": "c3d4e5f6-0001-4000-8000-000000000001",
+    "occupancy": 92,
+    "city": "Tega Cay",
+    "latitude": 35.051683,
+    "capacity": 150,
+    "lastUpdated": "2026-09-27T07:00Z",
+    "inventoryItems": [
+      {
+        "reorderThreshold": 100,
+        "itemId": "d4e5f6a7-0001-4000-8000-000000000001",
+        "quantity": 480,
+        "supplyType": "Bottled Water (cases)"
+      },
+      {
+        "reorderThreshold": 20,
+        "itemId": "d4e5f6a7-0002-4000-8000-000000000002",
+        "quantity": 35,
+        "supplyType": "First Aid Kits"
+      }
+    ],
+    "streetAddress": "7725 Tega Cay Dr",
+    "name": "Tega Cay City Hall",
+    "state": "SC",
+    "status": "OPEN",
+    "longitude": -81.010111
+  },
+  {
+    "zipCode": "29715",
+    "resourceId": "c3d4e5f6-0002-4000-8000-000000000002",
+    "occupancy": 300,
+    "city": "Fort Mill",
+    "latitude": null,
+    "capacity": 300,
+    "lastUpdated": "2026-09-27T06:45Z",
+    "inventoryItems": [],
+    "streetAddress": "215 N Highway 21 Bypass",
+    "name": "Fort Mill High School Gym",
+    "state": "SC",
+    "status": "FULL",
+    "longitude": null
+  },
+  {
+    "zipCode": "29730",
+    "resourceId": "c3d4e5f6-0003-4000-8000-000000000003",
+    "occupancy": 0,
+    "city": "Rock Hill",
+    "latitude": null,
+    "capacity": 200,
+    "lastUpdated": "2026-09-27T08:15Z",
+    "inventoryItems": [],
+    "streetAddress": "801 Crawford Rd",
+    "name": "Emmett Scott Recreation Center",
+    "state": "SC",
+    "status": "CLOSED",
+    "longitude": null
+  },
+  {
+    "zipCode": "29732",
+    "resourceId": "c3d4e5f6-0004-4000-8000-000000000004",
+    "occupancy": 40,
+    "city": "Rock Hill",
+    "latitude": 34.949669,
+    "capacity": 120,
+    "lastUpdated": "2026-09-27T08:30Z",
+    "inventoryItems": [],
+    "streetAddress": "1204 Alexander Rd",
+    "name": "Fewell Park Recreation Center",
+    "state": "SC",
+    "status": "OPEN",
+    "longitude": -81.037266
+  },
+  {
+    "resourceId": "a7c3e2b0-5d1f-4e8a-9b6c-2f4d8e1a7c30",
+    "name": "Burke High School",
+    "capacity": 150,
+    "occupancy": 87,
+    "status": "OPEN",
+    "lastUpdated": "2026-10-22T12:00Z",
+    "zipCode": "29403",
+    "streetAddress": "244 President St",
+    "city": "Charleston",
+    "state": "SC",
+    "inventoryItems": [],
+    "occupants": [],
+    "pets": []
+  }
+]

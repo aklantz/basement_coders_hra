@@ -44,6 +44,11 @@ public class DataLoader extends DataConstants {
                 User user = createUser(type, id, username, password, fullName,
                         dateOfBirth, address, email, phone);
 
+                if (user instanceof ShelterManager && userJSON.get(USER_SHELTER_ID) != null) {
+                    ((ShelterManager) user).setShelterId(
+                            UUID.fromString((String) userJSON.get(USER_SHELTER_ID)));
+                }
+
                 if (user != null) {
                     user.setAccountStatus(AccountStatus.valueOf((String) userJSON.get(USER_ACCOUNT_STATUS)));
                     user.setSafetyStatus(SafetyStatus.valueOf((String) userJSON.get(USER_SAFETY_STATUS)));
@@ -93,6 +98,7 @@ public class DataLoader extends DataConstants {
      *
      * @return the new user, or null if the type is not recognized
      */
+
     private static User createUser(USERTYPE type, UUID id, String username, String password,
                                    String fullName, LocalDate dateOfBirth, String address,
                                    String email, String phone) {
@@ -106,6 +112,13 @@ public class DataLoader extends DataConstants {
             case ADMIN:
                 return new Admin(id, username, password, fullName,
                         dateOfBirth, address, email, phone, username);
+            case RESIDENT:
+                return new Resident(id, username, password, fullName,
+                        dateOfBirth, address, email, phone, username);
+            case SHELTER_MANAGER:
+                // user is made, then the shelter id is created
+                return new ShelterManager(id, username, password, fullName,
+                        dateOfBirth, address, email, phone, username, null);
             default:
                 return null;
         }
@@ -191,6 +204,10 @@ public class DataLoader extends DataConstants {
                     shelter.setInventoryItems(inventoryItems);
                 }
 
+                // loading the people and pets staying at the shelter
+                shelter.setOccupants(loadStringList((JSONArray) shelterJSON.get(SHELTER_OCCUPANTS)));
+                shelter.setPets(loadStringList((JSONArray) shelterJSON.get(SHELTER_PETS)));
+
                 shelters.add(shelter);
             }
         } catch (Exception e) {
@@ -198,6 +215,25 @@ public class DataLoader extends DataConstants {
         }
 
         return shelters;
+    }
+
+    /**
+     * Turns a array from json file into list
+     *
+     * @param array the saved list, or null if there isn't one
+     *  @return the list or an empty list if nothing saved correctly
+     */
+
+    private static ArrayList<String> loadStringList(JSONArray array) {
+        ArrayList<String> list = new ArrayList<String>();
+        if (array == null) {
+            return list;
+        }
+        for (Object item : array) {
+            list.add((String) item);
+        }
+
+        return list;
     }
 
     /**

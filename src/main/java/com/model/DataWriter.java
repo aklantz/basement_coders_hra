@@ -117,6 +117,14 @@ public class DataWriter extends DataConstants {
         userJSON.put(USER_ACCOUNT_STATUS, user.getAccountStatus().name());
         userJSON.put(USER_SAFETY_STATUS, user.getSafetyStatus().name());
 
+        // saving what shelter a shelter manager runs
+        if (user instanceof ShelterManager) {
+            ShelterManager manager = (ShelterManager) user;
+            if (manager.getShelterId() != null) {
+                userJSON.put(USER_SHELTER_ID, manager.getShelterId().toString());
+            }
+        }
+
         JSONArray householdsJSON = new JSONArray();
         for (Household household : user.getHouseholds()) {
             JSONObject householdJSON = new JSONObject();
@@ -259,6 +267,20 @@ public class DataWriter extends DataConstants {
         shelterJSON.put(
                 "inventoryItems",
                 inventoryJSON);
+
+        // save the people and pets staying at the shelter
+
+        JSONArray occupantsJSON = new JSONArray();
+        for (String person : shelter.getOccupants()) {
+            occupantsJSON.add(person);
+        }
+        shelterJSON.put(SHELTER_OCCUPANTS, occupantsJSON);
+
+        JSONArray petsJSON = new JSONArray();
+        for (String pet : shelter.getPets()) {
+            petsJSON.add(pet);
+        }
+        shelterJSON.put(SHELTER_PETS, petsJSON);
 
         return shelterJSON;
     }

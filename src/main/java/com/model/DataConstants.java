@@ -24,6 +24,8 @@ public class DataConstants {
     public static final String SHELTER_STATE = "state";
     public static final String SHELTER_LATITUDE = "latitude";
     public static final String SHELTER_LONGITUDE = "longitude";
+    public static final String SHELTER_OCCUPANTS = "occupants";
+    public static final String SHELTER_PETS = "pets";
 
     protected static final String USER_ID = "userId";
     protected static final String USER_USERNAME = "username";
@@ -36,6 +38,7 @@ public class DataConstants {
     protected static final String USER_TYPE = "type";
     protected static final String USER_ACCOUNT_STATUS = "accountStatus";
     protected static final String USER_SAFETY_STATUS = "safetyStatus";
+    protected static final String USER_SHELTER_ID = "shelterId";
 
     // aid request keys
     protected static final String REQUEST_ID = "requestId";
