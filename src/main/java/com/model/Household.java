@@ -27,18 +27,43 @@ public class Household {
     }
 
     /**
-     * Adds a member with an unknown safety status and the current check-in time.     *
+     * Adds a person with an unknown safety status and the current check-in time.
+     * Their age is 0 and they have no medical need.
+     *
      * @param memberName the member's name
      * @return true if the member was added, false if they were already in the household
      */
     public boolean addHouseholdMember(String memberName) {
+        return addHouseholdMember(memberName, 0, null, null);
+    }
+
+    /**
+     * Adds a person or pet, with details, with an unknown safety status and the current
+     * check-in time.
+     *
+     * @param memberName the member's name
+     * @param age the member's age (use 0 for a pet)
+     * @param petType the kind of pet, such as "dog", or null for a person
+     * @param medicalNote the medical assistance the member needs, or null if none
+     * @return true if the member was added, false if the name is blank
+     *         or they were already in the household
+     */
+    public boolean addHouseholdMember(String memberName, int age, String petType,
+                                      String medicalNote) {
+        if (memberName == null || memberName.trim().isEmpty()) {
+            return false;
+        }
         // don't add someone who is already in the household
         for (HouseholdMember member : householdMembers) {
             if (member.getName().equals(memberName)) {
                 return false;
             }
         }
-        householdMembers.add(new HouseholdMember(memberName));
+        HouseholdMember member = new HouseholdMember(memberName);
+        member.setAge(age);
+        member.setPetType(petType);
+        member.setMedicalNote(medicalNote);
+        householdMembers.add(member);
         return true;
     }
 
@@ -92,10 +117,10 @@ public class Household {
 
     /**
      * Records a member's safety status and sets their check-in time to now.
-     *      *
+     *
      * @param memberName the member's name
      * @param safetyStatus the safety status to record
-     * @return true after the check-in is stored
+     * @return true if the check-in is stored, false if the member is not in the household
      */
     public boolean checkIn(String memberName, SafetyStatus safetyStatus) {
         for(HouseholdMember member : householdMembers) {

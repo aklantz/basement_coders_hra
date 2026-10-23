@@ -1,5 +1,6 @@
 package com.model;
 
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.UUID;
@@ -8,6 +9,9 @@ public class AidRequestDirectory {
 
     /** How long a submitted request can go unassigned before it expires. */
     private static final int STALE_HOURS = 72;
+
+    /** A matching request this many minutes or less away from the volunteer is recommended. */
+    private static final double NEARBY_MINUTES = 30.0;
 
     private static AidRequestDirectory aidRequestDirectory;
     private ArrayList<AidRequest> requests;
@@ -134,6 +138,62 @@ public class AidRequestDirectory {
     }
 
     /**
+     * Gets the open requests for a volunteer, with the recommended ones first and then
+     * the closest first. A request is recommended when its category matches the volunteer's
+     * specialty and it is within NEARBY_MINUTES of the volunteer's home. Each one carries
+     * a sentence explaining why it is or is not recommended.
+     *
+     * @param user the volunteer looking at the requests
+     * @return the open requests, or an empty list if the user is not a volunteer
+     * @throws IOException if a map lookup fails
+     * @throws InterruptedException if a map request is interrupted
+     */
+    public ArrayList<RecommendedRequest> getRecommendedRequests(User user)
+            throws IOException, InterruptedException {
+        ArrayList<RecommendedRequest> result = new ArrayList<RecommendedRequest>();
+        if (!(user instanceof Volunteer)) {
+            return result;
+        }
+        Volunteer volunteer = (Volunteer) user;
+        ShelterDirectory shelterDirectory = ShelterDirectory.getInstance();
+
+        for (AidRequest request : requests) {
+            if (request.getStatus() != RequestStatus.SUBMITTED || request.isDuplicate()) {
+                continue;
+            }
+
+            double minutes = shelterDirectory.getDrivingMinutes(
+                    volunteer.getHomeAddress(), request.getStreetAddress());
+            boolean matches = volunteer.getSpecialty() != null
+                    && request.getCategory() == volunteer.getSpecialty();
+            boolean recommended = matches && minutes <= NEARBY_MINUTES;
+
+            String away = (minutes == Double.MAX_VALUE)
+                    ? "its distance is unknown"
+                    : "it is " + String.format("%.0f", minutes) + " minutes away";
+            String reason;
+            if (recommended) {
+                reason = "Recommended: it matches your "
+                        + volunteer.getSpecialty().name().toLowerCase().replace('_', ' ')
+                        + " specialty and " + away;
+            } else if (matches) {
+                reason = "Matches your specialty, but " + away;
+            } else {
+                reason = "Open request; " + away;
+            }
+            result.add(new RecommendedRequest(request, recommended, minutes, reason));
+        }
+
+        result.sort((a, b) -> {
+            if (a.isRecommended() != b.isRecommended()) {
+                return a.isRecommended() ? -1 : 1;
+            }
+            return Double.compare(a.getDrivingMinutes(), b.getDrivingMinutes());
+        });
+        return result;
+    }
+
+    /**
      * Adds a request to the directory
      */
     public boolean addRequest(AidRequest request) {
@@ -141,6 +201,36 @@ public class AidRequestDirectory {
             return false;
         }
         requests.add(request);
+        return true;
+    }
+
+    /**
+     * A volunteer takes an open request for themselves. The request becomes ASSIGNED, the
+     * shelter they chose is saved with it, and other volunteers can see who is handling it.
+     *
+     * @param user the volunteer taking the request
+     * @param requestId the id of the request
+     * @param shelter the shelter the volunteer selected
+     * @return true if the request was assigned and saved
+     */
+    public boolean assignToVolunteer(User user, UUID requestId, Shelter shelter) {
+        AidRequest request = getRequestById(requestId);
+        if (!(user instanceof Volunteer) || shelter == null || request == null
+                || request.getStatus() != RequestStatus.SUBMITTED) {
+            return false;
+        }
+        TaskAssignment task = new TaskAssignment(
+                UUID.randomUUID(), request, (Volunteer) user, null);
+        request.addAssignment(task);
+        request.setShelterId(shelter.getResourceId());
+        request.updateStatus(RequestStatus.ASSIGNED);
+
+        if (!save()) {
+            request.getAssignments().remove(task);
+            request.setShelterId(null);
+            request.updateStatus(RequestStatus.SUBMITTED);
+            return false;
+        }
         return true;
     }
 
@@ -158,7 +248,8 @@ public class AidRequestDirectory {
         }
         // only roles like shelter manager are allowed to complete requests
         if (!user.canCompleteRequests()) {
-            throw new SecurityException("Your " + user.getType().name().toLowerCase()
+            throw new SecurityException("Your "
+                    + user.getType().name().toLowerCase().replace('_', ' ')
                     + " role does not have permission to complete relief requests.");
         }
         AidRequest request = getRequestById(requestId);

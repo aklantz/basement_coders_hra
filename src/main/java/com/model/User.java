@@ -248,4 +248,27 @@ public abstract class User {
         }
         return household.checkIn(memberName, safetyStatus);
     }
+
+    /**
+     * Adds a person or pet with details to one of this user's households.
+     *
+     * @param householdName the household's name
+     * @param memberName the person's or pet's name
+     * @param age the person's age; use 0 for a pet
+     * @param petType the kind of pet, or null for a person
+     * @param medicalNote the medical assistance needed, or null if none
+     * @return true if added, false if the household does not exist,
+     *         the age is negative, the name is blank, or the member already exists
+     */
+    public boolean addHouseholdMember(String householdName, String memberName,
+                                    int age, String petType, String medicalNote) {
+        Household household = getHousehold(householdName);
+
+        if (household == null || age < 0) {
+            return false;
+        }
+
+        return household.addHouseholdMember(
+                memberName, age, petType, medicalNote);
+    }
 }

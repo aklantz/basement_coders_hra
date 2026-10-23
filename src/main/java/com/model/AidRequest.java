@@ -20,6 +20,10 @@ public class AidRequest {
     private boolean isDuplicate;
     private LocalDateTime createdAt;
     private String note;
+    private UUID shelterId;
+ 
+    public UUID getShelterId() { return shelterId; }
+    public void setShelterId(UUID shelterId) { this.shelterId = shelterId; }
 
     private ArrayList<TaskAssignment> assignments = new ArrayList<>();
 
@@ -57,7 +61,45 @@ public class AidRequest {
         this.isDuplicate = false;
         this.createdAt = LocalDateTime.now();
         this.note = note;
-                      }
+    }
+
+     /**
+     * Checks whether anyone in the requester's households needs medical assistance.
+     *
+     * @return true if any member has a medical note
+     */
+    public boolean needsMedicalAssistance() {
+        if (requester == null) {
+            return false;
+        }
+        for (Household household : requester.getHouseholds()) {
+            for (HouseholdMember member : household.getMembers()) {
+                if (member.getMedicalNote() != null) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+ 
+    /**
+     * Checks whether the requester's households include a dog.
+     *
+     * @return true if any member is a dog
+     */
+    public boolean hasDog() {
+        if (requester == null) {
+            return false;
+        }
+        for (Household household : requester.getHouseholds()) {
+            for (HouseholdMember member : household.getMembers()) {
+                if (member.isPet() && "dog".equalsIgnoreCase(member.getPetType())) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
 
     /**
      * Changes the request's status. This does not check who is asking, so a role

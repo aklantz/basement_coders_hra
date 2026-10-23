@@ -1,8 +1,8 @@
 package com.model;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.UUID;
 
 /**
@@ -136,12 +136,43 @@ public class ReliefApplication {
 	}
 
 	/**
+	 * Gets every shelter in the system.
+	 *
+	 * @return all shelters
+	 */
+	public ArrayList<Shelter> getAllShelters() {
+		return shelterDirectory.getShelters();
+	}
+
+	/**
 	 * Gets the active shelters in the zip codes the hurricane affects.
 	 *
 	 * @return the active shelters
 	 */
 	public ArrayList<Shelter> getShelterDirectory() {
 		return shelterDirectory.getActiveShelters(hurricaneDirectory.getAffectedZipCodes());
+	}
+
+	/**
+	 * Gets every aid request, so volunteers can see which ones are already being handled.
+	 *
+	 * @return all requests
+	 */
+	public ArrayList<AidRequest> getRequests() {
+		return aidRequestDirectory.getRequests();
+	}
+
+	/**
+	 * Gets the open requests for the logged-in volunteer. Recommended requests come first,
+	 * and each one says why it is or is not recommended.
+	 *
+	 * @return the open requests, or an empty list if the user is not a volunteer
+	 * @throws IOException if a map lookup fails
+	 * @throws InterruptedException if a map request is interrupted
+	 */
+	public ArrayList<RecommendedRequest> getRecommendedRequests()
+			throws IOException, InterruptedException {
+		return aidRequestDirectory.getRecommendedRequests(currentUser);
 	}
 
 	/**
@@ -154,35 +185,70 @@ public class ReliefApplication {
 				: new ArrayList<AidRequest>();
 	}
 
+	/**
+	 * Finds the nearest available shelter for an aid request.
+	 *
+	 * @param request the request to find a shelter for
+	 * @return the nearest available shelter, or null if the request is null
+	 *         or no shelter is found
+	 * @throws IOException if a map lookup fails
+	 * @throws InterruptedException if a map request is interrupted
+	 */
+	public Shelter findNearestShelter(AidRequest request)
+			throws IOException, InterruptedException {
+		return shelterDirectory.findNearestShelter(request);
+	}
 
+	/**
+	 * Finds the shelter closest by driving distance that can take a request's family.
+	 * It must have room for everyone, accept the family's pets, and have medical staff
+	 * if the request needs medical assistance.
+	 *
+	 * @param request the request to find a shelter for
+	 * @return the suitable shelter, or null if there is none
+	 * @throws IOException if a map lookup fails
+	 * @throws InterruptedException if a map request is interrupted
+	 */
+	public Shelter findSuitableShelter(AidRequest request)
+			throws IOException, InterruptedException {
+		return shelterDirectory.findSuitableShelter(request);
+	}
 
-    /**
-     * Finds the nearest available shelter for an aid request.
-     *
-     * @param request the request to find a shelter for
-     * @return the nearest available shelter, or null if the request is null
-     *         or no shelter is found
-     * @throws IOException if a map lookup fails
-     * @throws InterruptedException if a map request is interrupted
-     */
-    public Shelter findNearestShelter(AidRequest request)
-            throws IOException, InterruptedException {
-        return shelterDirectory.findNearestShelter(request);
-    }
+	/**
+	 * Assigns an open request to the logged-in volunteer and saves the shelter they chose.
+	 * The request becomes ASSIGNED.
+	 *
+	 * @param requestId the id of the request
+	 * @param shelter the shelter the volunteer selected
+	 * @return true if the request was assigned
+	 */
+	public boolean assignRequestToMe(UUID requestId, Shelter shelter) {
+		return aidRequestDirectory.assignToVolunteer(currentUser, requestId, shelter);
+	}
 
-    /**
-     * Gets driving directions between two addresses.
-     *
-     * @param fromAddress where the trip starts
-     * @param toAddress where the trip ends
-     * @return one direction per entry, or an empty list if either address is invalid
-     * @throws IOException if a map lookup fails
-     * @throws InterruptedException if a map request is interrupted
-     */
-    public ArrayList<String> getDirections(String fromAddress, String toAddress)
-            throws IOException, InterruptedException {
-        return shelterDirectory.getDirections(fromAddress, toAddress);
-    }
+	/**
+	 * Gets the shelter that was selected when a request was assigned.
+	 *
+	 * @param request the request
+	 * @return the selected shelter, or null if none was selected
+	 */
+	public Shelter getSelectedShelter(AidRequest request) {
+		return request == null ? null : shelterDirectory.getShelterById(request.getShelterId());
+	}
+
+	/**
+	 * Gets driving directions between two addresses.
+	 *
+	 * @param fromAddress where the trip starts
+	 * @param toAddress where the trip ends
+	 * @return one direction per entry, or an empty list if either address is invalid
+	 * @throws IOException if a map lookup fails
+	 * @throws InterruptedException if a map request is interrupted
+	 */
+	public ArrayList<String> getDirections(String fromAddress, String toAddress)
+			throws IOException, InterruptedException {
+		return shelterDirectory.getDirections(fromAddress, toAddress);
+	}
 
 	/**
 	 * Writes a printable .txt file with the trip information for a request.
@@ -196,34 +262,34 @@ public class ReliefApplication {
 		return isLoggedIn() && tripExporter.export(currentUser, request, shelter, filePath);
 	}
 
-    /**
-     * Creates an aid request for the logged-in user.
-     *
-     * @param category the kind of aid needed
-     * @param householdSize how many people need aid
-     * @param streetAddress where the aid is needed
-     * @return the new request, or null if creation fails
-     */
-    public AidRequest createAidRequest(RequestCategory category, int householdSize,
-                                    String streetAddress) {
-        return aidRequestDirectory.createAidRequest(
-                currentUser, category, householdSize, streetAddress);
-    }
+	/**
+	 * Creates an aid request for the logged-in user.
+	 *
+	 * @param category the kind of aid needed
+	 * @param householdSize how many people need aid
+	 * @param streetAddress where the aid is needed
+	 * @return the new request, or null if creation fails
+	 */
+	public AidRequest createAidRequest(RequestCategory category, int householdSize,
+			String streetAddress) {
+		return aidRequestDirectory.createAidRequest(
+				currentUser, category, householdSize, streetAddress);
+	}
 
 	/**
-     * Creates an aid request for the logged-in user.
-     *
-     * @param category the kind of aid needed
-     * @param householdSize how many people need aid
-     * @param streetAddress where the aid is needed
+	 * Creates an aid request with a note for the logged-in user.
+	 *
+	 * @param category the kind of aid needed
+	 * @param householdSize how many people need aid
+	 * @param streetAddress where the aid is needed
 	 * @param note a note to leave in the aid request
-     * @return the new request, or null if creation fails
-     */
+	 * @return the new request, or null if creation fails
+	 */
 	public AidRequest createAidRequest(RequestCategory category, int householdSize,
-                                    String streetAddress, String note) {
-        return aidRequestDirectory.createAidRequest(
-                currentUser, category, householdSize, streetAddress, note);
-    }
+			String streetAddress, String note) {
+		return aidRequestDirectory.createAidRequest(
+				currentUser, category, householdSize, streetAddress, note);
+	}
 
 	/**
 	 * Marks a request complete if the logged-in user's role allows it.
@@ -264,15 +330,14 @@ public class ReliefApplication {
 	}
 
 	/**
-	 * Checks people and their pets into manager's shelter 
+	 * Checks people and their pets into the logged-in manager's shelter and saves.
+	 * Only the people count toward the shelter's occupancy; pets are recorded separately.
 	 *
-	 * @param people 
-	 * @param pets 
-	 * @return true if they were successfully checked in, false if the user isn't a shelter
-	 *         manager or the shelter doesn't have room
+	 * @param people the names of the people being checked in
+	 * @param pets the pets being checked in
+	 * @return true if they were checked in, false if the user isn't a shelter manager
+	 *         or the shelter doesn't have room
 	 */
-
-	
 	public boolean checkInToShelter(ArrayList<String> people, ArrayList<String> pets) {
 		Shelter shelter = getMyShelter();
 		if (shelter == null) {
@@ -305,6 +370,23 @@ public class ReliefApplication {
 	}
 
 	/**
+	 * Adds a person or pet, with details, to one of the logged-in user's households and saves.
+	 *
+	 * @param householdName the name of the household
+	 * @param memberName the person's or pet's name
+	 * @param age the person's age (use 0 for a pet)
+	 * @param petType the kind of pet, such as "dog", or null for a person
+	 * @param medicalNote the medical assistance needed, or null if none
+	 * @return false if nobody is logged in, the household doesn't exist,
+	 *         or the member is already in it
+	 */
+	public boolean addHouseholdMember(String householdName, String memberName, int age,
+			String petType, String medicalNote) {
+		return isLoggedIn() && currentUser.addHouseholdMember(householdName, memberName, age,
+				petType, medicalNote) && userDirectory.save();
+	}
+
+	/**
 	 * Checks in a household member with a safety status and saves.
 	 *
 	 * @param householdName the name of the household
@@ -320,14 +402,13 @@ public class ReliefApplication {
 	}
 
 	/**
-     * Gets the logged-in user's households.
-     *
-     * @return the households, or an empty list if nobody is logged in
-     */
-    public ArrayList<Household> getHouseholds() {
-        return isLoggedIn() ? currentUser.getHouseholds()
-            : new ArrayList<Household>();
-    }
+	 * Gets the logged-in user's households.
+	 *
+	 * @return the households, or an empty list if nobody is logged in
+	 */
+	public ArrayList<Household> getHouseholds() {
+		return isLoggedIn() ? currentUser.getHouseholds() : new ArrayList<Household>();
+	}
 
 	/**
 	 * Records who did what to which item.
