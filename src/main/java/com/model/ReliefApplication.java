@@ -237,6 +237,51 @@ public class ReliefApplication {
 	}
 
 	/**
+	 * Finds the open aid request made by a user.
+	 *
+	 * @param username the username of the person who made the request
+	 * @return their request, or null if they don't have one
+	 */
+	public AidRequest getRequestFrom(String username) {
+		User requester = userDirectory.getUser(username);
+		if (requester == null) {
+			return null;
+		}
+		return aidRequestDirectory.getRequest(requester.getUserId());
+	}
+
+	/**
+	 * Gets the shelter run by the logged-in shelter manager.
+	 *
+	 * @return the manager's shelter, or null if the user is not a shelter manager
+	 */
+	public Shelter getMyShelter() {
+		if (!(currentUser instanceof ShelterManager)) {
+			return null;
+		}
+		ShelterManager manager = (ShelterManager) currentUser;
+		return shelterDirectory.getShelterById(manager.getShelterId());
+	}
+
+	/**
+	 * Checks people and their pets into manager's shelter 
+	 *
+	 * @param people 
+	 * @param pets 
+	 * @return true if they were successfully checked in, false if the user isn't a shelter
+	 *         manager or the shelter doesn't have room
+	 */
+
+	
+	public boolean checkInToShelter(ArrayList<String> people, ArrayList<String> pets) {
+		Shelter shelter = getMyShelter();
+		if (shelter == null) {
+			return false;
+		}
+		return shelter.checkIn(people, pets) && shelterDirectory.save();
+	}
+
+	/**
 	 * Creates a household for the logged-in user and saves it.
 	 *
 	 * @param householdName the name of the household

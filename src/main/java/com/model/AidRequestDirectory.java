@@ -23,8 +23,9 @@ public class AidRequestDirectory {
     }
 
     /**
-     * Singleton accessor
+     * Singleton 
      */
+    
     public static AidRequestDirectory getInstance() {
         if (aidRequestDirectory == null) {
             aidRequestDirectory = new AidRequestDirectory();
@@ -155,10 +156,10 @@ public class AidRequestDirectory {
         if (user == null) {
             return false;
         }
-        if (user.getType() != USERTYPE.VOLUNTEER
-                && user.getType() != USERTYPE.SHELTER_MANAGER) {
-            throw new SecurityException(
-                    "Only volunteers and shelter managers can complete requests.");
+        // only roles like shelter manager are allowed to complete requests
+        if (!user.canCompleteRequests()) {
+            throw new SecurityException("Your " + user.getType().name().toLowerCase()
+                    + " role does not have permission to complete relief requests.");
         }
         AidRequest request = getRequestById(requestId);
         if (request == null || request.getStatus() == RequestStatus.FULFILLED

@@ -35,6 +35,14 @@ public class ReliefUI {
     private static final String CARTER_EMAIL = "carterj@email.sc.edu";
     /** The phone number of the father in the Carter family */
     private static final String CARTER_PHONE = "803-888-9999";
+    /** Felix's username in the users file. */
+    private static final String FELIX_USERNAME = "felix";
+    /** Felix's password in the users file. */
+    private static final String FELIX_PASSWORD = "password";
+    /** The Carter family members who check into the shelter (change names to match the team's). */
+    private static final String[] CARTER_FAMILY = {"John Carter", "Jane Carter", "Sophie Carter"};
+    /** The Carter family's dog. */
+    private static final String CARTER_PET = "Buddy (dog)";
     /** Where the exported trip information is saved. */
     private static final String TRIP_FILE = "carter_trip_information.txt";
 
@@ -51,6 +59,8 @@ public class ReliefUI {
      * Runs every scenario in order, then saves the users, aid requests and shelters.
      */
     public void run() {
+        showSavedData("BEFORE");
+
         scenario1();
         scenario2();
         scenario3();
@@ -62,10 +72,143 @@ public class ReliefUI {
         scenario9();
         scenario10();
         scenario11();
+        scenario12();
+        scenario13();
 
         DataWriter.saveUsers(UserDirectory.getInstance().getUsers());
         DataWriter.saveAidRequests(AidRequestDirectory.getInstance().getRequests());
         DataWriter.saveResources(ShelterDirectory.getInstance().getShelters());
+
+        showSavedData("AFTER");
+    }
+
+    /**
+     * Felix checks the Carter family and Buddy into his shelter,
+     * then marks their aid request complete.
+     */
+
+    public void scenario13() {
+        System.out.println();
+
+        User felix = reliefApp.login(FELIX_USERNAME, FELIX_PASSWORD);
+        if (felix == null) {
+            System.out.println("Felix could not log in.");
+            return;
+        }
+        System.out.println("Logged in: " + felix.getFullName() + " (" + felix.getType() + ")");
+
+        // show Felix the shelter
+
+        Shelter shelter = reliefApp.getMyShelter();
+        if (shelter == null) {
+            System.out.println("Felix's shelter was not found.");
+            reliefApp.logout();
+            return;
+        }
+        printShelter(shelter);
+
+        // check in the family and their dog
+        ArrayList<String> family = new ArrayList<String>();
+        for (String person : CARTER_FAMILY) {
+            family.add(person);
+        }
+        ArrayList<String> pets = new ArrayList<String>();
+        pets.add(CARTER_PET);
+
+        if (!reliefApp.checkInToShelter(family, pets)) {
+            System.out.println("Check in failed. The family may already be checked in,"
+                    + " or the shelter may not have room.");
+            reliefApp.logout();
+            return;
+        }
+        System.out.println("\nChecked in the Carter family and " + CARTER_PET + ".");
+        printShelter(shelter);
+
+        // Felix successfully marks the task as complete, unlike Rosa
+        AidRequest request = reliefApp.getRequestFrom(CARTER_USERNAME);
+        if (request == null) {
+            System.out.println("The Carter family's request was not found.");
+        } else {
+            try {
+                if (reliefApp.completeRequest(request.getRequestId())) {
+                    System.out.println("\nRequest marked complete. Status: " + request.getStatus());
+                } else {
+                    System.out.println("\nThe request could not be completed.");
+                }
+            } catch (SecurityException e) {
+                System.out.println("\nNot allowed: " + e.getMessage());
+            }
+        }
+
+        reliefApp.logout();
+    }
+
+
+
+    /**
+     * Prints what a shelter manager sees about the shelter they manage.
+     *
+     * @param shelter the shelter
+     */
+    
+    private void printShelter(Shelter shelter) {
+        System.out.println("Shelter: " + shelter.getName());
+        System.out.println("Location: " + shelter.getStreetAddress() + ", " + shelter.getCity()
+                + ", " + shelter.getState() + " " + shelter.getZipCode());
+        System.out.println("Capacity: " + shelter.getCapacity());
+        System.out.println("Occupancy: " + shelter.getOccupancy());
+        System.out.println("Spaces available: " + shelter.getRemainingCapacity());
+        System.out.println("Occupants: " + shelter.getOccupants());
+        System.out.println("Pets: " + shelter.getPets());
+    }
+
+    /**
+     *  Shows loaded data to confirm JSON was saved correctly.
+     *
+     * @param label BEFORE or AFTER
+     */
+    private void showSavedData(String label) {
+        System.out.println("\n===== SAVED DATA " + label + " =====");
+
+        User carter = null;
+        for (User user : DataLoader.getUsers()) {
+            if (user.getUsername().equals(CARTER_USERNAME)) {
+                carter = user;
+            }
+        }
+        System.out.println(carter == null
+                ? "users.json: no account for " + CARTER_USERNAME
+                : "users.json: " + carter.getUsername() + " (" + carter.getType()
+                        + ", " + carter.getFullName() + ")");
+
+        AidRequest carterRequest = null;
+        for (AidRequest request : DataLoader.getAidRequests()) {
+            if (request.getRequester() != null
+                    && request.getRequester().getUsername().equals(CARTER_USERNAME)) {
+                carterRequest = request;
+            }
+        }
+        if (carterRequest == null) {
+            System.out.println("aidrequests.json: no request from " + CARTER_USERNAME);
+        } else {
+            System.out.println("aidrequests.json: " + carterRequest.getCategory()
+                    + " request, status " + carterRequest.getStatus());
+            for (TaskAssignment task : carterRequest.getAssignments()) {
+                String volunteer = (task.getVolunteer() == null)
+                        ? "nobody" : task.getVolunteer().getUsername();
+                System.out.println("  assigned to: " + volunteer + " (" + task.getStatus() + ")");
+            }
+        }
+
+        for (Shelter shelter : DataLoader.getCachedShelters()) {
+            if (shelter.getOccupants().isEmpty() && shelter.getPets().isEmpty()) {
+                continue;
+            }
+            System.out.println("shelters.json: " + shelter.getName() + " | occupancy "
+                    + shelter.getOccupancy() + "/" + shelter.getCapacity()
+                    + " | occupants " + shelter.getOccupants() + " | pets " + shelter.getPets());
+        }
+        System.out.println("=============================\n");
     }
 
     /**
@@ -480,7 +623,7 @@ public class ReliefUI {
                     System.out.println("- " + item);
                 }
             }
-        } catch (IOException e) {
+        } catch (IOException | InterruptedException e) {
             System.out.println("Couldn't read the exported file.");
         } catch (IllegalStateException e) {
             System.out.println("Map error: " + e.getMessage());

@@ -24,13 +24,15 @@ public class ShelterManager extends User {
      * @param emailAddress the user's email address
      * @param phoneNumber the user's phone number
      * @param login the login value passed to User
+     * @param shelterId the id of the shelter this person manages
      */
     public ShelterManager(UUID userId, String username, String passwordHash,
             String fullName, LocalDate dateOfBirth, String homeAddress,
             String emailAddress, String phoneNumber, String login,
-            String shelterId) {
+            UUID shelterId) {
         super(userId, username, passwordHash, fullName, dateOfBirth,
                 homeAddress, emailAddress, phoneNumber, login);
+        this.shelterId = shelterId;
     }
 
     /**
@@ -41,6 +43,18 @@ public class ShelterManager extends User {
     @Override
     public USERTYPE getType() {
         return USERTYPE.SHELTER_MANAGER;
+    }
+
+    /**
+     * Shelter managers have permission to mark aid requests as Complete.
+     *
+     * @return true
+     */
+
+
+    @Override
+    public boolean canCompleteRequests() {
+        return true;
     }
 
     /**

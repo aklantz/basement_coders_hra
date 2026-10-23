@@ -29,9 +29,15 @@ public class Household {
     /**
      * Adds a member with an unknown safety status and the current check-in time.     *
      * @param memberName the member's name
-     * @return true after the member's information is stored
+     * @return true if the member was added, false if they were already in the household
      */
     public boolean addHouseholdMember(String memberName) {
+        // don't add someone who is already in the household
+        for (HouseholdMember member : householdMembers) {
+            if (member.getName().equals(memberName)) {
+                return false;
+            }
+        }
         householdMembers.add(new HouseholdMember(memberName));
         return true;
     }

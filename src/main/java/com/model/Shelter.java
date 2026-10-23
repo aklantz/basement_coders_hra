@@ -27,6 +27,10 @@ public class Shelter {
     private Double latitude;
     private Double longitude;
 
+    // names of the people staying and what pets are with them
+    private ArrayList<String> occupants;
+    private ArrayList<String> pets;
+
     /**
      * Creates a new shelter and sets status based on occupancy.
      *
@@ -45,6 +49,8 @@ public class Shelter {
 
         this.lastUpdated = LocalDateTime.now();
         this.inventoryItems = new ArrayList<>();
+        this.occupants = new ArrayList<>();
+        this.pets = new ArrayList<>();
 
         refreshStatus();
     }
@@ -69,6 +75,8 @@ public class Shelter {
         this.status = status;
         this.lastUpdated = lastUpdated;
         this.inventoryItems = new ArrayList<>();
+        this.occupants = new ArrayList<>();
+        this.pets = new ArrayList<>();
     }
 
     /**
@@ -254,6 +262,65 @@ public class Shelter {
         this.latitude = latitude;
         this.longitude = longitude;
     }
+
+    /**
+     * Checks people and also the pets into the shelter.
+     *
+     * @param people the names of the people checking in
+     * @param newPets the pets coming with them
+     * @return true if they were checked in, false if there isn't enough room
+     *         or someone is already checked in
+     */
+
+
+    public boolean checkIn(ArrayList<String> people, ArrayList<String> newPets) {
+        // can't check in if the shelter is closed or has no room
+        if (people == null || status == ShelterStatus.CLOSED
+                || people.size() > getRemainingCapacity()) {
+            return false;
+        }
+
+        // does not check in anyone twice
+        for (String person : people) {
+            if (occupants.contains(person)) {
+                return false;
+            }
+        }
+        
+
+        // add each person to the list
+        for (String person : people) {
+            occupants.add(person);
+        }
+
+        // add each pet to the list
+        if (newPets != null) {
+            for (String pet : newPets) {
+                pets.add(pet);
+            }
+        }
+
+        // only people count toward occupancy
+        updateOccupancy(occupancy + people.size());
+        return true;
+    }
+
+    public ArrayList<String> getOccupants() {
+        return occupants;
+    }
+
+    public void setOccupants(ArrayList<String> occupants) {
+        this.occupants = occupants;
+    }
+
+    public ArrayList<String> getPets() {
+        return pets;
+    }
+
+    public void setPets(ArrayList<String> pets) {
+        this.pets = pets;
+    }
+
 
     @Override
     public String toString() {
