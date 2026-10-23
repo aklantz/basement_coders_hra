@@ -11,6 +11,15 @@
     },
     {
       "type": "java",
+      "name": "ReliefUI (verify)",
+      "request": "launch",
+      "mainClass": "com.hurricane/com.model.ReliefUI",
+      "projectName": "basement_coders_hra",
+      "envFile": "${workspaceFolder}/.env",
+      "args": ["verify"]
+    },
+    {
+      "type": "java",
       "name": "UI",
       "request": "launch",
       "mainClass": "com.hurricane/com.model.UI",

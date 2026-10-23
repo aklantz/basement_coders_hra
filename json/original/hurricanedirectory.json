@@ -1,0 +1,30 @@
+{
+  "category": "CATEGORY_4",
+  "windSpeed": 140,
+  "affectedAreas": [
+    {
+      "zipCode": "29401"
+    },
+    {
+      "zipCode": "29403"
+    },
+    {
+      "zipCode": "29405"
+    },
+    {
+      "zipCode": "29407"
+    },
+    {
+      "zipCode": "29412"
+    },
+    {
+      "zipCode": "29414"
+    },
+    {
+      "zipCode": "29418"
+    },
+    {
+      "zipCode": "29466"
+    }
+  ]
+}
