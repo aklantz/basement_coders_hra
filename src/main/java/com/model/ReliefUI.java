@@ -84,15 +84,15 @@ public class ReliefUI {
     public void run() {
         showSavedData("BEFORE");
 
-        scenario1();
-        scenario2();
-        scenario3();
-        scenario4();
-        scenario5();
-        scenario6();
-        scenario7();
-        scenario8();
-        scenario9();
+        //scenario1();
+        //scenario2();
+        //scenario3();
+        //scenario4();
+        //scenario5();
+        //scenario6();
+        //scenario7();
+        //scenario8();
+        //scenario9();
         scenario10();
         scenario11();
         scenario12();
