@@ -62,4 +62,13 @@ public class DataConstants {
     protected static final String REQUEST_CREATED_AT = "createdAt";
     protected static final String REQUEST_NOTE = "note";
     protected static final String REQUEST_SHELTER_ID = "shelterId";
+
+    public static boolean isJUnitTest() {  
+		for (StackTraceElement element : Thread.currentThread().getStackTrace()) {
+		  if (element.getClassName().startsWith("org.junit.")) {
+			return true;
+		  }           
+		}
+		return false;
+	  }
 }
