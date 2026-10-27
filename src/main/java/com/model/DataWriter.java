@@ -33,7 +33,8 @@ public class DataWriter extends DataConstants {
             for (User user : users) {
                 usersJSON.add(getUserJSON(user));
             }
-            return writeFile(USER_FILE, usersJSON);
+            String path = getFileWritingPath(USER_FILE, "users.json");
+            return writeFile(path, usersJSON);
         } catch (RuntimeException exception) {
             // return reportFailure(USER_FILE, exception);
             return false;
@@ -52,7 +53,8 @@ public class DataWriter extends DataConstants {
             for (AidRequest request : requests) {
                 requestsJSON.add(getAidRequestJSON(request));
             }
-            return writeFile(AID_REQUEST_FILE, requestsJSON);
+            String path = getFileWritingPath(AID_REQUEST_FILE, "aidrequests.json");
+            return writeFile(path, requestsJSON);
         } catch (RuntimeException exception) {
             // return reportFailure(AID_REQUEST_FILE, exception);
             return false;
@@ -91,7 +93,8 @@ public class DataWriter extends DataConstants {
             for (Shelter shelter : shelters) {
                 sheltersJSON.add(getShelterJSON(shelter));
             }
-            return writeFile(RESOURCE_FILE, sheltersJSON);
+            String path = getFileWritingPath(RESOURCE_FILE, "shelters.json");
+            return writeFile(path, sheltersJSON);
         } catch (RuntimeException exception) {
             // return reportFailure(RESOURCE_FILE, exception);
             return false;
