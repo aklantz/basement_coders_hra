@@ -46,4 +46,4 @@ information without the distractions of full-scale weather platforms.
 | Austin Lantz                                 | TBD  |
 | Riley Haywood                                | TBD  |
 | Tim Simpson                                  | TBD  |
-| [Connor Thiele](https://github.com/cthiele1) | TBD  |
+| [Connor Thiele](https://github.com/cthiele1) |  Self Appointed Group Leader  |
