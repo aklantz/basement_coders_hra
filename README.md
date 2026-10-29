@@ -43,7 +43,7 @@ information without the distractions of full-scale weather platforms.
 
 | Team Members                                 | Role |
 | -------------------------------------------- | ---- |
-| Austin Lantz                                 | TBD  |
-| Riley Haywood                                | TBD  |
-| Tim Simpson                                  | TBD  |
-| [Connor Thiele](https://github.com/cthiele1) |  Self Appointed Group Leader  |
+| Austin Lantz                                 | Lead Developer  |
+| Riley Haywood                                | Lead QA  |
+| Tim Simpson                                  | Head Designer  |
+| [Connor Thiele](https://github.com/cthiele1) |  SCRUM Master  |
