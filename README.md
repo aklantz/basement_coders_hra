@@ -43,7 +43,7 @@ information without the distractions of full-scale weather platforms.
 
 | Team Members                                 | Role |
 | -------------------------------------------- | ---- |
-| Austin Lantz                                 | Lead Developer  |
-| Riley Haywood                                | Basement Developer  |
-| Tim Simpson                                  | Head Designer  |
+| [Austin Lantz](https://github.com/aklantz)      | Lead Developer  |
+| [Riley Haywood](https://github.com/haywoodrw)   | Basement Developer  |
+| [Tim Simpson](https://github.com/timsimpson26)  | Head Designer  |
 | [Connor Thiele](https://github.com/cthiele1) |  SCRUM Master  |
