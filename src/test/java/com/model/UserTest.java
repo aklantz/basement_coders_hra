@@ -35,14 +35,14 @@ import com.location.Address;
  * | each subclass reports its own type            | the UI shows different menus for each role                       |
  * | only shelter managers can complete requests   | the requirements say only shelter managers mark requests done    |
  * | notification is addressed to the user         | the message has to say who it is for                             |
- * | formed address is split into parts       | the map tools need street, city, state and zip separately       |
+ * | formed address is split into parts            | the map tools need street, city, state and zip separately             |
  * | address missing commas returns null           | a bad address should not be sent to the map tools                |
  * | null address returns null                     | a user may not have entered an address yet                       |
  * | address with no zip has blank zip             | state is still usable even if the zip was left off               |
  * | add household succeeds                        | normal case for creating a household                             |
  * | duplicate household name rejected             | the user looks households up by name, so names must be unique    |
  * | blank household name rejected                 | a household needs a name to be found later                       |
- * | null household name rejected                  | a missing name can not crash the app                            |
+ * | null household name rejected                  | a missing name can not crash the app                             |
  * | new household is owned by the user            | the household has to point back to the user who made it          |
  * | find household by name                        | normal lookup case                                               |
  * | find missing household returns null           | error case for lookup                                            |
