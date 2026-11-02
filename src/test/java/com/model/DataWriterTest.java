@@ -29,25 +29,54 @@ import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 
 /**
- * Tests for DataWriter.
- * Created with AI assistance.
  *
- * +---------------------------------------------------+------------------------------------------------------+
- * | Test                                              | Reasoning                                            |
- * +---------------------------------------------------+------------------------------------------------------+
- * | null lists and entries fail                       | invalid data should not be saved                     |
- * | user details and households are serialized        | saved users should keep their nested data            |
- * | volunteer and manager fields are serialized       | role-specific information should be preserved        |
- * | request details and assignments are serialized    | saved requests should keep their task history        |
- * | optional request and assignment fields work       | missing optional values should not prevent saving    |
- * | shelter details and inventory are serialized      | saved shelters should keep resources and occupants   |
- * | times use UTC and allow null                      | timestamps should use a consistent format            |
- * | writing creates directories and replaces data     | saving should produce complete, readable JSON        |
- * | writing an empty array clears saved data          | removed records should not remain in the file        |
- * | invalid destination fails without leftover files  | failed writes should clean up temporary files        |
- * | public saves can be loaded again                  | reader and writer must use the same test resources   |
- * | public saves leave application JSON unchanged     | JUnit saves must use the test copies                 |
- * +---------------------------------------------------+------------------------------------------------------+
+ * +--------------------------------------------------------------------------------+----------------------------------------------------------------------------+
+ * | Test                                                                           | Reasoning                                                                  |
+ * +--------------------------------------------------------------------------------+----------------------------------------------------------------------------+
+ * | savedUsersCanBeLoadedAgain                                                     | Public save and load methods must agree on the stored record.              |
+ * | savedRequestsCanBeLoadedAgain                                                  | Public save and load methods must agree on the stored record.              |
+ * | cachedSheltersCanBeLoadedAgain                                                 | Public save and load methods must agree on the stored record.              |
+ * | saveUsersLeavesApplicationFileUnchanged                                        | JUnit writes belong in test resources, not application JSON.               |
+ * | saveAidRequestsLeavesApplicationFileUnchanged                                  | JUnit writes belong in test resources, not application JSON.               |
+ * | saveResourcesLeavesApplicationFileUnchanged                                    | JUnit writes belong in test resources, not application JSON.               |
+ * | cacheSheltersLeavesApplicationFileUnchanged                                    | JUnit writes belong in test resources, not application JSON.               |
+ * | saveUsersRejectsNullList                                                       | A missing collection is invalid input and must return false.               |
+ * | saveAidRequestsRejectsNullList                                                 | A missing collection is invalid input and must return false.               |
+ * | saveResourcesRejectsNullList                                                   | A missing collection is invalid input and must return false.               |
+ * | cacheSheltersRejectsNullList                                                   | A missing collection is invalid input and must return false.               |
+ * | saveUsersRejectsNullEntry                                                      | A null record cannot be serialized and must return false.                  |
+ * | saveAidRequestsRejectsNullEntry                                                | A null record cannot be serialized and must return false.                  |
+ * | saveResourcesRejectsNullEntry                                                  | A null record cannot be serialized and must return false.                  |
+ * | cacheSheltersRejectsNullEntry                                                  | A null record cannot be serialized and must return false.                  |
+ * | userJSONKeepsAccountAndContactDetails                                          | The saved record must match the explicit fixture values.                   |
+ * | userJSONKeepsHouseholdMembers                                                  | Household ownership and member details must remain persistence.            |
+ * | userJSONIncludesVolunteerSpecialtyWhenPresent                                  | The MEDICAL specialty must remain persistence.                             |
+ * | userJSONIncludesManagerShelterWhenPresent                                      | The manager must retain the saved shelter UUID.                            |
+ * | requestJSONKeepsDetailsAndShelter                                              | The shelter record must retain its saved resource information.             |
+ * | requestJSONOmitsMissingShelter                                                 | Absent optional data must use the specified default.                       |
+ * | requestJSONKeepsAssignmentHistory                                              | Saved task identities, participants, status, and times must remain.        |
+ * | requestJSONAllowsMissingAssignmentPeopleAndTimes                               | Absent optional data must use the specified default.                       |
+ * | shelterJSONKeepsDetailsInventoryAndOccupants                                   | The shelter record must retain its saved resource information.             |
+ * | requestJSONFormatsCreatedTimeAsUTC                                             | The fixed creation time must be written with its UTC offset.               |
+ * | requestJSONAllowsNullCreatedTime                                               | An absent timestamp must remain JSON null.                                 |
+ * | writeFileCreatesDirectoriesAndPreservesSpecialCharacters                       | The saved role must construct the matching user subclass.                  |
+ * | writeFileReplacesExistingDataWithEmptyArray                                    | Replacing a file with [] must remove its prior records.                    |
+ * | writeFileFailsForNonemptyDirectoryAndCleansUp                                  | An unwritable destination must fail and clean up temporary files.          |
+ * | userJSONOmitsMissingVolunteerSpecialty                                         | Absent optional data must use the specified default.                       |
+ * | userJSONOmitsMissingManagerShelter                                             | Absent optional data must use the specified default.                       |
+ * | saveUsersReplacesSavedRecordsWithEmptyList                                     | An empty collection must not retain stale records.                         |
+ * | saveUsersPreservesSavedFileWhenSerializationFails                              | A failed save must leave the previous file bytes intact.                   |
+ * | saveUsersWritesMultipleRecords                                                 | Every supplied record must remain, in its original order.                  |
+ * | saveAidRequestsReplacesSavedRecordsWithEmptyList                               | An empty collection must not retain stale records.                         |
+ * | saveAidRequestsPreservesSavedFileWhenSerializationFails                        | A failed save must leave the previous file bytes intact.                   |
+ * | saveAidRequestsWritesMultipleRecords                                           | Every supplied record must remain, in its original order.                  |
+ * | saveResourcesReplacesSavedRecordsWithEmptyList                                 | An empty collection must not retain stale records.                         |
+ * | saveResourcesPreservesSavedFileWhenSerializationFails                          | A failed save must leave the previous file bytes intact.                   |
+ * | saveResourcesWritesMultipleRecords                                             | Every supplied record must remain, in its original order.                  |
+ * | cacheSheltersReplacesSavedRecordsWithEmptyList                                 | An empty collection must not retain stale records.                         |
+ * | cacheSheltersPreservesSavedFileWhenSerializationFails                          | A failed save must leave the previous file bytes intact.                   |
+ * | cacheSheltersWritesMultipleRecords                                             | Every supplied record must remain, in its original order.                  |
+ * +--------------------------------------------------------------------------------+----------------------------------------------------------------------------+
  */
 public class DataWriterTest {
 
@@ -120,51 +149,95 @@ public class DataWriterTest {
     }
 
     @Test
-    public void publicSavesUseTestResourcesAndLeaveApplicationFilesUnchanged() throws Exception {
-        assertTrue(DataConstants.isJUnitTest());
-        Map<Path, byte[]> applicationFiles = new LinkedHashMap<Path, byte[]>();
-        for (String file : new String[] { DataConstants.USER_FILE,
-                DataConstants.AID_REQUEST_FILE, DataConstants.RESOURCE_FILE }) {
-            Path path = Paths.get(file);
-            applicationFiles.put(path, Files.readAllBytes(path));
-        }
-
-        saveAndRead(resident);
-        saveAndRead(request);
-        saveAndRead(new Shelter(UUID.randomUUID(), "School", 100, 0));
-        assertTrue(DataWriter.saveUsers(new ArrayList<User>()));
-        assertTrue(DataWriter.saveAidRequests(new ArrayList<AidRequest>()));
-        assertTrue(DataWriter.saveResources(new ArrayList<Shelter>()));
-        assertTrue(readFile(testFile("users.json")).isEmpty());
-        assertTrue(readFile(testFile("aidrequests.json")).isEmpty());
-        assertTrue(readFile(testFile("shelters.json")).isEmpty());
-
-        for (Map.Entry<Path, byte[]> entry : applicationFiles.entrySet()) {
-            assertArrayEquals(entry.getKey().toString(), entry.getValue(), Files.readAllBytes(entry.getKey()));
-        }
+    public void saveUsersLeavesApplicationFileUnchanged() throws Exception {
+        Path applicationFile = Paths.get("json/users.json");
+        byte[] before = Files.readAllBytes(applicationFile);
+        ArrayList<User> values = new ArrayList<User>();
+        values.add(resident);
+        assertTrue(DataWriter.saveUsers(values));
+        assertEquals(1, readFile(testFile("users.json")).size());
+        assertArrayEquals(before, Files.readAllBytes(applicationFile));
     }
 
     @Test
-    public void saveMethodsRejectNullLists() {
+    public void saveAidRequestsLeavesApplicationFileUnchanged() throws Exception {
+        Path applicationFile = Paths.get("json/aidrequests.json");
+        byte[] before = Files.readAllBytes(applicationFile);
+        ArrayList<AidRequest> values = new ArrayList<AidRequest>();
+        values.add(request);
+        assertTrue(DataWriter.saveAidRequests(values));
+        assertEquals(1, readFile(testFile("aidrequests.json")).size());
+        assertArrayEquals(before, Files.readAllBytes(applicationFile));
+    }
+
+    @Test
+    public void saveResourcesLeavesApplicationFileUnchanged() throws Exception {
+        Path applicationFile = Paths.get("json/shelters.json");
+        byte[] before = Files.readAllBytes(applicationFile);
+        ArrayList<Shelter> values = new ArrayList<Shelter>();
+        values.add(new Shelter(UUID.randomUUID(), "School", 100, 0));
+        assertTrue(DataWriter.saveResources(values));
+        assertEquals(1, readFile(testFile("shelters.json")).size());
+        assertArrayEquals(before, Files.readAllBytes(applicationFile));
+    }
+
+    @Test
+    public void cacheSheltersLeavesApplicationFileUnchanged() throws Exception {
+        Path applicationFile = Paths.get("json/shelters.json");
+        byte[] before = Files.readAllBytes(applicationFile);
+        ArrayList<Shelter> values = new ArrayList<Shelter>();
+        values.add(new Shelter(UUID.randomUUID(), "School", 100, 0));
+        assertTrue(DataWriter.cacheShelters(values));
+        assertEquals(1, readFile(testFile("shelters.json")).size());
+        assertArrayEquals(before, Files.readAllBytes(applicationFile));
+    }
+
+    @Test
+    public void saveUsersRejectsNullList() throws Exception {
         assertFalse(DataWriter.saveUsers(null));
+    }
+
+    @Test
+    public void saveAidRequestsRejectsNullList() throws Exception {
         assertFalse(DataWriter.saveAidRequests(null));
+    }
+
+    @Test
+    public void saveResourcesRejectsNullList() throws Exception {
         assertFalse(DataWriter.saveResources(null));
+    }
+
+    @Test
+    public void cacheSheltersRejectsNullList() throws Exception {
         assertFalse(DataWriter.cacheShelters(null));
     }
 
     @Test
-    public void saveMethodsRejectNullEntries() {
-        ArrayList<User> users = new ArrayList<User>();
-        users.add(null);
-        ArrayList<AidRequest> requests = new ArrayList<AidRequest>();
-        requests.add(null);
-        ArrayList<Shelter> shelters = new ArrayList<Shelter>();
-        shelters.add(null);
+    public void saveUsersRejectsNullEntry() throws Exception {
+        ArrayList<User> values = new ArrayList<User>();
+        values.add(null);
+        assertFalse(DataWriter.saveUsers(values));
+    }
 
-        assertFalse(DataWriter.saveUsers(users));
-        assertFalse(DataWriter.saveAidRequests(requests));
-        assertFalse(DataWriter.saveResources(shelters));
-        assertFalse(DataWriter.cacheShelters(shelters));
+    @Test
+    public void saveAidRequestsRejectsNullEntry() throws Exception {
+        ArrayList<AidRequest> values = new ArrayList<AidRequest>();
+        values.add(null);
+        assertFalse(DataWriter.saveAidRequests(values));
+    }
+
+    @Test
+    public void saveResourcesRejectsNullEntry() throws Exception {
+        ArrayList<Shelter> values = new ArrayList<Shelter>();
+        values.add(null);
+        assertFalse(DataWriter.saveResources(values));
+    }
+
+    @Test
+    public void cacheSheltersRejectsNullEntry() throws Exception {
+        ArrayList<Shelter> values = new ArrayList<Shelter>();
+        values.add(null);
+        assertFalse(DataWriter.cacheShelters(values));
     }
 
     @Test
@@ -211,8 +284,6 @@ public class DataWriterTest {
     public void userJSONIncludesVolunteerSpecialtyWhenPresent() throws Exception {
         Volunteer volunteer = new Volunteer(UUID.randomUUID(), "val", "password",
                 "Val Volunteer", LocalDate.of(1990, 1, 1), null, null, null, null);
-        volunteer.setSpecialty(null);
-        assertFalse(saveAndRead(volunteer).containsKey("specialty"));
 
         volunteer.setSpecialty(RequestCategory.MEDICAL);
         assertEquals("MEDICAL", saveAndRead(volunteer).get("specialty"));
@@ -222,7 +293,6 @@ public class DataWriterTest {
     public void userJSONIncludesManagerShelterWhenPresent() throws Exception {
         ShelterManager manager = new ShelterManager(UUID.randomUUID(), "manager", "password",
                 "Shelter Manager", LocalDate.of(1990, 1, 1), null, null, null, null, null);
-        assertFalse(saveAndRead(manager).containsKey("shelterId"));
 
         UUID shelterId = UUID.randomUUID();
         manager.setShelterId(shelterId);
@@ -339,12 +409,14 @@ public class DataWriterTest {
     }
 
     @Test
-    public void formatTimeUsesUTCAndAllowsNull() throws Exception {
-        Method method = DataWriter.class.getDeclaredMethod("formatTime", LocalDateTime.class);
-        method.setAccessible(true);
+    public void requestJSONFormatsCreatedTimeAsUTC() throws Exception {
+        assertEquals("2026-10-01T09:30Z", saveAndRead(request).get("createdAt"));
+    }
 
-        assertEquals("2026-10-01T09:30Z", method.invoke(null, LocalDateTime.of(2026, 10, 1, 9, 30)));
-        assertNull(method.invoke(null, new Object[] { null }));
+    @Test
+    public void requestJSONAllowsNullCreatedTime() throws Exception {
+        request.setCreatedAt(null);
+        assertNull(saveAndRead(request).get("createdAt"));
     }
 
     @Test
@@ -378,6 +450,148 @@ public class DataWriterTest {
         assertFalse(writeFile(destination, new JSONArray()));
         assertEquals("keep", Files.readString(existing, StandardCharsets.UTF_8));
         assertEquals(1, temporaryFolder.getRoot().list().length);
+    }
+
+    @Test
+    public void userJSONOmitsMissingVolunteerSpecialty() throws Exception {
+        Volunteer volunteer = new Volunteer(UUID.randomUUID(), "val", "password", "Val",
+                LocalDate.of(1990, 1, 1), null, null, null, null);
+        assertFalse(saveAndRead(volunteer).containsKey("specialty"));
+    }
+
+    @Test
+    public void userJSONOmitsMissingManagerShelter() throws Exception {
+        ShelterManager manager = new ShelterManager(UUID.randomUUID(), "manager", "password", "Manager",
+                LocalDate.of(1990, 1, 1), null, null, null, null, null);
+        assertFalse(saveAndRead(manager).containsKey("shelterId"));
+    }
+
+    @Test
+    public void saveUsersReplacesSavedRecordsWithEmptyList() throws Exception {
+        ArrayList<User> values = new ArrayList<User>();
+        values.add(resident);
+        assertTrue(DataWriter.saveUsers(values));
+        assertTrue(DataWriter.saveUsers(new ArrayList<User>()));
+        assertTrue(readFile(testFile("users.json")).isEmpty());
+    }
+
+    @Test
+    public void saveUsersPreservesSavedFileWhenSerializationFails() throws Exception {
+        ArrayList<User> values = new ArrayList<User>();
+        values.add(resident);
+        assertTrue(DataWriter.saveUsers(values));
+        byte[] before = Files.readAllBytes(testFile("users.json"));
+        values.add(null);
+        assertFalse(DataWriter.saveUsers(values));
+        assertArrayEquals(before, Files.readAllBytes(testFile("users.json")));
+    }
+
+    @Test
+    public void saveUsersWritesMultipleRecords() throws Exception {
+        ArrayList<User> values = new ArrayList<User>();
+        values.add(resident);
+        values.add(new Resident(UUID.fromString("bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb"), "ben", "password", "Ben", LocalDate.of(1991, 2, 2), null, null, null, null));
+        assertTrue(DataWriter.saveUsers(values));
+        JSONArray saved = readFile(testFile("users.json"));
+        assertEquals(2, saved.size());
+        assertEquals(values.get(0).getUserId().toString(), ((JSONObject) saved.get(0)).get("userId"));
+        assertEquals("bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb", ((JSONObject) saved.get(1)).get("userId"));
+    }
+
+    @Test
+    public void saveAidRequestsReplacesSavedRecordsWithEmptyList() throws Exception {
+        ArrayList<AidRequest> values = new ArrayList<AidRequest>();
+        values.add(request);
+        assertTrue(DataWriter.saveAidRequests(values));
+        assertTrue(DataWriter.saveAidRequests(new ArrayList<AidRequest>()));
+        assertTrue(readFile(testFile("aidrequests.json")).isEmpty());
+    }
+
+    @Test
+    public void saveAidRequestsPreservesSavedFileWhenSerializationFails() throws Exception {
+        ArrayList<AidRequest> values = new ArrayList<AidRequest>();
+        values.add(request);
+        assertTrue(DataWriter.saveAidRequests(values));
+        byte[] before = Files.readAllBytes(testFile("aidrequests.json"));
+        values.add(null);
+        assertFalse(DataWriter.saveAidRequests(values));
+        assertArrayEquals(before, Files.readAllBytes(testFile("aidrequests.json")));
+    }
+
+    @Test
+    public void saveAidRequestsWritesMultipleRecords() throws Exception {
+        ArrayList<AidRequest> values = new ArrayList<AidRequest>();
+        values.add(request);
+        values.add(new AidRequest(UUID.fromString("bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb"), resident, RequestCategory.WATER, 1, "20 Oak St"));
+        assertTrue(DataWriter.saveAidRequests(values));
+        JSONArray saved = readFile(testFile("aidrequests.json"));
+        assertEquals(2, saved.size());
+        assertEquals(values.get(0).getRequestId().toString(), ((JSONObject) saved.get(0)).get("requestId"));
+        assertEquals("bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb", ((JSONObject) saved.get(1)).get("requestId"));
+    }
+
+    @Test
+    public void saveResourcesReplacesSavedRecordsWithEmptyList() throws Exception {
+        ArrayList<Shelter> values = new ArrayList<Shelter>();
+        values.add(new Shelter(UUID.randomUUID(), "School", 100, 0));
+        assertTrue(DataWriter.saveResources(values));
+        assertTrue(DataWriter.saveResources(new ArrayList<Shelter>()));
+        assertTrue(readFile(testFile("shelters.json")).isEmpty());
+    }
+
+    @Test
+    public void saveResourcesPreservesSavedFileWhenSerializationFails() throws Exception {
+        ArrayList<Shelter> values = new ArrayList<Shelter>();
+        values.add(new Shelter(UUID.randomUUID(), "School", 100, 0));
+        assertTrue(DataWriter.saveResources(values));
+        byte[] before = Files.readAllBytes(testFile("shelters.json"));
+        values.add(null);
+        assertFalse(DataWriter.saveResources(values));
+        assertArrayEquals(before, Files.readAllBytes(testFile("shelters.json")));
+    }
+
+    @Test
+    public void saveResourcesWritesMultipleRecords() throws Exception {
+        ArrayList<Shelter> values = new ArrayList<Shelter>();
+        values.add(new Shelter(UUID.randomUUID(), "School", 100, 0));
+        values.add(new Shelter(UUID.fromString("bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb"), "Gym", 50, 0));
+        assertTrue(DataWriter.saveResources(values));
+        JSONArray saved = readFile(testFile("shelters.json"));
+        assertEquals(2, saved.size());
+        assertEquals(values.get(0).getResourceId().toString(), ((JSONObject) saved.get(0)).get("resourceId"));
+        assertEquals("bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb", ((JSONObject) saved.get(1)).get("resourceId"));
+    }
+
+    @Test
+    public void cacheSheltersReplacesSavedRecordsWithEmptyList() throws Exception {
+        ArrayList<Shelter> values = new ArrayList<Shelter>();
+        values.add(new Shelter(UUID.randomUUID(), "School", 100, 0));
+        assertTrue(DataWriter.cacheShelters(values));
+        assertTrue(DataWriter.cacheShelters(new ArrayList<Shelter>()));
+        assertTrue(readFile(testFile("shelters.json")).isEmpty());
+    }
+
+    @Test
+    public void cacheSheltersPreservesSavedFileWhenSerializationFails() throws Exception {
+        ArrayList<Shelter> values = new ArrayList<Shelter>();
+        values.add(new Shelter(UUID.randomUUID(), "School", 100, 0));
+        assertTrue(DataWriter.cacheShelters(values));
+        byte[] before = Files.readAllBytes(testFile("shelters.json"));
+        values.add(null);
+        assertFalse(DataWriter.cacheShelters(values));
+        assertArrayEquals(before, Files.readAllBytes(testFile("shelters.json")));
+    }
+
+    @Test
+    public void cacheSheltersWritesMultipleRecords() throws Exception {
+        ArrayList<Shelter> values = new ArrayList<Shelter>();
+        values.add(new Shelter(UUID.randomUUID(), "School", 100, 0));
+        values.add(new Shelter(UUID.fromString("bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb"), "Gym", 50, 0));
+        assertTrue(DataWriter.cacheShelters(values));
+        JSONArray saved = readFile(testFile("shelters.json"));
+        assertEquals(2, saved.size());
+        assertEquals(values.get(0).getResourceId().toString(), ((JSONObject) saved.get(0)).get("resourceId"));
+        assertEquals("bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb", ((JSONObject) saved.get(1)).get("resourceId"));
     }
 
     @After

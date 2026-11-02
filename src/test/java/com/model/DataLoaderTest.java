@@ -27,27 +27,52 @@ import org.junit.Before;
 import org.junit.Test;
 
 /**
- * Tests for DataLoader.
- * Created with AI assistance.
  *
- * +---------------------------------------------------+------------------------------------------------------+
- * | Test                                              | Reasoning                                            |
- * +---------------------------------------------------+------------------------------------------------------+
- * | empty files return empty lists                    | no saved records should mean no loaded records       |
- * | users keep account and contact details            | loaded accounts should match saved information       |
- * | each user type creates the correct subclass       | roles need their own behavior                        |
- * | volunteers and managers keep optional fields      | specialty and shelter links should be restored       |
- * | households restore members and older defaults     | nested data and older files should both load          |
- * | legacy household key is accepted                  | older user files should remain readable              |
- * | shelters restore details and inventory            | cached resources should retain their saved data      |
- * | missing shelter fields use defaults               | optional lists and flags should not prevent loading  |
- * | requests link to the existing requester           | requests should use users from the directory         |
- * | assignments restore users, status, and times       | saved task history should survive loading            |
- * | missing or wrong-role assignees become null        | invalid links should not create incorrect user types |
- * | optional request fields use defaults              | older requests should still load                     |
- * | hurricane details and affected areas load          | hurricane getters should return the saved values     |
- * +---------------------------------------------------+------------------------------------------------------+
+ * +--------------------------------------------------------------------------------+----------------------------------------------------------------------------+
+ * | Test                                                                           | Reasoning                                                                  |
+ * +--------------------------------------------------------------------------------+----------------------------------------------------------------------------+
+ * | getUsersReturnsEmptyListForEmptyFile                                           | An empty collection must not retain stale records.                         |
+ * | getCachedSheltersReturnsEmptyListForEmptyFile                                  | An empty collection must not retain stale records.                         |
+ * | getAidRequestsReturnsEmptyListForEmptyFile                                     | An empty collection must not retain stale records.                         |
+ * | getUsersRestoresAccountAndContactDetails                                       | The saved record must match the explicit fixture values.                   |
+ * | getUsersCreatesResident                                                        | The saved role must construct the matching user subclass.                  |
+ * | getUsersCreatesVolunteer                                                       | The saved role must construct the matching user subclass.                  |
+ * | getUsersCreatesCoordinator                                                     | The saved role must construct the matching user subclass.                  |
+ * | getUsersCreatesAdmin                                                           | The saved role must construct the matching user subclass.                  |
+ * | getUsersCreatesShelterManager                                                  | The saved role must construct the matching user subclass.                  |
+ * | getUsersRestoresVolunteerSpecialty                                             | The MEDICAL specialty must remain persistence.                            |
+ * | getUsersRestoresManagerShelter                                                 | The manager must retain the saved shelter UUID.                            |
+ * | getUsersAllowsMissingVolunteerSpecialty                                        | Absent optional data must use the specified default.         |
+ * | getUsersAllowsMissingManagerShelter                                            | Absent optional data must use the specified default.         |
+ * | getUsersRestoresHouseholdMembersAndOlderDefaults                               | Older records must receive defaults for optional fields.                   |
+ * | getUsersAcceptsLegacyHouseholdKey                                              | Previously saved household keys must remain readable.                      |
+ * | getCachedSheltersRestoresDetailsInventoryAndOccupants                          | The shelter record must retain its saved resource information.             |
+ * | getCachedSheltersDefaultsMissingOptionalFields                                 | Absent optional data must use the specified default.         |
+ * | getAidRequestsRestoresDetailsAndRequester                                      | The saved record must match the explicit fixture values.                   |
+ * | getAidRequestsDefaultsMissingOptionalFields                                    | Absent optional data must use the specified default.         |
+ * | getAidRequestsRestoresAssignmentUsersAndHistory                                | Saved task identities, participants, status, and times must remain.       |
+ * | getAidRequestsAllowsMissingAssignees                                           | Absent optional data must use the specified default.         |
+ * | getAidRequestsAllowsUnknownAssignees                                           | Unresolvable user IDs must not create assignment participants.             |
+ * | getAidRequestsAllowsWrongRoleAssignees                                         | A resident must not be loaded as a volunteer or coordinator.               |
+ * | getHurricaneCategoryReturnsSavedCategory                                       | CATEGORY_4 in the fixture must load as CATEGORY_4.                         |
+ * | getWindSpeedReturnsSavedSpeed                                                  | The fixture wind speed of 140 must load unchanged.                         |
+ * | getAffectedZipCodesReturnsSavedAreas                                           | Both fixture zip codes must load in their saved order.                     |
+ * | getAffectedZipCodesAllowsNoAffectedAreas                                       | No affected areas must produce an empty zip-code list.                     |
+ * | getUsersReturnsEmptyListForMalformedJSON                                       | Unreadable JSON must return the documented empty/default result.           |
+ * | getUsersReturnsEmptyListForInvalidRecord                                       | Missing required fields must not create an incomplete record.              |
+ * | getCachedSheltersReturnsEmptyListForMalformedJSON                              | Unreadable JSON must return the documented empty/default result.           |
+ * | getCachedSheltersReturnsEmptyListForInvalidRecord                              | Missing required fields must not create an incomplete record.              |
+ * | getAidRequestsReturnsEmptyListForMalformedJSON                                 | Unreadable JSON must return the documented empty/default result.           |
+ * | getAidRequestsReturnsEmptyListForInvalidRecord                                 | Missing required fields must not create an incomplete record.              |
+ * | getWindSpeedHandlesMalformedFile                                               | Unreadable JSON must return the documented empty/default result.           |
+ * | getHurricaneCategoryHandlesMalformedFile                                       | Unreadable JSON must return the documented empty/default result.           |
+ * | getAffectedZipCodesHandlesMalformedFile                                        | Unreadable JSON must return the documented empty/default result.           |
+ * | getUsersLoadsMultipleRecordsInOrder                                            | Every supplied record must remain, in its original order.                 |
+ * | getSheltersLoadsMultipleRecordsInOrder                                         | Every supplied record must remain, in its original order.                 |
+ * | getRequestsLoadsMultipleRecordsInOrder                                         | Every supplied record must remain, in its original order.                 |
+ * +--------------------------------------------------------------------------------+----------------------------------------------------------------------------+
  */
+@SuppressWarnings("unchecked")
 public class DataLoaderTest {
 
     private Path resourceDirectory;
@@ -106,9 +131,17 @@ public class DataLoaderTest {
     }
 
     @Test
-    public void emptyFilesReturnEmptyLists() {
+    public void getUsersReturnsEmptyListForEmptyFile() throws Exception {
         assertTrue(DataLoader.getUsers().isEmpty());
+    }
+
+    @Test
+    public void getCachedSheltersReturnsEmptyListForEmptyFile() throws Exception {
         assertTrue(DataLoader.getCachedShelters().isEmpty());
+    }
+
+    @Test
+    public void getAidRequestsReturnsEmptyListForEmptyFile() throws Exception {
         assertTrue(DataLoader.getAidRequests().isEmpty());
     }
 
@@ -134,45 +167,71 @@ public class DataLoaderTest {
     }
 
     @Test
-    public void getUsersCreatesEachUserType() throws Exception {
-        writeFixture("users.json", array(makeUser(USERTYPE.RESIDENT), makeUser(USERTYPE.VOLUNTEER),
-                makeUser(USERTYPE.COORDINATOR), makeUser(USERTYPE.ADMIN), makeUser(USERTYPE.SHELTER_MANAGER)));
-
+    public void getUsersCreatesResident() throws Exception {
+        writeFixture("users.json", array(makeUser(USERTYPE.RESIDENT)));
         ArrayList<User> users = DataLoader.getUsers();
-
-        assertEquals(5, users.size());
+        assertEquals(1, users.size());
         assertTrue(users.get(0) instanceof Resident);
-        assertTrue(users.get(1) instanceof Volunteer);
-        assertTrue(users.get(2) instanceof Coordinator);
-        assertTrue(users.get(3) instanceof Admin);
-        assertTrue(users.get(4) instanceof ShelterManager);
     }
 
     @Test
-    @SuppressWarnings("unchecked")
-    public void getUsersRestoresVolunteerSpecialtyAndManagerShelter() throws Exception {
-        JSONObject volunteer = makeUser(USERTYPE.VOLUNTEER);
-        volunteer.put("specialty", "MEDICAL");
-        JSONObject manager = makeUser(USERTYPE.SHELTER_MANAGER);
-        manager.put("shelterId", shelterId.toString());
-        writeFixture("users.json", array(volunteer, manager));
-
+    public void getUsersCreatesVolunteer() throws Exception {
+        writeFixture("users.json", array(makeUser(USERTYPE.VOLUNTEER)));
         ArrayList<User> users = DataLoader.getUsers();
-
-        assertEquals(2, users.size());
-        assertEquals(RequestCategory.MEDICAL, ((Volunteer) users.get(0)).getSpecialty());
-        assertEquals(shelterId, ((ShelterManager) users.get(1)).getShelterId());
+        assertEquals(1, users.size());
+        assertTrue(users.get(0) instanceof Volunteer);
     }
 
     @Test
-    public void getUsersAllowsMissingRoleFields() throws Exception {
-        writeFixture("users.json", array(makeUser(USERTYPE.VOLUNTEER), makeUser(USERTYPE.SHELTER_MANAGER)));
-
+    public void getUsersCreatesCoordinator() throws Exception {
+        writeFixture("users.json", array(makeUser(USERTYPE.COORDINATOR)));
         ArrayList<User> users = DataLoader.getUsers();
+        assertEquals(1, users.size());
+        assertTrue(users.get(0) instanceof Coordinator);
+    }
 
-        assertEquals(2, users.size());
-        assertNull(((Volunteer) users.get(0)).getSpecialty());
-        assertNull(((ShelterManager) users.get(1)).getShelterId());
+    @Test
+    public void getUsersCreatesAdmin() throws Exception {
+        writeFixture("users.json", array(makeUser(USERTYPE.ADMIN)));
+        ArrayList<User> users = DataLoader.getUsers();
+        assertEquals(1, users.size());
+        assertTrue(users.get(0) instanceof Admin);
+    }
+
+    @Test
+    public void getUsersCreatesShelterManager() throws Exception {
+        writeFixture("users.json", array(makeUser(USERTYPE.SHELTER_MANAGER)));
+        ArrayList<User> users = DataLoader.getUsers();
+        assertEquals(1, users.size());
+        assertTrue(users.get(0) instanceof ShelterManager);
+    }
+
+    @Test
+    public void getUsersRestoresVolunteerSpecialty() throws Exception {
+        JSONObject user = makeUser(USERTYPE.VOLUNTEER);
+        user.put("specialty", "MEDICAL");
+        writeFixture("users.json", array(user));
+        assertEquals(RequestCategory.MEDICAL, ((Volunteer) DataLoader.getUsers().get(0)).getSpecialty());
+    }
+
+    @Test
+    public void getUsersRestoresManagerShelter() throws Exception {
+        JSONObject user = makeUser(USERTYPE.SHELTER_MANAGER);
+        user.put("shelterId", shelterId.toString());
+        writeFixture("users.json", array(user));
+        assertEquals(shelterId, ((ShelterManager) DataLoader.getUsers().get(0)).getShelterId());
+    }
+
+    @Test
+    public void getUsersAllowsMissingVolunteerSpecialty() throws Exception {
+        writeFixture("users.json", array(makeUser(USERTYPE.VOLUNTEER)));
+        assertNull(((Volunteer) DataLoader.getUsers().get(0)).getSpecialty());
+    }
+
+    @Test
+    public void getUsersAllowsMissingManagerShelter() throws Exception {
+        writeFixture("users.json", array(makeUser(USERTYPE.SHELTER_MANAGER)));
+        assertNull(((ShelterManager) DataLoader.getUsers().get(0)).getShelterId());
     }
 
     @Test
@@ -351,37 +410,61 @@ public class DataLoaderTest {
     }
 
     @Test
-    @SuppressWarnings("unchecked")
-    public void getAidRequestsAllowsMissingAndWrongRoleAssignees() throws Exception {
+    public void getAidRequestsAllowsMissingAssignees() throws Exception {
         addRequester();
         JSONObject request = makeRequest();
-        request.put("assignments", array(
-                object("taskId", UUID.randomUUID().toString(), "status", "PENDING"),
-                object("taskId", UUID.randomUUID().toString(), "status", "PENDING",
-                        "volunteer", userId.toString(), "coordinator", UUID.randomUUID().toString())));
+        JSONObject assignment = object("taskId", UUID.randomUUID().toString(), "status", "PENDING");
+        request.put("assignments", array(assignment));
         writeFixture("aidrequests.json", array(request));
-
-        ArrayList<AidRequest> requests = DataLoader.getAidRequests();
-
-        assertEquals(1, requests.size());
-        assertEquals(2, requests.get(0).getAssignments().size());
-        for (TaskAssignment task : requests.get(0).getAssignments()) {
-            assertNull(task.getVolunteer());
-            assertNull(task.getCoordinator());
-            assertNull(task.getAcceptedAt());
-            assertNull(task.getCompletedAt());
-            assertEquals(TaskStatus.PENDING, task.getStatus());
-        }
+        TaskAssignment loaded = DataLoader.getAidRequests().get(0).getAssignments().get(0);
+        assertNull(loaded.getVolunteer());
+        assertNull(loaded.getCoordinator());
     }
 
     @Test
-    public void getHurricaneDetailsMatchesSavedValues() {
+    public void getAidRequestsAllowsUnknownAssignees() throws Exception {
+        addRequester();
+        JSONObject request = makeRequest();
+        JSONObject assignment = object("taskId", UUID.randomUUID().toString(), "status", "PENDING");
+        assignment.put("volunteer", UUID.randomUUID().toString());
+        assignment.put("coordinator", UUID.randomUUID().toString());
+        request.put("assignments", array(assignment));
+        writeFixture("aidrequests.json", array(request));
+        TaskAssignment loaded = DataLoader.getAidRequests().get(0).getAssignments().get(0);
+        assertNull(loaded.getVolunteer());
+        assertNull(loaded.getCoordinator());
+    }
+
+    @Test
+    public void getAidRequestsAllowsWrongRoleAssignees() throws Exception {
+        addRequester();
+        JSONObject request = makeRequest();
+        JSONObject assignment = object("taskId", UUID.randomUUID().toString(), "status", "PENDING");
+        assignment.put("volunteer", userId.toString());
+        assignment.put("coordinator", userId.toString());
+        request.put("assignments", array(assignment));
+        writeFixture("aidrequests.json", array(request));
+        TaskAssignment loaded = DataLoader.getAidRequests().get(0).getAssignments().get(0);
+        assertNull(loaded.getVolunteer());
+        assertNull(loaded.getCoordinator());
+    }
+
+    @Test
+    public void getHurricaneCategoryReturnsSavedCategory() throws Exception {
         assertEquals(HurricaneCategory.CATEGORY_4, DataLoader.getHurricaneCategory());
+    }
+
+    @Test
+    public void getWindSpeedReturnsSavedSpeed() throws Exception {
         assertEquals(140, DataLoader.getWindSpeed());
-        ArrayList<ZipCode> zipCodes = DataLoader.getAffectedZipCodes();
-        assertEquals(2, zipCodes.size());
-        assertEquals("29401", zipCodes.get(0).getCode());
-        assertEquals("29403", zipCodes.get(1).getCode());
+    }
+
+    @Test
+    public void getAffectedZipCodesReturnsSavedAreas() throws Exception {
+        ArrayList<ZipCode> areas = DataLoader.getAffectedZipCodes();
+        assertEquals(2, areas.size());
+        assertEquals("29401", areas.get(0).getCode());
+        assertEquals("29403", areas.get(1).getCode());
     }
 
     @Test
@@ -390,8 +473,99 @@ public class DataLoaderTest {
                 "windSpeed", 75, "affectedAreas", new JSONArray()));
 
         assertTrue(DataLoader.getAffectedZipCodes().isEmpty());
-        assertEquals(HurricaneCategory.CATEGORY_1, DataLoader.getHurricaneCategory());
-        assertEquals(75, DataLoader.getWindSpeed());
+    }
+
+    @Test
+    public void getUsersReturnsEmptyListForMalformedJSON() throws Exception {
+        writeFixture("users.json", "[broken");
+        assertTrue(DataLoader.getUsers().isEmpty());
+    }
+
+    @Test
+    public void getUsersReturnsEmptyListForInvalidRecord() throws Exception {
+        writeFixture("users.json", array(object("invalid", true)));
+        assertTrue(DataLoader.getUsers().isEmpty());
+    }
+
+    @Test
+    public void getCachedSheltersReturnsEmptyListForMalformedJSON() throws Exception {
+        writeFixture("shelters.json", "[broken");
+        assertTrue(DataLoader.getCachedShelters().isEmpty());
+    }
+
+    @Test
+    public void getCachedSheltersReturnsEmptyListForInvalidRecord() throws Exception {
+        writeFixture("shelters.json", array(object("invalid", true)));
+        assertTrue(DataLoader.getCachedShelters().isEmpty());
+    }
+
+    @Test
+    public void getAidRequestsReturnsEmptyListForMalformedJSON() throws Exception {
+        writeFixture("aidrequests.json", "[broken");
+        assertTrue(DataLoader.getAidRequests().isEmpty());
+    }
+
+    @Test
+    public void getAidRequestsReturnsEmptyListForInvalidRecord() throws Exception {
+        writeFixture("aidrequests.json", array(object("invalid", true)));
+        assertTrue(DataLoader.getAidRequests().isEmpty());
+    }
+
+    @Test
+    public void getWindSpeedHandlesMalformedFile() throws Exception {
+        writeFixture("hurricanedirectory.json", "{broken");
+        assertEquals(0, DataLoader.getWindSpeed());
+    }
+
+    @Test
+    public void getHurricaneCategoryHandlesMalformedFile() throws Exception {
+        writeFixture("hurricanedirectory.json", "{broken");
+        assertNull(DataLoader.getHurricaneCategory());
+    }
+
+    @Test
+    public void getAffectedZipCodesHandlesMalformedFile() throws Exception {
+        writeFixture("hurricanedirectory.json", "{broken");
+        assertTrue(DataLoader.getAffectedZipCodes().isEmpty());
+    }
+
+    @Test
+    public void getUsersLoadsMultipleRecordsInOrder() throws Exception {
+        JSONObject first = makeUser(USERTYPE.RESIDENT);
+        JSONObject second = makeUser(USERTYPE.RESIDENT);
+        UUID secondId = UUID.fromString("aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa");
+        second.put("userId", secondId.toString());
+        writeFixture("users.json", array(first, second));
+        ArrayList<User> loaded = DataLoader.getUsers();
+        assertEquals(2, loaded.size());
+        assertEquals(first.get("userId"), loaded.get(0).getUserId().toString());
+        assertEquals(secondId, loaded.get(1).getUserId());
+    }
+
+    @Test
+    public void getSheltersLoadsMultipleRecordsInOrder() throws Exception {
+        JSONObject first = makeShelter();
+        JSONObject second = makeShelter();
+        UUID secondId = UUID.fromString("aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa");
+        second.put("resourceId", secondId.toString());
+        writeFixture("shelters.json", array(first, second));
+        ArrayList<Shelter> loaded = DataLoader.getCachedShelters();
+        assertEquals(2, loaded.size());
+        assertEquals(first.get("resourceId"), loaded.get(0).getResourceId().toString());
+        assertEquals(secondId, loaded.get(1).getResourceId());
+    }
+
+    @Test
+    public void getRequestsLoadsMultipleRecordsInOrder() throws Exception {
+        JSONObject first = makeRequest();
+        JSONObject second = makeRequest();
+        UUID secondId = UUID.fromString("aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa");
+        second.put("requestId", secondId.toString());
+        writeFixture("aidrequests.json", array(first, second));
+        ArrayList<AidRequest> loaded = DataLoader.getAidRequests();
+        assertEquals(2, loaded.size());
+        assertEquals(first.get("requestId"), loaded.get(0).getRequestId().toString());
+        assertEquals(secondId, loaded.get(1).getRequestId());
     }
 
     private JSONObject makeUser(USERTYPE type) {

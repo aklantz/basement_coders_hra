@@ -5,6 +5,9 @@
 
 *.class
 
+# Generated coverage classes, copied fixtures, and reports
+/target/coverage/
+
 # Log file
 *.log
 
