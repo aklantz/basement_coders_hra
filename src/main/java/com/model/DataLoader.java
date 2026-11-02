@@ -28,7 +28,7 @@ public class DataLoader extends DataConstants {
         ArrayList<User> users = new ArrayList<User>();
         
 
-        try (BufferedReader reader = getReaderFromFile(USER_FILE, "users.json")) {
+        try (BufferedReader reader = getReaderFromFile(USER_FILE, "/data/users.json")) {
             JSONParser parser = new JSONParser();
             JSONArray usersJSON = (JSONArray) parser.parse(reader);
 
@@ -151,7 +151,7 @@ public class DataLoader extends DataConstants {
     public static ArrayList<Shelter> getCachedShelters() {
         ArrayList<Shelter> shelters = new ArrayList<Shelter>();
 
-        try (BufferedReader reader = getReaderFromFile(RESOURCE_FILE, "shelters.json")) {
+        try (BufferedReader reader = getReaderFromFile(RESOURCE_FILE, "/data/shelters.json")) {
             JSONParser parser = new JSONParser();
             JSONArray sheltersJSON = (JSONArray) parser.parse(reader);
 
@@ -270,7 +270,7 @@ public class DataLoader extends DataConstants {
         ArrayList<AidRequest> requests = new ArrayList<AidRequest>();
         UserDirectory userDirectory = UserDirectory.getInstance();
 
-        try (BufferedReader reader = getReaderFromFile(AID_REQUEST_FILE, "aidrequests.json")) {
+        try (BufferedReader reader = getReaderFromFile(AID_REQUEST_FILE, "/data/aidrequests.json")) {
             JSONParser parser = new JSONParser();
             JSONArray requestsJSON = (JSONArray) parser.parse(reader);
 
@@ -421,7 +421,7 @@ public class DataLoader extends DataConstants {
      * @return the hurricane's JSON object, or null if reading failed
      */
     private static JSONObject getHurricaneJSON() {
-        try (BufferedReader reader = getReaderFromFile(HURRICANE_FILE, "hurricanedirectory.json")) {
+        try (BufferedReader reader = getReaderFromFile(HURRICANE_FILE, "/data/hurricanedirectory.json")) {
             JSONParser parser = new JSONParser();
             return (JSONObject) parser.parse(reader);
         } catch (Exception e) {

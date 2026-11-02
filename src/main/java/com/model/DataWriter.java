@@ -33,7 +33,7 @@ public class DataWriter extends DataConstants {
             for (User user : users) {
                 usersJSON.add(getUserJSON(user));
             }
-            String path = getFileWritingPath(USER_FILE, "users.json");
+            String path = getFileWritingPath(USER_FILE, "/data/users.json");
             return writeFile(path, usersJSON);
         } catch (RuntimeException exception) {
             // return reportFailure(USER_FILE, exception);
@@ -53,7 +53,7 @@ public class DataWriter extends DataConstants {
             for (AidRequest request : requests) {
                 requestsJSON.add(getAidRequestJSON(request));
             }
-            String path = getFileWritingPath(AID_REQUEST_FILE, "aidrequests.json");
+            String path = getFileWritingPath(AID_REQUEST_FILE, "/data/aidrequests.json");
             return writeFile(path, requestsJSON);
         } catch (RuntimeException exception) {
             // return reportFailure(AID_REQUEST_FILE, exception);
@@ -93,7 +93,7 @@ public class DataWriter extends DataConstants {
             for (Shelter shelter : shelters) {
                 sheltersJSON.add(getShelterJSON(shelter));
             }
-            String path = getFileWritingPath(RESOURCE_FILE, "shelters.json");
+            String path = getFileWritingPath(RESOURCE_FILE, "/data/shelters.json");
             return writeFile(path, sheltersJSON);
         } catch (RuntimeException exception) {
             // return reportFailure(RESOURCE_FILE, exception);
@@ -349,7 +349,7 @@ public class DataWriter extends DataConstants {
 		try {
 			if(isJUnitTest()){
 				URI url = DataWriter.class.getResource(JUNIT_PATH_NAME).toURI();
-				return url.getPath();
+				return Paths.get(url).toString();
 			} else {
 				return PATH_NAME;
 			}
