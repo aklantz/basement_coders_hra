@@ -8,6 +8,6 @@ public class LoginController {
 
     @FXML
     private void switchToHurricaneRelief() throws IOException {
-        App.setRoot("HurricaneRelief");
+        App.setRoot("hurricanerelief");
     }
 }

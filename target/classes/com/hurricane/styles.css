@@ -1,0 +1,71 @@
+/* JavaFX stylesheet for the Login and Hurricane Relief screens. */
+
+.root {
+    -fx-font-family: "Segoe UI", sans-serif;
+    -fx-font-size: 14px;
+    -fx-background-color: #F4F7F9;
+    -fx-padding: 32;
+    -fx-spacing: 24;
+    -fx-alignment: center;
+}
+
+/* Each supplied screen has a title label directly inside its root VBox. */
+.root > .label {
+    -fx-font-size: 30px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #142D45;
+    -fx-wrap-text: true;
+    -fx-text-alignment: center;
+}
+
+.button {
+    -fx-font-size: 15px;
+    -fx-font-weight: bold;
+    -fx-background-color: #087F7A;
+    -fx-text-fill: white;
+    -fx-background-radius: 10;
+    -fx-background-insets: 0;
+    -fx-border-color: transparent;
+    -fx-border-width: 2;
+    -fx-border-radius: 10;
+    -fx-padding: 14 24;
+    -fx-min-height: 52;
+    -fx-pref-width: 300;
+    -fx-max-width: 346;
+    -fx-cursor: hand;
+}
+
+.button:hover {
+    -fx-background-color: #066B67;
+}
+
+.button:armed {
+    -fx-background-color: #055651;
+}
+
+/* fx:id supplies the CSS id when no separate id is specified in FXML. */
+#secondaryButton {
+    -fx-background-color: white;
+    -fx-text-fill: #087F7A;
+    -fx-border-color: #DCE5EB;
+}
+
+#secondaryButton:hover {
+    -fx-background-color: #E2F3F1;
+    -fx-border-color: #087F7A;
+}
+
+#secondaryButton:armed {
+    -fx-background-color: #CEE8E5;
+}
+
+/* Visible keyboard focus for both navigation buttons. */
+.button:focused,
+#secondaryButton:focused {
+    -fx-border-color: #142D45;
+}
+
+.button:disabled {
+    -fx-opacity: 0.5;
+    -fx-cursor: default;
+}
