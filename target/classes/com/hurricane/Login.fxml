@@ -1,27 +1,69 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.layout.VBox?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.control.Button?>
 <?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
 
 <VBox alignment="CENTER"
       spacing="20.0"
       stylesheets="@styles.css"
-      xmlns="http://javafx.com/javafx/8.0.171"
+      xmlns="http://javafx.com/javafx/26"
       xmlns:fx="http://javafx.com/fxml/1"
       fx:controller="com.controllers.LoginController">
 
     <children>
-        <Label text="Login" />
+        <Label text="Account Login" />
+
+        <TextField fx:id="usernameField"
+                   promptText="Enter Username"
+                   prefHeight="48.0"
+                   maxWidth="346.0" />
+
+        <HBox alignment="CENTER_LEFT"
+              spacing="8.0"
+              maxWidth="346.0">
+
+            <children>
+                <StackPane HBox.hgrow="ALWAYS">
+                    <children>
+                        <PasswordField fx:id="passwordField"
+                                       promptText="Enter Password"
+                                       prefHeight="48.0" />
+
+                        <TextField fx:id="visiblePasswordField"
+                                   promptText="Enter Password"
+                                   prefHeight="48.0"
+                                   visible="false"
+                                   managed="false" />
+                    </children>
+                </StackPane>
+
+                <Button fx:id="showPasswordButton"
+                        text="👁"
+                        accessibleText="Show password"
+                        onAction="#togglePasswordVisibility"
+                        minWidth="48.0"
+                        prefWidth="48.0"
+                        maxWidth="48.0"
+                        style="-fx-padding: 0;" />
+            </children>
+        </HBox>
 
         <Button fx:id="primaryButton"
-                text="Hurricane Relief"
+                text="Login"
+                defaultButton="true"
                 onAction="#switchToHurricaneRelief" />
     </children>
 
     <padding>
-        <Insets bottom="20.0" left="20.0"
-                right="20.0" top="20.0" />
+        <Insets bottom="20.0"
+                left="20.0"
+                right="20.0"
+                top="20.0" />
     </padding>
 </VBox>
