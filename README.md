@@ -37,6 +37,7 @@ information without the distractions of full-scale weather platforms.
 # Protoype
 
 [Basement Coders Prototype 1](https://github.com/aklantz/basement_coders_hra/blob/main/docs/Basement%20Coders%20Prototype.pdf)
+[Basement Coders Presentation Prototype](https://github.com/aklantz/basement_coders_hra/blob/main/docs/Basement%20Coders%20Prototype(presentation).pdf)
 
 # Demos
 
