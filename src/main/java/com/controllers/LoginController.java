@@ -1,48 +1,21 @@
 package com.controllers;
-import java.io.IOException;
-import javafx.fxml.FXML;
-import javafx.scene.control.Button;
-import javafx.scene.control.PasswordField;
-import javafx.scene.control.TextField;
-import com.hurricane.App;
-import java.net.URL;
-import java.util.ResourceBundle;
 
+import java.io.IOException;
 import com.hurricane.App;
 import com.model.User;
 import com.model.UserDirectory;
-
+import javafx.application.Platform;
 import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
-import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.VBox;
 
-public class LoginController implements Initializable {
-
-    @FXML
-    private TextField txt_username;
-    @FXML
-    private PasswordField txt_password;
-    @FXML
-    private Label lbl_error;
+public class LoginController {
 
     @FXML
-    private void btnLoginClicked(MouseEvent event) throws IOException {
-        String username = txt_username.getText();
-        String password = txt_password.getText();
-
-        UserDirectory directory = UserDirectory.getInstance();
-User user = directory.getUser(username, password);
-
-        if (user == null) {
-            lbl_error.setText("Invalid login credentials.");
-            return;
-        }
-
-        App.setRoot("user_home");
-    }
+    private VBox loginRoot;
 
     @FXML
     private TextField usernameField;
@@ -57,9 +30,20 @@ User user = directory.getUser(username, password);
     private Button showPasswordButton;
 
     @FXML
+    private Label lbl_error;
+
+    @FXML
     private void initialize() {
         visiblePasswordField.textProperty()
                 .bindBidirectional(passwordField.textProperty());
+
+        passwordField.setVisible(true);
+        passwordField.setManaged(true);
+
+        visiblePasswordField.setVisible(false);
+        visiblePasswordField.setManaged(false);
+
+        Platform.runLater(() -> loginRoot.requestFocus());
     }
 
     @FXML
@@ -84,16 +68,25 @@ User user = directory.getUser(username, password);
     }
 
     @FXML
-    private void switchToHurricaneRelief() throws IOException {
-        App.setRoot("hurricanerelief");
+    private void btnLoginClicked() throws IOException {
+        String username = usernameField.getText();
+        String password = passwordField.getText();
+
+        UserDirectory directory = UserDirectory.getInstance();
+        User user = directory.getUser(username, password);
+
+        if (user == null) {
+            lbl_error.setText("Invalid login credentials.");
+            lbl_error.setManaged(true);
+            lbl_error.setVisible(true);
+            return;
+        }
+
+        App.setRoot("user_home");
     }
 
     @FXML
-    private void back(MouseEvent event) throws IOException {
+    private void back() throws IOException {
         App.setRoot("home");
-    }
-
-    @Override
-    public void initialize(URL url, ResourceBundle rb) {
     }
 }

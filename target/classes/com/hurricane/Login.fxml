@@ -5,44 +5,91 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.PasswordField?>
 <?import javafx.scene.control.TextField?>
-<?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
-<?import javafx.scene.text.Font?>
 
-<VBox alignment="CENTER" spacing="20.0" stylesheets="@styles.css" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.controllers.LoginController">
+<VBox fx:id="loginRoot"
+      alignment="CENTER"
+      spacing="20.0"
+      focusTraversable="true"
+      stylesheets="@styles.css"
+      xmlns="http://javafx.com/javafx/26"
+      xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="com.controllers.LoginController">
 
     <children>
         <Label text="Account Login" />
 
-        <TextField fx:id="usernameField" maxWidth="346.0" prefHeight="48.0" promptText="Enter Username" />
+        <TextField fx:id="usernameField"
+                   maxWidth="346.0"
+                   prefHeight="48.0"
+                   promptText="Enter Username" />
 
-        <HBox alignment="CENTER_LEFT" maxWidth="346.0" spacing="8.0">
-
+        <StackPane maxWidth="346.0">
             <children>
-                <StackPane HBox.hgrow="ALWAYS">
-                    <children>
-                        <PasswordField fx:id="passwordField" managed="false" prefHeight="48.0" prefWidth="556.0" promptText="Enter Password" />
+                <PasswordField fx:id="passwordField"
+                               prefHeight="48.0"
+                               promptText="Enter Password"
+                               style="-fx-padding: 12 52 12 14;" />
 
-                        <TextField fx:id="visiblePasswordField" prefHeight="48.0" promptText="Enter Password" visible="false" />
-            
-                            <Button fx:id="showPasswordButton" accessibleText="Show password" alignment="CENTER_RIGHT" maxHeight="36.0" maxWidth="36.0" minHeight="36.0" minWidth="36.0" onAction="#togglePasswordVisibility" prefHeight="36.0" prefWidth="36.0" style="-fx-background-color: transparent; -fx-border-color: transparent; -fx-text-fill: #536879; -fx-padding: 0; -fx-font-size: 24;" text="👁" textAlignment="RIGHT">
-                     <StackPane.margin>
+                <TextField fx:id="visiblePasswordField"
+                           managed="false"
+                           visible="false"
+                           prefHeight="48.0"
+                           promptText="Enter Password"
+                           style="-fx-padding: 12 52 12 14;" />
+
+                <Button fx:id="showPasswordButton"
+                        StackPane.alignment="CENTER_RIGHT"
+                        accessibleText="Show password"
+                        onAction="#togglePasswordVisibility"
+                        text="👁"
+                        style="-fx-background-color: transparent;
+                            -fx-border-color: transparent;
+                            -fx-text-fill: #536879;
+                            -fx-padding: 0;
+                            -fx-font-size: 24px;
+                            -fx-alignment: center;
+                            -fx-min-width: 36px;
+                            -fx-pref-width: 36px;
+                            -fx-max-width: 36px;
+                            -fx-min-height: 36px;
+                            -fx-pref-height: 36px;
+                            -fx-max-height: 36px;">
+
+                    <StackPane.margin>
                         <Insets right="8.0" />
-                     </StackPane.margin>
-                     <font>
-                        <Font size="24.0" />
-                     </font>
-                  </Button>
-                    </children>
-                </StackPane>
+                    </StackPane.margin>
+            </Button>
             </children>
-        </HBox>
+        </StackPane>
 
-        <Button fx:id="primaryButton" defaultButton="true" onAction="#switchToHurricaneRelief" text="Login" />
+        <VBox maxWidth="346.0"
+              managed="false"
+              visible="false"
+              fx:id="unusedErrorContainer">
+            <children />
+        </VBox>
+
+        <Label fx:id="lbl_error"
+               managed="false"
+               visible="false"
+               maxWidth="346.0"
+               wrapText="true"
+               style="-fx-text-fill: #B33535;
+                      -fx-font-size: 13px;
+                      -fx-font-weight: normal;" />
+
+        <Button fx:id="primaryButton"
+                defaultButton="true"
+                onAction="#btnLoginClicked"
+                text="Login" />
     </children>
 
     <padding>
-        <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+        <Insets bottom="20.0"
+                left="20.0"
+                right="20.0"
+                top="20.0" />
     </padding>
 </VBox>
