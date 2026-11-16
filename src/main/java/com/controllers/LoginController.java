@@ -5,10 +5,6 @@ import java.io.IOException;
 import com.hurricane.App;
 import com.model.User;
 import com.model.UserDirectory;
-<<<<<<< HEAD
-
-=======
->>>>>>> c8ae9ada830b8dcf8e1e987459c3d6f8adcfd431
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
