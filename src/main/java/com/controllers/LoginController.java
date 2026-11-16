@@ -4,7 +4,7 @@ import java.io.IOException;
 
 import com.hurricane.App;
 import com.model.User;
-import com.model.UserDirectory;
+import com.model.ReliefApplication;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
@@ -142,8 +142,7 @@ public class LoginController {
             return;
         }
 
-        UserDirectory directory = UserDirectory.getInstance();
-        User user = directory.getUser(usernameOrEmail, password);
+        User user = ReliefApplication.getInstance().login(usernameOrEmail, password);
 
         if (user == null) {
             setPasswordVisible(false);
