@@ -2,94 +2,351 @@
 
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.CheckBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.shape.SVGPath?>
 
-<VBox fx:id="loginRoot"
-      alignment="CENTER"
-      spacing="20.0"
-      focusTraversable="true"
-      stylesheets="@styles.css"
-      xmlns="http://javafx.com/javafx/26"
-      xmlns:fx="http://javafx.com/fxml/1"
-      fx:controller="com.controllers.LoginController">
+<StackPane fx:id="loginRoot"
+           xmlns="http://javafx.com/javafx/21"
+           xmlns:fx="http://javafx.com/fxml/1"
+           fx:controller="com.controllers.LoginController"
+           focusTraversable="true"
+           prefWidth="390.0"
+           prefHeight="874.0"
+           style="-fx-background-color: #F4F7FA;
+                  -fx-font-family: 'Segoe UI';
+                  -fx-font-size: 14px;
+                  -fx-padding: 0;">
 
     <children>
-        <Label text="Account Login" />
+        <ScrollPane fitToWidth="true"
+                    fitToHeight="true"
+                    hbarPolicy="NEVER"
+                    style="-fx-background: #F4F7FA;
+                           -fx-background-color: #F4F7FA;
+                           -fx-background-insets: 0;
+                           -fx-padding: 0;">
 
-        <TextField fx:id="usernameField"
-                   maxWidth="346.0"
-                   prefHeight="48.0"
-                   promptText="Enter Username" />
+            <content>
+                <StackPane alignment="TOP_CENTER"
+                           style="-fx-background-color: #F4F7FA;">
 
-        <StackPane maxWidth="346.0">
-            <children>
-                <PasswordField fx:id="passwordField"
-                               prefHeight="48.0"
-                               promptText="Enter Password"
-                               style="-fx-padding: 12 52 12 14;" />
+                    <children>
+                        <VBox spacing="20.0"
+                              maxWidth="390.0"
+                              minHeight="-Infinity"
+                              alignment="TOP_LEFT">
 
-                <TextField fx:id="visiblePasswordField"
-                           managed="false"
-                           visible="false"
-                           prefHeight="48.0"
-                           promptText="Enter Password"
-                           style="-fx-padding: 12 52 12 14;" />
+                            <padding>
+                                <Insets top="30.0"
+                                        right="22.0"
+                                        bottom="30.0"
+                                        left="22.0" />
+                            </padding>
 
-                <Button fx:id="showPasswordButton"
-                        StackPane.alignment="CENTER_RIGHT"
-                        accessibleText="Show password"
-                        onAction="#togglePasswordVisibility"
-                        text="👁"
-                        style="-fx-background-color: transparent;
-                            -fx-border-color: transparent;
-                            -fx-text-fill: #536879;
-                            -fx-padding: 0;
-                            -fx-font-size: 24px;
-                            -fx-alignment: center;
-                            -fx-min-width: 36px;
-                            -fx-pref-width: 36px;
-                            -fx-max-width: 36px;
-                            -fx-min-height: 36px;
-                            -fx-pref-height: 36px;
-                            -fx-max-height: 36px;">
+                            <children>
+                                <!-- Back button -->
+                                <Button text="Back"
+                                        onAction="#back"
+                                        style="-fx-background-color: transparent;
+                                               -fx-text-fill: #536879;
+                                               -fx-font-size: 13px;
+                                               -fx-padding: 0;
+                                               -fx-min-width: 80px;
+                                               -fx-pref-width: 80px;
+                                               -fx-max-width: 80px;
+                                               -fx-min-height: 40px;
+                                               -fx-alignment: center-left;
+                                               -fx-graphic-text-gap: 8px;
+                                               -fx-cursor: hand;">
 
-                    <StackPane.margin>
-                        <Insets right="8.0" />
-                    </StackPane.margin>
-            </Button>
-            </children>
-        </StackPane>
+                                    <graphic>
+                                        <SVGPath
+                                            content="M 14 2 L 5 11 L 14 20 M 5 11 L 24 11"
+                                            fill="TRANSPARENT"
+                                            stroke="#087F7A"
+                                            strokeWidth="1.5"
+                                            mouseTransparent="true" />
+                                    </graphic>
+                                </Button>
 
-        <VBox maxWidth="346.0"
-              managed="false"
-              visible="false"
-              fx:id="unusedErrorContainer">
-            <children />
-        </VBox>
+                                <!-- Heading -->
+                                <VBox spacing="8.0">
+                                    <children>
+                                        <Label fx:id="titleLabel"
+                                                text="Log in"
+                                                wrapText="true"
+                                                minWidth="0.0"
+                                                maxWidth="346.0"
+                                                minHeight="-Infinity"
+                                                style="-fx-font-size: 29px;
+                                                        -fx-font-weight: bold;
+                                                        -fx-text-fill: #142D45;" />
 
-        <Label fx:id="lbl_error"
-               managed="false"
-               visible="false"
-               maxWidth="346.0"
-               wrapText="true"
-               style="-fx-text-fill: #B33535;
-                      -fx-font-size: 13px;
-                      -fx-font-weight: normal;" />
+                                        <Label
+                                            text="Log in to manage your household’s relief requests."
+                                            wrapText="true"
+                                            maxWidth="346.0"
+                                            style="-fx-font-size: 15px;
+                                                   -fx-text-fill: #536879;
+                                                   -fx-line-spacing: 3px;" />
+                                    </children>
+                                </VBox>
 
-        <Button fx:id="primaryButton"
-                defaultButton="true"
-                onAction="#btnLoginClicked"
-                text="Login" />
+                                <!-- Hidden until login fails -->
+                                <HBox fx:id="errorBanner"
+                                    visible="false"
+                                    managed="false"
+                                    alignment="TOP_LEFT"
+                                    spacing="12.0"
+                                    minHeight="-Infinity"
+                                    style="-fx-background-color: #FCECEC;
+                                            -fx-background-radius: 9px;
+                                            -fx-padding: 16px;">
+
+                                    <children>
+                                        <StackPane minWidth="18.0"
+                                                prefWidth="18.0"
+                                                maxWidth="18.0"
+                                                minHeight="18.0"
+                                                prefHeight="18.0"
+                                                maxHeight="18.0"
+                                                style="-fx-border-color: #B33535;
+                                                        -fx-border-radius: 20px;">
+                                            <children>
+                                                <Label text="!"
+                                                    style="-fx-text-fill: #B33535;
+                                                            -fx-font-size: 12px;" />
+                                            </children>
+                                        </StackPane>
+
+                                        <VBox spacing="6.0"
+                                            minWidth="0.0"
+                                            prefWidth="0.0"
+                                            minHeight="-Infinity"
+                                            HBox.hgrow="ALWAYS">
+
+                                            <children>
+                                                <Label text="Email or password doesn’t match"
+                                                    wrapText="true"
+                                                    minWidth="0.0"
+                                                    maxWidth="Infinity"
+                                                    minHeight="-Infinity"
+                                                    style="-fx-font-size: 13px;
+                                                            -fx-font-weight: bold;
+                                                            -fx-text-fill: #B33535;" />
+
+                                                <Label
+                                                    text="Check your details and try again, or reset your password. Your saved requests are still there."
+                                                    wrapText="true"
+                                                    minWidth="0.0"
+                                                    maxWidth="Infinity"
+                                                    minHeight="-Infinity"
+                                                    style="-fx-font-size: 12px;
+                                                        -fx-text-fill: #142D45;
+                                                        -fx-line-spacing: 2px;" />
+                                            </children>
+                                        </VBox>
+                                    </children>
+                                </HBox>
+
+                                <!-- Email -->
+                                <VBox spacing="8.0">
+                                    <children>
+                                        <Label text="Email address"
+                                               style="-fx-font-size: 13px;
+                                                      -fx-font-weight: bold;
+                                                      -fx-text-fill: #142D45;" />
+
+                                        <TextField
+                                            fx:id="usernameField"
+                                            promptText="Enter your email address"
+                                            accessibleText="Email address"
+                                            style="-fx-background-color: white;
+                                                   -fx-background-insets: 0;
+                                                   -fx-background-radius: 9px;
+                                                   -fx-border-color: #DCE5EB;
+                                                   -fx-border-radius: 9px;
+                                                   -fx-border-width: 1px;
+                                                   -fx-padding: 13px 14px;
+                                                   -fx-min-height: 52px;
+                                                   -fx-pref-height: 52px;
+                                                   -fx-font-size: 14px;
+                                                   -fx-text-fill: #142D45;
+                                                   -fx-prompt-text-fill: #728492;" />
+                                    </children>
+                                </VBox>
+
+                                <!-- Password -->
+                                <VBox spacing="8.0">
+                                    <children>
+                                        <Label text="Password"
+                                               style="-fx-font-size: 13px;
+                                                      -fx-font-weight: bold;
+                                                      -fx-text-fill: #142D45;" />
+
+                                        <StackPane minHeight="52.0"
+                                                   prefHeight="52.0">
+
+                                            <children>
+                                                <PasswordField
+                                                    fx:id="passwordField"
+                                                    promptText="Enter your password"
+                                                    accessibleText="Password"
+                                                    style="-fx-background-color: white;
+                                                           -fx-background-insets: 0;
+                                                           -fx-background-radius: 9px;
+                                                           -fx-border-color: #DCE5EB;
+                                                           -fx-border-radius: 9px;
+                                                           -fx-border-width: 1px;
+                                                           -fx-padding: 13px 56px 13px 14px;
+                                                           -fx-min-height: 52px;
+                                                           -fx-pref-height: 52px;
+                                                           -fx-font-size: 14px;
+                                                           -fx-text-fill: #142D45;
+                                                           -fx-prompt-text-fill: #728492;" />
+
+                                                <TextField
+                                                    fx:id="visiblePasswordField"
+                                                    visible="false"
+                                                    managed="false"
+                                                    promptText="Enter your password"
+                                                    accessibleText="Password"
+                                                    style="-fx-background-color: white;
+                                                           -fx-background-insets: 0;
+                                                           -fx-background-radius: 9px;
+                                                           -fx-border-color: #DCE5EB;
+                                                           -fx-border-radius: 9px;
+                                                           -fx-border-width: 1px;
+                                                           -fx-padding: 13px 56px 13px 14px;
+                                                           -fx-min-height: 52px;
+                                                           -fx-pref-height: 52px;
+                                                           -fx-font-size: 14px;
+                                                           -fx-text-fill: #142D45;
+                                                           -fx-prompt-text-fill: #728492;" />
+
+                                                <Button
+                                                    fx:id="showPasswordButton"
+                                                    StackPane.alignment="CENTER_RIGHT"
+                                                    accessibleText="Show password"
+                                                    onAction="#togglePasswordVisibility"
+                                                    style="-fx-background-color: transparent;
+                                                           -fx-background-insets: 0;
+                                                           -fx-border-color: transparent;
+                                                           -fx-padding: 0;
+                                                           -fx-min-width: 36px;
+                                                           -fx-pref-width: 36px;
+                                                           -fx-max-width: 36px;
+                                                           -fx-min-height: 36px;
+                                                           -fx-pref-height: 36px;
+                                                           -fx-max-height: 36px;
+                                                           -fx-alignment: center;
+                                                           -fx-cursor: hand;">
+
+                                                    <StackPane.margin>
+                                                        <Insets right="8.0" />
+                                                    </StackPane.margin>
+
+                                                    <graphic>
+                                                        <SVGPath
+                                                            content="M 1 12 C 6 4 18 4 23 12 C 18 20 6 20 1 12 Z M 15 12 A 3 3 0 1 1 9 12 A 3 3 0 1 1 15 12 Z"
+                                                            fill="TRANSPARENT"
+                                                            stroke="#536879"
+                                                            strokeWidth="1.5"
+                                                            mouseTransparent="true" />
+                                                    </graphic>
+                                                </Button>
+                                            </children>
+                                        </StackPane>
+
+                                        <Label
+                                            fx:id="passwordErrorLabel"
+                                            text="Re-enter your password or use password recovery."
+                                            visible="false"
+                                            managed="false"
+                                            wrapText="true"
+                                            style="-fx-font-size: 12px;
+                                                   -fx-text-fill: #B33535;" />
+                                    </children>
+                                </VBox>
+
+                                <!-- Remember sign-in preference -->
+                                <CheckBox
+                                    fx:id="keepSignedInCheckBox"
+                                    text="Keep me signed in on this device."
+                                    wrapText="true"
+                                    minHeight="40.0"
+                                    style="-fx-font-size: 13px;
+                                           -fx-text-fill: #536879;
+                                           -fx-focus-color: #087F7A;
+                                           -fx-faint-focus-color: transparent;" />
+
+                                <!-- Actions -->
+                                <VBox spacing="12.0">
+                                    <children>
+                                        <Button
+                                            fx:id="primaryButton"
+                                            text="Log in"
+                                            defaultButton="true"
+                                            maxWidth="Infinity"
+                                            onAction="#btnLoginClicked"
+                                            style="-fx-background-color: #087F7A;
+                                                   -fx-background-insets: 0;
+                                                   -fx-background-radius: 9px;
+                                                   -fx-text-fill: white;
+                                                   -fx-font-size: 15px;
+                                                   -fx-font-weight: bold;
+                                                   -fx-min-height: 52px;
+                                                   -fx-pref-height: 52px;
+                                                   -fx-padding: 12px 18px;
+                                                   -fx-cursor: hand;" />
+
+                                        <Button
+                                            text="Forgot password?"
+                                            maxWidth="Infinity"
+                                            onAction="#forgotPassword"
+                                            style="-fx-background-color: white;
+                                                   -fx-background-insets: 0;
+                                                   -fx-background-radius: 9px;
+                                                   -fx-border-color: #DCE5EB;
+                                                   -fx-border-radius: 9px;
+                                                   -fx-text-fill: #087F7A;
+                                                   -fx-font-size: 15px;
+                                                   -fx-font-weight: bold;
+                                                   -fx-min-height: 52px;
+                                                   -fx-pref-height: 52px;
+                                                   -fx-padding: 12px 18px;
+                                                   -fx-cursor: hand;" />
+
+                                        <Button
+                                            text="Continue as guest"
+                                            maxWidth="Infinity"
+                                            onAction="#continueAsGuest"
+                                            style="-fx-background-color: white;
+                                                   -fx-background-insets: 0;
+                                                   -fx-background-radius: 9px;
+                                                   -fx-border-color: #DCE5EB;
+                                                   -fx-border-radius: 9px;
+                                                   -fx-text-fill: #087F7A;
+                                                   -fx-font-size: 15px;
+                                                   -fx-font-weight: bold;
+                                                   -fx-min-height: 52px;
+                                                   -fx-pref-height: 52px;
+                                                   -fx-padding: 12px 18px;
+                                                   -fx-cursor: hand;" />
+                                    </children>
+                                </VBox>
+                            </children>
+                        </VBox>
+                    </children>
+                </StackPane>
+            </content>
+        </ScrollPane>
     </children>
-
-    <padding>
-        <Insets bottom="20.0"
-                left="20.0"
-                right="20.0"
-                top="20.0" />
-    </padding>
-</VBox>
+</StackPane>
