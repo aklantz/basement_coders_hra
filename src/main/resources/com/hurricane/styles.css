@@ -1,76 +1,180 @@
-/* JavaFX stylesheet for the Login and Hurricane Relief screens. */
-
-
 .root {
-    -fx-font-family: "Arial", sans-serif;
-    -fx-font-size: 14px;
-    -fx-background-color: #F4F7F9;
-    -fx-padding: 32;
-    -fx-spacing: 24;
-    -fx-alignment: center;
+  -fx-font-family: "Inter", "Arial", sans-serif;
+  -fx-font-size: 14px;
+  -fx-background-color: #f3f6fa;
 }
 
-.label, .button, .text-field, .password-field {
-    -fx-font-family: "Arial", sans-serif;
+.screen {
+  -fx-background-color: #f3f6fa;
+  -fx-padding: 24 22 24 22;
+  -fx-spacing: 14;
 }
 
-/* Each supplied screen has a title label directly inside its root VBox. */
-.root > .label {
-    -fx-font-size: 30px;
-    -fx-font-weight: bold;
-    -fx-text-fill: #142D45;
-    -fx-wrap-text: true;
-    -fx-text-alignment: center;
+.scroll-pane,
+.scroll-pane > .viewport {
+  -fx-background-color: #f3f6fa;
+  -fx-background-insets: 0;
+  -fx-padding: 0;
 }
 
-.button {
-    -fx-font-size: 15px;
-    -fx-font-weight: bold;
-    -fx-background-color: #087F7A;
-    -fx-text-fill: white;
-    -fx-background-radius: 10;
-    -fx-background-insets: 0;
-    -fx-border-color: transparent;
-    -fx-border-width: 2;
-    -fx-border-radius: 10;
-    -fx-padding: 14 24;
-    -fx-min-height: 52;
-    -fx-pref-width: 300;
-    -fx-max-width: 346;
-    -fx-cursor: hand;
+/* Text */
+.app-name {
+  -fx-text-fill: #14304a;
+  -fx-font-size: 14px;
 }
 
-.button:hover {
-    -fx-background-color: #066B67;
+.title {
+  -fx-text-fill: #14304a;
+  -fx-font-size: 28px;
+  -fx-font-weight: bold;
+  -fx-wrap-text: true;
 }
 
-.button:armed {
-    -fx-background-color: #055651;
+.subtitle {
+  -fx-text-fill: #5f6f7f;
+  -fx-font-size: 15px;
+  -fx-wrap-text: true;
 }
 
-/* fx:id supplies the CSS id when no separate id is specified in FXML. */
-#secondaryButton {
-    -fx-background-color: white;
-    -fx-text-fill: #087F7A;
-    -fx-border-color: #DCE5EB;
+.field-label {
+  -fx-text-fill: #14304a;
+  -fx-font-size: 13px;
+  -fx-font-weight: bold;
 }
 
-#secondaryButton:hover {
-    -fx-background-color: #E2F3F1;
-    -fx-border-color: #087F7A;
+.hint {
+  -fx-text-fill: #5f6f7f;
+  -fx-font-size: 12px;
+  -fx-wrap-text: true;
 }
 
-#secondaryButton:armed {
-    -fx-background-color: #CEE8E5;
+/* Back link */
+.back-button,
+.back-button:hover,
+.back-button:focused {
+  -fx-background-color: transparent;
+  -fx-text-fill: #14304a;
+  -fx-font-size: 15px;
+  -fx-padding: 0;
+  -fx-cursor: hand;
 }
 
-/* Visible keyboard focus for both navigation buttons. */
-.button:focused,
-#secondaryButton:focused {
-    -fx-border-color: #142D45;
+/* Text fields */
+.text-field,
+.password-field {
+  -fx-background-color: white;
+  -fx-background-radius: 10;
+  -fx-border-color: #dce3ea;
+  -fx-border-radius: 10;
+  -fx-text-fill: #14304a;
+  -fx-font-size: 15px;
+  -fx-pref-height: 48;
+  -fx-padding: 0 14 0 14;
 }
 
-.button:disabled {
-    -fx-opacity: 0.5;
-    -fx-cursor: default;
+.text-field:focused,
+.password-field:focused {
+  -fx-border-color: #0b7f79;
+}
+
+.field-error {
+  -fx-border-color: #b83232;
+}
+
+/* Buttons */
+.primary-button {
+  -fx-background-color: #0b7f79;
+  -fx-text-fill: white;
+  -fx-font-size: 16px;
+  -fx-font-weight: bold;
+  -fx-background-radius: 10;
+  -fx-pref-height: 52;
+  -fx-max-width: Infinity;
+  -fx-cursor: hand;
+}
+
+.primary-button:hover {
+  -fx-background-color: #086b66;
+}
+
+.secondary-button {
+  -fx-background-color: white;
+  -fx-text-fill: #0b7f79;
+  -fx-font-size: 16px;
+  -fx-font-weight: bold;
+  -fx-background-radius: 10;
+  -fx-border-color: #dce3ea;
+  -fx-border-radius: 10;
+  -fx-pref-height: 52;
+  -fx-max-width: Infinity;
+  -fx-cursor: hand;
+}
+
+.secondary-button:hover {
+  -fx-background-color: #e6f2ef;
+}
+
+.eye-button,
+.eye-button:hover,
+.eye-button:focused {
+  -fx-background-color: transparent;
+  -fx-text-fill: #536879;
+  -fx-font-size: 18px;
+  -fx-padding: 0 12 0 0;
+  -fx-cursor: hand;
+}
+
+/* Cards and notices */
+.card {
+  -fx-background-color: white;
+  -fx-background-radius: 14;
+  -fx-border-color: #dce3ea;
+  -fx-border-radius: 14;
+  -fx-padding: 20;
+  -fx-spacing: 10;
+}
+
+.card-title {
+  -fx-text-fill: #14304a;
+  -fx-font-size: 18px;
+  -fx-font-weight: bold;
+  -fx-wrap-text: true;
+}
+
+.error-box {
+  -fx-background-color: #fceaea;
+  -fx-background-radius: 12;
+  -fx-padding: 16;
+  -fx-spacing: 4;
+}
+
+.error-title {
+  -fx-text-fill: #b83232;
+  -fx-font-size: 14px;
+  -fx-font-weight: bold;
+  -fx-wrap-text: true;
+}
+
+.info-box {
+  -fx-background-color: #e6f2ef;
+  -fx-background-radius: 12;
+  -fx-padding: 16;
+  -fx-spacing: 4;
+}
+
+.info-title {
+  -fx-text-fill: #0b7f79;
+  -fx-font-size: 14px;
+  -fx-font-weight: bold;
+}
+
+.box-text {
+  -fx-text-fill: #14304a;
+  -fx-font-size: 13px;
+  -fx-wrap-text: true;
+}
+
+.check-box {
+  -fx-text-fill: #5f6f7f;
+  -fx-font-size: 14px;
 }

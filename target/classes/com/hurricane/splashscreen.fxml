@@ -1,114 +1,44 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.VBox?>
 
 <VBox fx:id="splashRoot"
-      alignment="TOP_CENTER"
-      spacing="16.0"
+      styleClass="screen"
       focusTraversable="true"
-      prefWidth="390.0"
-      prefHeight="844.0"
       stylesheets="@styles.css"
-      style="-fx-background-color: #F3F6FA;"
       xmlns="http://javafx.com/javafx/26"
       xmlns:fx="http://javafx.com/fxml/1"
       fx:controller="com.controllers.SplashController">
 
     <children>
-        <Label text="Hurricane Tracker"
-               maxWidth="346.0"
-               style="-fx-text-fill: #14304A; -fx-font-size: 14px;" />
+        <Label styleClass="app-name" text="Hurricane Tracker" />
+        <Label styleClass="title" text="Welcome to Hurricane Tracker" />
+        <Label styleClass="subtitle"
+               text="Stay informed, find safety guidance and request non-emergency support for your household." />
 
-        <Label text="Welcome to Hurricane Tracker"
-               maxWidth="346.0"
-               wrapText="true"
-               style="-fx-text-fill: #14304A; -fx-font-size: 28px; -fx-font-weight: bold;" />
-
-        <Label text="Stay informed, find safety guidance and request non-emergency support for your household."
-               maxWidth="346.0"
-               wrapText="true"
-               style="-fx-text-fill: #5F6F7F; -fx-font-size: 16px;" />
-
-        <VBox fx:id="infoCard"
-              maxWidth="346.0"
-              spacing="10.0"
-              style="-fx-background-color: white;
-                     -fx-background-radius: 16;
-                     -fx-border-color: #DCE3EA;
-                     -fx-border-radius: 16;">
+        <VBox styleClass="card">
             <children>
-                <Label text="Support, one step at a time"
-                       wrapText="true"
-                       style="-fx-text-fill: #14304A; -fx-font-size: 18px; -fx-font-weight: bold;" />
-                <Label text="Create and track relief requests with an account. Storm updates and safety information are available to everyone."
-                       wrapText="true"
-                       style="-fx-text-fill: #5F6F7F; -fx-font-size: 15px;" />
+                <Label styleClass="card-title" text="Support, one step at a time" />
+                <Label styleClass="subtitle"
+                       text="Create and track relief requests with an account. Storm updates and safety information are available to everyone." />
             </children>
-            <padding>
-                <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
-            </padding>
         </VBox>
 
-        <Button fx:id="loginButton"
-                maxWidth="346.0"
-                prefHeight="52.0"
-                defaultButton="true"
-                onAction="#btnLoginClicked"
-                text="Log in"
-                style="-fx-background-color: #16807A;
-                       -fx-text-fill: white;
-                       -fx-font-weight: bold;
-                       -fx-font-size: 16px;
-                       -fx-background-radius: 12;" />
+        <Button styleClass="primary-button" defaultButton="true"
+                onAction="#btnLoginClicked" text="Log in" />
+        <Button styleClass="secondary-button"
+                onAction="#btnCreateAccountClicked" text="Create account" />
+        <Button styleClass="secondary-button"
+                onAction="#btnGuestClicked" text="Continue as guest" />
 
-        <Button fx:id="createAccountButton"
-                maxWidth="346.0"
-                prefHeight="52.0"
-                onAction="#btnCreateAccountClicked"
-                text="Create account"
-                style="-fx-background-color: white;
-                       -fx-text-fill: #16807A;
-                       -fx-font-weight: bold;
-                       -fx-font-size: 16px;
-                       -fx-border-color: #DCE3EA;
-                       -fx-border-radius: 12;
-                       -fx-background-radius: 12;" />
-
-        <Button fx:id="guestButton"
-                maxWidth="346.0"
-                prefHeight="52.0"
-                onAction="#btnGuestClicked"
-                text="Continue as guest"
-                style="-fx-background-color: white;
-                       -fx-text-fill: #16807A;
-                       -fx-font-weight: bold;
-                       -fx-font-size: 16px;
-                       -fx-border-color: #DCE3EA;
-                       -fx-border-radius: 12;
-                       -fx-background-radius: 12;" />
-
-        <VBox fx:id="emergencyNotice"
-              maxWidth="346.0"
-              spacing="6.0"
-              style="-fx-background-color: #FCEAEA; -fx-background-radius: 12;">
+        <VBox styleClass="error-box">
             <children>
-                <Label text="Call 911 when in an emergency"
-                       wrapText="true"
-                       style="-fx-text-fill: #B83232; -fx-font-size: 14px; -fx-font-weight: bold;" />
-                <Label text="For immediate danger or medical emergencies, call 911 immediately. Emergency situations should not wait for a relief request to be processed."
-                       wrapText="true"
-                       style="-fx-text-fill: #14304A; -fx-font-size: 13px;" />
+                <Label styleClass="error-title" text="Call 911 when in an emergency" />
+                <Label styleClass="box-text"
+                       text="For immediate danger or medical emergencies, call 911 immediately. Emergency situations should not wait for a relief request to be processed." />
             </children>
-            <padding>
-                <Insets bottom="16.0" left="16.0" right="16.0" top="16.0" />
-            </padding>
         </VBox>
     </children>
-
-    <padding>
-        <Insets bottom="24.0" left="20.0" right="20.0" top="24.0" />
-    </padding>
 </VBox>

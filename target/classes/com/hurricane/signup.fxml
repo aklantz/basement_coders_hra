@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.VBox?>
+
+<ScrollPane fitToWidth="true"
+            hbarPolicy="NEVER"
+            stylesheets="@styles.css"
+            xmlns="http://javafx.com/javafx/26"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.controllers.SignupController">
+    <content>
+        <VBox styleClass="screen">
+            <children>
+                <Button styleClass="back-button" onAction="#back" text="← Back" />
+
+                <Label styleClass="title" text="Create your account" />
+                <Label styleClass="subtitle" text="Save your household details and track relief requests securely." />
+
+                <VBox fx:id="errorBox" styleClass="error-box" managed="false" visible="false">
+                    <children>
+                        <Label fx:id="lbl_error" styleClass="error-title" />
+                    </children>
+                </VBox>
+
+                <Label styleClass="field-label" text="Full name *" />
+                <TextField fx:id="fullNameField" promptText="Full name" />
+
+                <Label styleClass="field-label" text="Email address *" />
+                <TextField fx:id="emailField" promptText="name@example.com" />
+                <Label styleClass="hint" text="Used for account access and request updates." />
+
+                <Label styleClass="field-label" text="Mobile phone *" />
+                <TextField fx:id="phoneField" promptText="(555) 555-5555" />
+                <Label styleClass="hint" text="Used for your requests. Never displayed publicly." />
+
+                <Label styleClass="field-label" text="Password *" />
+                <PasswordField fx:id="passwordField" promptText="Password" />
+
+                <CheckBox fx:id="agreeCheckBox" wrapText="true"
+                          text="I agree to the Terms and Privacy notice. My details may be shared with relief coordinators only when I submit a request." />
+
+                <VBox styleClass="info-box">
+                    <children>
+                        <Label styleClass="info-title" text="Your information stays purposeful" />
+                        <Label styleClass="box-text"
+                               text="No public resident directory. You control optional alerts in Settings." />
+                    </children>
+                </VBox>
+
+                <Button styleClass="primary-button" defaultButton="true"
+                        onAction="#btnSignupClicked" text="Create account" />
+                <Button styleClass="secondary-button"
+                        onAction="#goToLogin" text="Already have an account? Log in" />
+            </children>
+        </VBox>
+    </content>
+</ScrollPane>

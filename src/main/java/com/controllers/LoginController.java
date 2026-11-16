@@ -3,7 +3,7 @@ package com.controllers;
 import java.io.IOException;
 import com.hurricane.App;
 import com.model.User;
-import com.model.UserDirectory;
+import com.model.ReliefApplication;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -72,8 +72,7 @@ public class LoginController {
         String username = usernameField.getText();
         String password = passwordField.getText();
 
-        UserDirectory directory = UserDirectory.getInstance();
-        User user = directory.getUser(username, password);
+        User user = ReliefApplication.getInstance().login(username, password);
 
         if (user == null) {
             lbl_error.setText("Invalid login credentials.");
