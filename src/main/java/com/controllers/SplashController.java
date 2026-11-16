@@ -23,7 +23,7 @@ private void btnLoginClicked() throws IOException {
 
 @FXML
 private void btnCreateAccountClicked() throws IOException {
-    App.setRoot("login");
+    App.setRoot("signup");
 }
 
 @FXML

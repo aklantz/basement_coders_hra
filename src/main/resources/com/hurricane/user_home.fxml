@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.VBox?>
+
+<VBox styleClass="screen"
+      stylesheets="@styles.css"
+      xmlns="http://javafx.com/javafx/26"
+      xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="com.controllers.UserHomeController">
+
+    <children>
+        <Label styleClass="app-name" text="Hurricane Tracker" />
+        <Label fx:id="lbl_welcome" styleClass="title" />
+        <Label styleClass="subtitle" text="Your household's storm and relief overview." />
+
+        <Label styleClass="card-title" text="What do you need today?" />
+        <Button styleClass="primary-button" text="Request relief" />
+        <Button styleClass="secondary-button" text="View my requests" />
+
+        <Label styleClass="hint"
+               text="Immediate danger? Call 911 in the US. Relief requests are not monitored for emergencies." />
+
+        <Button styleClass="secondary-button" onAction="#btnLogoutClicked" text="Log out" />
+    </children>
+</VBox>
