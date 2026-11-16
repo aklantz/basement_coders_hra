@@ -87,6 +87,6 @@ public class LoginController {
 
     @FXML
     private void back() throws IOException {
-        App.setRoot("home");
+        App.setRoot("splashscreen");
     }
 }

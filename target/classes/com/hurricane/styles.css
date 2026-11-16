@@ -1,12 +1,17 @@
 /* JavaFX stylesheet for the Login and Hurricane Relief screens. */
 
+
 .root {
-    -fx-font-family: "Segoe UI", sans-serif;
+    -fx-font-family: "Arial", sans-serif;
     -fx-font-size: 14px;
     -fx-background-color: #F4F7F9;
     -fx-padding: 32;
     -fx-spacing: 24;
     -fx-alignment: center;
+}
+
+.label, .button, .text-field, .password-field {
+    -fx-font-family: "Arial", sans-serif;
 }
 
 /* Each supplied screen has a title label directly inside its root VBox. */
