@@ -4,23 +4,37 @@ import java.io.IOException;
 import com.hurricane.App;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
-import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.StackPane;
 
 /**
- * Displays the email entered during password recovery.
+ * Controls the email confirmation screen and its resend popup.
  */
 public class CheckEmailController {
 
-    // Temporarily passes the address between these two controllers.
     private static String recoveryEmail = "";
 
     @FXML
     private StackPane checkEmailRoot;
 
     @FXML
+    private ScrollPane checkEmailContent;
+
+    @FXML
     private Label emailAddressLabel;
+
+    @FXML
+    private StackPane resendOverlay;
+
+    @FXML
+    private Button resendButton;
+
+    @FXML
+    private Button resendDoneButton;
 
     public static void setRecoveryEmail(String email) {
         recoveryEmail = email == null ? "" : email;
@@ -37,6 +51,9 @@ public class CheckEmailController {
                         ? "Your email address"
                         : recoveryEmail
         );
+
+        resendOverlay.setVisible(false);
+        resendOverlay.setManaged(false);
 
         Platform.runLater(
                 () -> checkEmailRoot.requestFocus()
@@ -58,24 +75,34 @@ public class CheckEmailController {
     @FXML
     private void resendResetLink() {
         /*
-         * Connect the same password recovery service used by
-         * ForgotPasswordController here.
+         * Prototype confirmation only.
+         * Connect your recovery service here to send a real email.
          */
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle("Password recovery");
-        alert.setHeaderText("Email delivery is not connected yet");
-        alert.setContentText(
-                "This prototype displays the recovery screens, "
-                + "but no password reset email has been sent."
-        );
 
-        if (checkEmailRoot.getScene() != null
-                && checkEmailRoot.getScene().getWindow() != null) {
-            alert.initOwner(
-                    checkEmailRoot.getScene().getWindow()
-            );
+        // Prevent interaction with the screen behind the popup.
+        checkEmailContent.setDisable(true);
+
+        resendOverlay.setManaged(true);
+        resendOverlay.setVisible(true);
+        resendOverlay.toFront();
+
+        resendDoneButton.requestFocus();
+    }
+
+    @FXML
+    private void closeResendPopup() {
+        resendOverlay.setVisible(false);
+        resendOverlay.setManaged(false);
+
+        checkEmailContent.setDisable(false);
+        resendButton.requestFocus();
+    }
+
+    @FXML
+    private void handleOverlayKey(KeyEvent event) {
+        if (event.getCode() == KeyCode.ESCAPE) {
+            closeResendPopup();
+            event.consume();
         }
-
-        alert.showAndWait();
     }
 }

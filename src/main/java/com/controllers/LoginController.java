@@ -164,8 +164,8 @@ public class LoginController {
 
     @FXML
     private void continueAsGuest() throws IOException {
-        // Replace this destination if your guest screen has another name.
-        App.setRoot("hurricanerelief");
+        ReliefApplication.getInstance().logout();
+        App.setRoot("user_home");
     }
 
     @FXML

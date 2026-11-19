@@ -86,12 +86,32 @@ public class UserHomeController {
 
     @FXML
     private void openRequestRelief() throws IOException {
+        if (isGuest()) {
+            App.setRoot("login");
+            return;
+        }
+
         openScreen(REQUEST_RELIEF_SCREEN);
     }
 
     @FXML
     private void openRequests() throws IOException {
+        if (isGuest()) {
+            App.setRoot("login");
+            return;
+        }
+
         openScreen(REQUESTS_SCREEN);
+    }
+
+    @FXML
+    private void openAccount() throws IOException {
+        if (isGuest()) {
+            App.setRoot("login");
+            return;
+        }
+
+        openScreen(ACCOUNT_SCREEN);
     }
 
     @FXML
@@ -102,11 +122,6 @@ public class UserHomeController {
     @FXML
     private void openSafety() throws IOException {
         openScreen(SAFETY_SCREEN);
-    }
-
-    @FXML
-    private void openAccount() throws IOException {
-        openScreen(ACCOUNT_SCREEN);
     }
 
     /**
@@ -137,6 +152,10 @@ public class UserHomeController {
         }
 
         App.setRoot(filename);
+    }
+
+    private boolean isGuest() {
+        return ReliefApplication.getInstance().getCurrentUser() == null;
     }
 
     /**
