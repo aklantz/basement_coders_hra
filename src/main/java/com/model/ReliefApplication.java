@@ -420,4 +420,33 @@ public class ReliefApplication {
 	public void logAction(String action, String entityType, UUID entityId) {
 		// TODO: record who did what to which entity (audit log)
 	}
+    /** Saves pending request changes only for the current requester. */
+    public boolean editMyRequest(UUID requestId, String expectedVersion, RequestCategory category,
+                                 int people, String address, String note) {
+        return new ResidentRequests(aidRequestDirectory.getRequests(), aidRequestDirectory::save)
+                .edit(currentUser, requestId, expectedVersion, category, people, address, note);
+    }
+
+    /** Closes an unassigned, pending request only for its requester. */
+    public boolean cancelMyRequest(UUID requestId, String expectedVersion) {
+        return new ResidentRequests(aidRequestDirectory.getRequests(), aidRequestDirectory::save)
+                .cancel(currentUser, requestId, expectedVersion);
+    }
+
+    /** Updates the signed-in user's profile with duplicate-email and persistence checks. */
+    public boolean updateMyProfile(String fullName, String address, String email, String phone) {
+        return new ResidentAccount(userDirectory.getUsers(), userDirectory::save)
+                .updateProfile(currentUser, fullName, address, email, phone);
+    }
+
+    /** Creates a household and rolls back if it cannot be saved. */
+    public boolean createMyHousehold(String name) {
+        return new ResidentAccount(userDirectory.getUsers(), userDirectory::save).addHousehold(currentUser, name);
+    }
+
+    /** Adds a household member and rolls back if it cannot be saved. */
+    public boolean addMyHouseholdMember(String household, String name, int age) {
+        return new ResidentAccount(userDirectory.getUsers(), userDirectory::save)
+                .addMember(currentUser, household, name, age);
+    }
 }

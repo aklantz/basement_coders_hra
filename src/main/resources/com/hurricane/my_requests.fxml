@@ -2,11 +2,8 @@
 
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
-<?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ScrollPane?>
-<?import javafx.scene.control.TextArea?>
-<?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.StackPane?>
@@ -40,7 +37,6 @@
                                 <VBox spacing="20.0"
                                       maxWidth="390.0"
                                       minHeight="-Infinity">
-
                                     <padding>
                                         <Insets top="20.0"
                                                 right="22.0"
@@ -49,7 +45,6 @@
                                     </padding>
 
                                     <children>
-                                        <!-- Application header -->
                                         <HBox alignment="CENTER_LEFT"
                                               spacing="8.0">
                                             <children>
@@ -60,8 +55,7 @@
                                                     strokeWidth="1.2" />
 
                                                 <Label text="Hurricane Tracker"
-                                                       style="-fx-font-size: 13px;
-                                                              -fx-text-fill: #142D45;" />
+                                                       style="-fx-font-size: 13px; -fx-text-fill: #142D45;" />
                                             </children>
                                         </HBox>
 
@@ -70,48 +64,33 @@
                                                 <Label text="My requests"
                                                        wrapText="true"
                                                        minHeight="-Infinity"
-                                                       style="-fx-font-size: 27px;
-                                                              -fx-font-weight: bold;
-                                                              -fx-text-fill: #142D45;" />
+                                                       style="-fx-font-size: 27px; -fx-font-weight: bold; -fx-text-fill: #142D45;" />
 
-                                                <Label
-                                                    text="Your household’s requests and latest updates."
-                                                    wrapText="true"
-                                                    minHeight="-Infinity"
-                                                    style="-fx-font-size: 14px;
-                                                           -fx-text-fill: #536879;" />
+                                                <Label text="Your household’s requests and latest updates."
+                                                       wrapText="true"
+                                                       minHeight="-Infinity"
+                                                       style="-fx-font-size: 14px; -fx-text-fill: #536879;" />
                                             </children>
                                         </VBox>
 
-                                        <!-- Request counts -->
                                         <HBox spacing="10.0"
                                               alignment="CENTER_LEFT">
                                             <children>
                                                 <Label fx:id="activeCountLabel"
                                                        text="Active · 0"
-                                                       style="-fx-background-color: #E4F3F0;
-                                                              -fx-background-radius: 12px;
-                                                              -fx-padding: 6px 10px;
-                                                              -fx-font-size: 11px;
-                                                              -fx-font-weight: bold;
-                                                              -fx-text-fill: #087F7A;" />
+                                                       style="-fx-background-color: #E4F3F0; -fx-background-radius: 12px; -fx-padding: 6px 10px; -fx-font-size: 11px; -fx-font-weight: bold; -fx-text-fill: #087F7A;" />
 
                                                 <Label fx:id="previousCountLabel"
                                                        text="Previous · 0"
-                                                       style="-fx-font-size: 11px;
-                                                              -fx-text-fill: #536879;" />
+                                                       style="-fx-font-size: 11px; -fx-text-fill: #536879;" />
                                             </children>
                                         </HBox>
 
-                                        <!-- Empty state -->
+                                        <!-- Empty requests -->
                                         <VBox fx:id="emptyState"
                                               spacing="13.0"
                                               minHeight="-Infinity"
-                                              style="-fx-background-color: white;
-                                                     -fx-background-radius: 12px;
-                                                     -fx-border-color: #DCE5EB;
-                                                     -fx-border-radius: 12px;
-                                                     -fx-padding: 20px;">
+                                              style="-fx-background-color: white; -fx-background-radius: 12px; -fx-border-color: #DCE5EB; -fx-border-radius: 12px; -fx-padding: 20px;">
                                             <children>
                                                 <SVGPath
                                                     content="M 5 3 L 2 3 L 2 21 L 18 21 L 18 3 L 15 3 M 5 1 L 15 1 L 15 5 L 5 5 Z M 6 10 L 14 10 M 6 14 L 14 14"
@@ -120,20 +99,16 @@
                                                     strokeWidth="1.3" />
 
                                                 <Label text="No requests yet"
-                                                       style="-fx-font-size: 17px;
-                                                              -fx-font-weight: bold;
-                                                              -fx-text-fill: #142D45;" />
+                                                       style="-fx-font-size: 17px; -fx-font-weight: bold; -fx-text-fill: #142D45;" />
 
-                                                <Label
-                                                    text="You have no active or previous requests. If your household needs non-emergency supplies, you can create your first relief request."
-                                                    wrapText="true"
-                                                    minHeight="-Infinity"
-                                                    style="-fx-font-size: 13px;
-                                                           -fx-text-fill: #536879;" />
+                                                <Label text="You have no active or previous requests. If your household needs non-emergency supplies, you can create your first relief request."
+                                                       wrapText="true"
+                                                       minHeight="-Infinity"
+                                                       style="-fx-font-size: 13px; -fx-text-fill: #536879;" />
                                             </children>
                                         </VBox>
 
-                                        <!-- Populated state -->
+                                        <!-- Existing requests -->
                                         <VBox fx:id="populatedState"
                                               spacing="20.0"
                                               visible="false"
@@ -144,8 +119,7 @@
                                                        text="You have no active requests. Your previous requests are below."
                                                        wrapText="true"
                                                        minHeight="-Infinity"
-                                                       style="-fx-font-size: 13px;
-                                                              -fx-text-fill: #536879;" />
+                                                       style="-fx-font-size: 13px; -fx-text-fill: #536879;" />
 
                                                 <VBox fx:id="activeRequests"
                                                       spacing="18.0"
@@ -153,9 +127,7 @@
 
                                                 <Label fx:id="previousHeading"
                                                        text="Previous requests"
-                                                       style="-fx-font-size: 18px;
-                                                              -fx-font-weight: bold;
-                                                              -fx-text-fill: #142D45;" />
+                                                       style="-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #142D45;" />
 
                                                 <VBox fx:id="previousRequests"
                                                       spacing="18.0"
@@ -168,27 +140,15 @@
                                                 onAction="#openCreateRequest"
                                                 minWidth="0.0"
                                                 maxWidth="Infinity"
-                                                style="-fx-background-color: #087F7A;
-                                                       -fx-background-insets: 0;
-                                                       -fx-background-radius: 8px;
-                                                       -fx-text-fill: white;
-                                                       -fx-font-size: 14px;
-                                                       -fx-font-weight: bold;
-                                                       -fx-min-height: 52px;
-                                                       -fx-padding: 12px 16px;
-                                                       -fx-cursor: hand;" />
+                                                style="-fx-background-color: #087F7A; -fx-background-insets: 0; -fx-background-radius: 8px; -fx-text-fill: white; -fx-font-size: 14px; -fx-font-weight: bold; -fx-min-height: 52px; -fx-padding: 12px 16px; -fx-cursor: hand;" />
 
-                                        <!-- Information panel -->
                                         <HBox spacing="12.0"
                                               alignment="TOP_LEFT"
                                               minHeight="-Infinity"
-                                              style="-fx-background-color: #E4F3F0;
-                                                     -fx-background-radius: 9px;
-                                                     -fx-padding: 16px;">
+                                              style="-fx-background-color: #E4F3F0; -fx-background-radius: 9px; -fx-padding: 16px;">
                                             <children>
                                                 <Label text="ⓘ"
-                                                       style="-fx-font-size: 18px;
-                                                              -fx-text-fill: #087F7A;" />
+                                                       style="-fx-font-size: 18px; -fx-text-fill: #087F7A;" />
 
                                                 <VBox spacing="6.0"
                                                       minWidth="0.0"
@@ -199,16 +159,13 @@
                                                                text="Before you request support"
                                                                wrapText="true"
                                                                minHeight="-Infinity"
-                                                               style="-fx-font-size: 13px;
-                                                                      -fx-font-weight: bold;
-                                                                      -fx-text-fill: #087F7A;" />
+                                                               style="-fx-font-size: 13px; -fx-font-weight: bold; -fx-text-fill: #087F7A;" />
 
                                                         <Label fx:id="supportMessage"
                                                                text="Relief requests are for non-emergency needs. Assistance and timing are not guaranteed."
                                                                wrapText="true"
                                                                minHeight="-Infinity"
-                                                               style="-fx-font-size: 12px;
-                                                                      -fx-text-fill: #142D45;" />
+                                                               style="-fx-font-size: 12px; -fx-text-fill: #142D45;" />
                                                     </children>
                                                 </VBox>
                                             </children>
@@ -221,13 +178,12 @@
                 </ScrollPane>
             </center>
 
-            <!-- Fixed bottom navigation -->
+            <!-- Bottom navigation -->
             <bottom>
-                <StackPane
-                    style="-fx-background-color: white;
-                           -fx-border-color: #DCE5EB transparent transparent transparent;">
+                <StackPane style="-fx-background-color: white; -fx-border-color: #DCE5EB transparent transparent transparent;">
                     <children>
-                        <HBox alignment="CENTER" maxWidth="390.0">
+                        <HBox alignment="CENTER"
+                              maxWidth="390.0">
                             <padding>
                                 <Insets top="8.0"
                                         right="10.0"
@@ -244,11 +200,7 @@
                                         minWidth="0.0"
                                         prefWidth="90.0"
                                         maxWidth="Infinity"
-                                        style="-fx-background-color: transparent;
-                                               -fx-font-size: 10px;
-                                               -fx-text-fill: #536879;
-                                               -fx-min-height: 54px;
-                                               -fx-cursor: hand;">
+                                        style="-fx-background-color: transparent; -fx-font-size: 10px; -fx-text-fill: #536879; -fx-min-height: 54px; -fx-cursor: hand;">
                                     <graphic>
                                         <SVGPath
                                             content="M 1 10 L 11 1 L 21 10 M 4 8 L 4 21 L 9 21 L 9 14 L 13 14 L 13 21 L 18 21 L 18 8"
@@ -267,12 +219,7 @@
                                         minWidth="0.0"
                                         prefWidth="90.0"
                                         maxWidth="Infinity"
-                                        style="-fx-background-color: transparent;
-                                               -fx-font-size: 10px;
-                                               -fx-text-fill: #087F7A;
-                                               -fx-font-weight: bold;
-                                               -fx-min-height: 54px;
-                                               -fx-cursor: hand;">
+                                        style="-fx-background-color: transparent; -fx-font-size: 10px; -fx-text-fill: #087F7A; -fx-font-weight: bold; -fx-min-height: 54px; -fx-cursor: hand;">
                                     <graphic>
                                         <SVGPath
                                             content="M 5 3 L 2 3 L 2 21 L 18 21 L 18 3 L 15 3 M 5 1 L 15 1 L 15 5 L 5 5 Z M 6 10 L 14 10 M 6 14 L 14 14"
@@ -291,11 +238,7 @@
                                         minWidth="0.0"
                                         prefWidth="90.0"
                                         maxWidth="Infinity"
-                                        style="-fx-background-color: transparent;
-                                               -fx-font-size: 10px;
-                                               -fx-text-fill: #536879;
-                                               -fx-min-height: 54px;
-                                               -fx-cursor: hand;">
+                                        style="-fx-background-color: transparent; -fx-font-size: 10px; -fx-text-fill: #536879; -fx-min-height: 54px; -fx-cursor: hand;">
                                     <graphic>
                                         <SVGPath
                                             content="M 11 1 L 20 5 L 18 15 L 11 22 L 4 15 L 2 5 Z M 7 11 L 10 14 L 15 8"
@@ -314,11 +257,7 @@
                                         minWidth="0.0"
                                         prefWidth="90.0"
                                         maxWidth="Infinity"
-                                        style="-fx-background-color: transparent;
-                                               -fx-font-size: 10px;
-                                               -fx-text-fill: #536879;
-                                               -fx-min-height: 54px;
-                                               -fx-cursor: hand;">
+                                        style="-fx-background-color: transparent; -fx-font-size: 10px; -fx-text-fill: #536879; -fx-min-height: 54px; -fx-cursor: hand;">
                                     <graphic>
                                         <SVGPath
                                             content="M 15 6 A 5 5 0 1 1 5 6 A 5 5 0 1 1 15 6 Z M 1 22 C 1 11 19 11 19 22"
@@ -335,7 +274,7 @@
             </bottom>
         </BorderPane>
 
-        <!-- Request details / creation popup -->
+        <!-- Request details popup -->
         <StackPane fx:id="overlay"
                    visible="false"
                    managed="false"
@@ -377,125 +316,11 @@
                                       spacing="12.0"
                                       minHeight="-Infinity" />
 
-                                <VBox fx:id="createForm"
-                                      spacing="12.0"
-                                      visible="false"
-                                      managed="false"
-                                      minHeight="-Infinity">
-                                    <children>
-                                        <Label text="Support needed *"
-                                               style="-fx-font-size: 13px;
-                                                      -fx-font-weight: bold;
-                                                      -fx-text-fill: #142D45;" />
-
-                                        <ComboBox fx:id="categoryField"
-                                                  promptText="Choose a category"
-                                                  maxWidth="Infinity"
-                                                  style="-fx-background-color: white;
-                                                         -fx-background-insets: 0;
-                                                         -fx-background-radius: 8px;
-                                                         -fx-border-color: #DCE5EB;
-                                                         -fx-border-radius: 8px;
-                                                         -fx-min-height: 52px;
-                                                         -fx-font-size: 14px;
-                                                         -fx-padding: 10px 12px;" />
-
-                                        <Label text="People needing support *"
-                                               style="-fx-font-size: 13px;
-                                                      -fx-font-weight: bold;
-                                                      -fx-text-fill: #142D45;" />
-
-                                        <ComboBox fx:id="householdSizeField"
-                                                  accessibleText="People needing support"
-                                                  maxWidth="Infinity"
-                                                  style="-fx-background-color: white;
-                                                         -fx-background-insets: 0;
-                                                         -fx-background-radius: 8px;
-                                                         -fx-border-color: #DCE5EB;
-                                                         -fx-border-radius: 8px;
-                                                         -fx-min-height: 52px;
-                                                         -fx-font-size: 14px;
-                                                         -fx-padding: 10px 12px;" />
-
-                                        <Label text="Safe handoff address *"
-                                               style="-fx-font-size: 13px;
-                                                      -fx-font-weight: bold;
-                                                      -fx-text-fill: #142D45;" />
-
-                                        <TextField fx:id="addressField"
-                                                   promptText="Street address, city, state and ZIP"
-                                                   style="-fx-background-color: white;
-                                                          -fx-background-insets: 0;
-                                                          -fx-background-radius: 8px;
-                                                          -fx-border-color: #DCE5EB;
-                                                          -fx-border-radius: 8px;
-                                                          -fx-min-height: 52px;
-                                                          -fx-font-size: 14px;
-                                                          -fx-padding: 10px 12px;" />
-
-                                        <Label text="Additional details - optional"
-                                               style="-fx-font-size: 13px;
-                                                      -fx-font-weight: bold;
-                                                      -fx-text-fill: #142D45;" />
-
-                                        <TextArea fx:id="noteField"
-                                                  promptText="Describe supplies or access needs. Do not include door codes."
-                                                  wrapText="true"
-                                                  prefRowCount="4"
-                                                  style="-fx-font-size: 14px;
-                                                         -fx-background-insets: 0;" />
-
-                                        <Label
-                                            text="This creates a non-emergency request for coordinator review. Assistance and response times are not guaranteed."
-                                            wrapText="true"
-                                            minHeight="-Infinity"
-                                            style="-fx-font-size: 12px;
-                                                   -fx-text-fill: #536879;
-                                                   -fx-background-color: #E4F3F0;
-                                                   -fx-padding: 12px;
-                                                   -fx-background-radius: 8px;" />
-
-                                        <Label fx:id="formError"
-                                               visible="false"
-                                               managed="false"
-                                               wrapText="true"
-                                               minHeight="-Infinity"
-                                               style="-fx-text-fill: #B33535;
-                                                      -fx-font-size: 13px;" />
-                                    </children>
-                                </VBox>
-
-                                <Button fx:id="submitRequestButton"
-                                        text="Submit relief request"
-                                        onAction="#submitRequest"
-                                        maxWidth="Infinity"
-                                        visible="false"
-                                        managed="false"
-                                        style="-fx-background-color: #087F7A;
-                                               -fx-background-insets: 0;
-                                               -fx-background-radius: 8px;
-                                               -fx-text-fill: white;
-                                               -fx-font-size: 14px;
-                                               -fx-font-weight: bold;
-                                               -fx-min-height: 52px;
-                                               -fx-padding: 12px 16px;
-                                               -fx-cursor: hand;" />
-
                                 <Button fx:id="closeOverlayButton"
                                         text="Done"
                                         onAction="#closeOverlay"
                                         maxWidth="Infinity"
-                                        style="-fx-background-color: white;
-                                               -fx-background-insets: 0;
-                                               -fx-background-radius: 8px;
-                                               -fx-border-color: #DCE5EB;
-                                               -fx-border-radius: 8px;
-                                               -fx-text-fill: #087F7A;
-                                               -fx-font-size: 14px;
-                                               -fx-font-weight: bold;
-                                               -fx-min-height: 52px;
-                                               -fx-padding: 12px 16px;
-                                               -fx-cursor: hand;" />
+                                        style="-fx-background-color: white; -fx-background-insets: 0; -fx-background-radius: 8px; -fx-border-color: #DCE5EB; -fx-border-radius: 8px; -fx-text-fill: #087F7A; -fx-font-size: 14px; -fx-font-weight: bold; -fx-min-height: 52px; -fx-padding: 12px 16px; -fx-cursor: hand;" />
                             </children>
                         </VBox>
                     </content>

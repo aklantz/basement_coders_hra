@@ -1,0 +1,689 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.geometry.Insets?>
+
+<StackPane fx:id="detailRoot"
+           xmlns="http://javafx.com/javafx/13"
+           xmlns:fx="http://javafx.com/fxml/1"
+           fx:controller="com.controllers.RequestDetailController"
+           prefWidth="390"
+           prefHeight="800"
+           focusTraversable="true"
+           style="-fx-background-color: #F4F7FA;
+                  -fx-font-family: 'Segoe UI';
+                  -fx-font-size: 14px;
+                  -fx-accent: #008681;
+                  -fx-focus-color: #008681;">
+
+    <BorderPane fx:id="mainContent">
+        <center>
+            <ScrollPane fx:id="pageScroll"
+                        fitToWidth="true"
+                        hbarPolicy="NEVER"
+                        style="-fx-background: #F4F7FA;
+                               -fx-background-color: #F4F7FA;
+                               -fx-padding: 0;">
+                <content>
+                    <StackPane alignment="TOP_CENTER">
+                        <VBox spacing="20"
+                              minHeight="-Infinity"
+                              maxWidth="390"
+                              style="-fx-padding: 22px;">
+
+                            <!-- Shared header -->
+                            <HBox alignment="CENTER_LEFT">
+                                <Hyperlink text="‹  Back"
+                                           onAction="#back"
+                                           style="-fx-text-fill: #008681;" />
+
+                                <Region HBox.hgrow="ALWAYS" />
+
+                                <Label fx:id="locationLabel"
+                                       wrapText="true"
+                                       minHeight="-Infinity"
+                                       maxWidth="160"
+                                       style="-fx-font-size: 11px;
+                                              -fx-text-fill: #587083;" />
+                            </HBox>
+
+                            <Label fx:id="pageTitle"
+                                   text="Request received"
+                                   wrapText="true"
+                                   minHeight="-Infinity"
+                                   maxWidth="Infinity"
+                                   style="-fx-font-size: 27px;
+                                          -fx-font-weight: bold;
+                                          -fx-text-fill: #142D45;" />
+
+                            <Label fx:id="referenceLabel"
+                                   text="Choose a request in My requests."
+                                   wrapText="true"
+                                   minHeight="-Infinity"
+                                   maxWidth="Infinity"
+                                   style="-fx-font-size: 12px;
+                                          -fx-text-fill: #587083;" />
+
+                            <Label fx:id="statusLabel"
+                                   text="AWAITING REVIEW"
+                                   wrapText="true"
+                                   minHeight="-Infinity"
+                                   style="-fx-font-size: 11px;
+                                          -fx-font-weight: bold;
+                                          -fx-text-fill: #94600D;
+                                          -fx-background-color: #FFF3DC;
+                                          -fx-padding: 6px 10px;
+                                          -fx-background-radius: 12px;" />
+
+                            <Label fx:id="messageLabel"
+                                   visible="false"
+                                   managed="false"
+                                   wrapText="true"
+                                   minHeight="-Infinity"
+                                   maxWidth="Infinity"
+                                   style="-fx-font-size: 13px;
+                                          -fx-text-fill: #B52E37;" />
+
+                            <!-- SCREEN 13: REQUEST DETAIL -->
+                            <VBox fx:id="detailPage"
+                                  spacing="18"
+                                  minHeight="-Infinity">
+
+                                <Button fx:id="editRequestButton"
+                                        text="Edit request"
+                                        onAction="#beginEdit"
+                                        maxWidth="Infinity"
+                                        style="-fx-background-color: white; -fx-background-insets: 0; -fx-background-radius: 8px; -fx-border-color: #D8E3EB; -fx-border-radius: 8px; -fx-text-fill: #008681; -fx-font-weight: bold; -fx-font-size: 14px; -fx-padding: 13px; -fx-min-height: 48px; -fx-cursor: hand;" />
+
+                                <!-- Progress -->
+                                <VBox spacing="10"
+                                      minHeight="-Infinity"
+                                      style="-fx-background-color: white; -fx-background-radius: 12px; -fx-border-color: #D8E3EB; -fx-border-radius: 12px; -fx-padding: 16px;">
+
+                                    <Label text="Request progress"
+                                           wrapText="true"
+                                           minHeight="-Infinity"
+                                           style="-fx-font-size: 17px; -fx-font-weight: bold; -fx-text-fill: #142D45;" />
+
+                                    <Label fx:id="progressLabel"
+                                           text="Progress will appear here."
+                                           wrapText="true"
+                                           minHeight="-Infinity"
+                                           maxWidth="Infinity"
+                                           style="-fx-font-size: 13px; -fx-text-fill: #587083;" />
+                                </VBox>
+
+                                <!-- Status information -->
+                                <VBox spacing="6"
+                                      minHeight="-Infinity"
+                                      style="-fx-background-color: #E4F3F0; -fx-padding: 14px; -fx-background-radius: 9px;">
+
+                                    <Label fx:id="updateTitle"
+                                           text="No coordinator assigned yet"
+                                           wrapText="true"
+                                           minHeight="-Infinity"
+                                           style="-fx-font-size: 13px; -fx-font-weight: bold; -fx-text-fill: #008681;" />
+
+                                    <Label fx:id="updateLabel"
+                                           text="Updates appear here. Review times and assistance are not guaranteed."
+                                           wrapText="true"
+                                           minHeight="-Infinity"
+                                           maxWidth="Infinity"
+                                           style="-fx-font-size: 12px; -fx-text-fill: #142D45;" />
+                                </VBox>
+
+                                <!-- Needs -->
+                                <VBox spacing="10"
+                                      minHeight="-Infinity"
+                                      style="-fx-background-color: white; -fx-background-radius: 12px; -fx-border-color: #D8E3EB; -fx-border-radius: 12px; -fx-padding: 16px;">
+
+                                    <HBox alignment="CENTER_LEFT">
+                                        <Label text="Needs &amp; urgency"
+                                               wrapText="true"
+                                               minHeight="-Infinity"
+                                               style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #142D45;" />
+
+                                        <Region HBox.hgrow="ALWAYS" />
+
+                                        <Hyperlink text="Edit"
+                                                   onAction="#editNeeds"
+                                                   style="-fx-text-fill: #008681; -fx-font-size: 12px;" />
+                                    </HBox>
+
+                                    <Label fx:id="needsLabel"
+                                           wrapText="true"
+                                           minHeight="-Infinity"
+                                           maxWidth="Infinity"
+                                           style="-fx-font-size: 13px; -fx-text-fill: #587083;" />
+                                </VBox>
+
+                                <!-- Household -->
+                                <VBox spacing="10"
+                                      minHeight="-Infinity"
+                                      style="-fx-background-color: white; -fx-background-radius: 12px; -fx-border-color: #D8E3EB; -fx-border-radius: 12px; -fx-padding: 16px;">
+
+                                    <HBox alignment="CENTER_LEFT">
+                                        <Label text="Household"
+                                               style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #142D45;" />
+
+                                        <Region HBox.hgrow="ALWAYS" />
+
+                                        <Hyperlink text="Edit"
+                                                   onAction="#editHousehold"
+                                                   style="-fx-text-fill: #008681; -fx-font-size: 12px;" />
+                                    </HBox>
+
+                                    <Label fx:id="householdLabel"
+                                           wrapText="true"
+                                           minHeight="-Infinity"
+                                           maxWidth="Infinity"
+                                           style="-fx-font-size: 13px; -fx-text-fill: #587083;" />
+                                </VBox>
+
+                                <!-- Location -->
+                                <VBox spacing="10"
+                                      minHeight="-Infinity"
+                                      style="-fx-background-color: white; -fx-background-radius: 12px; -fx-border-color: #D8E3EB; -fx-border-radius: 12px; -fx-padding: 16px;">
+
+                                    <HBox alignment="CENTER_LEFT">
+                                        <Label text="Location &amp; safe handoff"
+                                               wrapText="true"
+                                               minHeight="-Infinity"
+                                               style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #142D45;" />
+
+                                        <Region HBox.hgrow="ALWAYS" />
+
+                                        <Hyperlink text="Edit"
+                                                   onAction="#editLocation"
+                                                   style="-fx-text-fill: #008681; -fx-font-size: 12px;" />
+                                    </HBox>
+
+                                    <Label fx:id="handoffLabel"
+                                           wrapText="true"
+                                           minHeight="-Infinity"
+                                           maxWidth="Infinity"
+                                           style="-fx-font-size: 13px; -fx-text-fill: #587083;" />
+                                </VBox>
+
+                                <!-- Safe contact -->
+                                <VBox spacing="10"
+                                      minHeight="-Infinity"
+                                      style="-fx-background-color: white; -fx-background-radius: 12px; -fx-border-color: #D8E3EB; -fx-border-radius: 12px; -fx-padding: 16px;">
+
+                                    <HBox alignment="CENTER_LEFT">
+                                        <Label text="Safe contact"
+                                               style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #142D45;" />
+
+                                        <Region HBox.hgrow="ALWAYS" />
+
+                                        <Hyperlink text="Edit"
+                                                   onAction="#editContact"
+                                                   style="-fx-text-fill: #008681; -fx-font-size: 12px;" />
+                                    </HBox>
+
+                                    <Label fx:id="contactLabel"
+                                           wrapText="true"
+                                           minHeight="-Infinity"
+                                           maxWidth="Infinity"
+                                           style="-fx-font-size: 13px; -fx-text-fill: #587083;" />
+                                </VBox>
+
+                                <Label fx:id="originalNoteLabel"
+                                       visible="false"
+                                       managed="false"
+                                       wrapText="true"
+                                       minHeight="-Infinity"
+                                       maxWidth="Infinity"
+                                       style="-fx-font-size: 12px; -fx-text-fill: #587083;" />
+
+                                <Button fx:id="cancelRequestButton"
+                                        text="Cancel request"
+                                        onAction="#askCancel"
+                                        maxWidth="Infinity"
+                                        style="-fx-background-color: white; -fx-background-insets: 0; -fx-background-radius: 8px; -fx-border-color: #D8E3EB; -fx-border-radius: 8px; -fx-text-fill: #BB303A; -fx-font-weight: bold; -fx-font-size: 14px; -fx-padding: 13px; -fx-min-height: 48px; -fx-cursor: hand;" />
+                            </VBox>
+
+                            <!-- SCREEN 14: EDIT REQUEST -->
+                            <VBox fx:id="editPage"
+                                  spacing="18"
+                                  minHeight="-Infinity"
+                                  visible="false"
+                                  managed="false">
+
+                                <!-- Needs editor -->
+                                <VBox spacing="12"
+                                      minHeight="-Infinity"
+                                      style="-fx-background-color: white; -fx-background-radius: 12px; -fx-border-color: #D8E3EB; -fx-border-radius: 12px; -fx-padding: 16px;">
+
+                                    <HBox alignment="CENTER_LEFT">
+                                        <Label text="Needs &amp; urgency"
+                                               style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #142D45;" />
+
+                                        <Region HBox.hgrow="ALWAYS" />
+
+                                        <Hyperlink text="Edit"
+                                                   onAction="#toggleNeeds"
+                                                   style="-fx-text-fill: #008681; -fx-font-size: 12px;" />
+                                    </HBox>
+
+                                    <Label fx:id="editNeedsSummary"
+                                           wrapText="true"
+                                           minHeight="-Infinity"
+                                           maxWidth="Infinity"
+                                           style="-fx-font-size: 13px; -fx-text-fill: #587083;" />
+
+                                    <VBox fx:id="needsForm"
+                                          spacing="12"
+                                          minHeight="-Infinity"
+                                          visible="false"
+                                          managed="false">
+
+                                        <VBox spacing="7">
+                                            <Label text="Main category *"
+                                                   style="-fx-font-size: 12px; -fx-font-weight: bold; -fx-text-fill: #142D45;" />
+
+                                            <ComboBox fx:id="categoryField"
+                                                      maxWidth="Infinity"
+                                                      style="-fx-background-color: white; -fx-background-insets: 0; -fx-background-radius: 8px; -fx-border-color: #D8E3EB; -fx-border-radius: 8px; -fx-padding: 12px; -fx-font-size: 14px; -fx-text-fill: #142D45;" />
+                                        </VBox>
+
+                                        <VBox spacing="7">
+                                            <Label text="Needs *"
+                                                   style="-fx-font-size: 12px; -fx-font-weight: bold; -fx-text-fill: #142D45;" />
+
+                                            <TextField fx:id="needsField"
+                                                       style="-fx-background-color: white; -fx-background-insets: 0; -fx-background-radius: 8px; -fx-border-color: #D8E3EB; -fx-border-radius: 8px; -fx-padding: 12px; -fx-font-size: 14px; -fx-text-fill: #142D45;" />
+                                        </VBox>
+
+                                        <VBox spacing="7">
+                                            <Label text="Urgency"
+                                                   style="-fx-font-size: 12px; -fx-font-weight: bold; -fx-text-fill: #142D45;" />
+
+                                            <ComboBox fx:id="urgencyField"
+                                                      maxWidth="Infinity"
+                                                      style="-fx-background-color: white; -fx-background-insets: 0; -fx-background-radius: 8px; -fx-border-color: #D8E3EB; -fx-border-radius: 8px; -fx-padding: 12px; -fx-font-size: 14px; -fx-text-fill: #142D45;" />
+                                        </VBox>
+
+                                        <VBox spacing="7">
+                                            <Label text="Other essentials"
+                                                   style="-fx-font-size: 12px; -fx-font-weight: bold; -fx-text-fill: #142D45;" />
+
+                                            <TextField fx:id="otherField"
+                                                       style="-fx-background-color: white; -fx-background-insets: 0; -fx-background-radius: 8px; -fx-border-color: #D8E3EB; -fx-border-radius: 8px; -fx-padding: 12px; -fx-font-size: 14px; -fx-text-fill: #142D45;" />
+                                        </VBox>
+                                    </VBox>
+                                </VBox>
+
+                                <!-- Household editor -->
+                                <VBox spacing="12"
+                                      minHeight="-Infinity"
+                                      style="-fx-background-color: white; -fx-background-radius: 12px; -fx-border-color: #D8E3EB; -fx-border-radius: 12px; -fx-padding: 16px;">
+
+                                    <HBox alignment="CENTER_LEFT">
+                                        <Label text="Household"
+                                               style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #142D45;" />
+
+                                        <Region HBox.hgrow="ALWAYS" />
+
+                                        <Hyperlink text="Edit"
+                                                   onAction="#toggleHousehold"
+                                                   style="-fx-text-fill: #008681; -fx-font-size: 12px;" />
+                                    </HBox>
+
+                                    <Label fx:id="editHouseholdSummary"
+                                           wrapText="true"
+                                           minHeight="-Infinity"
+                                           maxWidth="Infinity"
+                                           style="-fx-font-size: 13px; -fx-text-fill: #587083;" />
+
+                                    <VBox fx:id="householdForm"
+                                          spacing="12"
+                                          minHeight="-Infinity"
+                                          visible="false"
+                                          managed="false">
+
+                                        <VBox spacing="7">
+                                            <Label text="People needing support *"
+                                                   style="-fx-font-size: 12px; -fx-font-weight: bold; -fx-text-fill: #142D45;" />
+
+                                            <TextField fx:id="peopleField"
+                                                       style="-fx-background-color: white; -fx-background-insets: 0; -fx-background-radius: 8px; -fx-border-color: #D8E3EB; -fx-border-radius: 8px; -fx-padding: 12px; -fx-font-size: 14px; -fx-text-fill: #142D45;" />
+                                        </VBox>
+
+                                        <VBox spacing="7">
+                                            <Label text="Children under 18 · optional"
+                                                   wrapText="true"
+                                                   minHeight="-Infinity"
+                                                   style="-fx-font-size: 12px; -fx-font-weight: bold; -fx-text-fill: #142D45;" />
+
+                                            <TextField fx:id="childrenField"
+                                                       style="-fx-background-color: white; -fx-background-insets: 0; -fx-background-radius: 8px; -fx-border-color: #D8E3EB; -fx-border-radius: 8px; -fx-padding: 12px; -fx-font-size: 14px; -fx-text-fill: #142D45;" />
+                                        </VBox>
+
+                                        <VBox spacing="7">
+                                            <Label text="Adults 65 or older · optional"
+                                                   wrapText="true"
+                                                   minHeight="-Infinity"
+                                                   style="-fx-font-size: 12px; -fx-font-weight: bold; -fx-text-fill: #142D45;" />
+
+                                            <TextField fx:id="olderField"
+                                                       style="-fx-background-color: white; -fx-background-insets: 0; -fx-background-radius: 8px; -fx-border-color: #D8E3EB; -fx-border-radius: 8px; -fx-padding: 12px; -fx-font-size: 14px; -fx-text-fill: #142D45;" />
+                                        </VBox>
+                                    </VBox>
+                                </VBox>
+
+                                <!-- Location editor -->
+                                <VBox spacing="12"
+                                      minHeight="-Infinity"
+                                      style="-fx-background-color: white; -fx-background-radius: 12px; -fx-border-color: #D8E3EB; -fx-border-radius: 12px; -fx-padding: 16px;">
+
+                                    <HBox alignment="CENTER_LEFT">
+                                        <Label text="Location &amp; safe handoff"
+                                               wrapText="true"
+                                               minHeight="-Infinity"
+                                               style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #142D45;" />
+
+                                        <Region HBox.hgrow="ALWAYS" />
+
+                                        <Hyperlink text="Edit"
+                                                   onAction="#toggleLocation"
+                                                   style="-fx-text-fill: #008681; -fx-font-size: 12px;" />
+                                    </HBox>
+
+                                    <Label fx:id="editLocationSummary"
+                                           wrapText="true"
+                                           minHeight="-Infinity"
+                                           maxWidth="Infinity"
+                                           style="-fx-font-size: 13px; -fx-text-fill: #587083;" />
+
+                                    <VBox fx:id="locationForm"
+                                          spacing="12"
+                                          minHeight="-Infinity"
+                                          visible="false"
+                                          managed="false">
+
+                                        <VBox spacing="7">
+                                            <Label text="Safe handoff address *"
+                                                   style="-fx-font-size: 12px; -fx-font-weight: bold; -fx-text-fill: #142D45;" />
+
+                                            <TextField fx:id="addressField"
+                                                       style="-fx-background-color: white; -fx-background-insets: 0; -fx-background-radius: 8px; -fx-border-color: #D8E3EB; -fx-border-radius: 8px; -fx-padding: 12px; -fx-font-size: 14px; -fx-text-fill: #142D45;" />
+                                        </VBox>
+
+                                        <VBox spacing="7">
+                                            <Label text="Access / pickup instructions"
+                                                   wrapText="true"
+                                                   minHeight="-Infinity"
+                                                   style="-fx-font-size: 12px; -fx-font-weight: bold; -fx-text-fill: #142D45;" />
+
+                                            <TextArea fx:id="instructionsField"
+                                                      wrapText="true"
+                                                      prefRowCount="3"
+                                                      style="-fx-background-color: white; -fx-background-insets: 0; -fx-background-radius: 8px; -fx-border-color: #D8E3EB; -fx-border-radius: 8px; -fx-padding: 12px; -fx-font-size: 14px; -fx-text-fill: #142D45;" />
+                                        </VBox>
+                                    </VBox>
+                                </VBox>
+
+                                <!-- Contact editor -->
+                                <VBox spacing="12"
+                                      minHeight="-Infinity"
+                                      style="-fx-background-color: white; -fx-background-radius: 12px; -fx-border-color: #D8E3EB; -fx-border-radius: 12px; -fx-padding: 16px;">
+
+                                    <HBox alignment="CENTER_LEFT">
+                                        <Label text="Safe contact"
+                                               style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #142D45;" />
+
+                                        <Region HBox.hgrow="ALWAYS" />
+
+                                        <Hyperlink text="Edit"
+                                                   onAction="#toggleContact"
+                                                   style="-fx-text-fill: #008681; -fx-font-size: 12px;" />
+                                    </HBox>
+
+                                    <Label fx:id="editContactSummary"
+                                           wrapText="true"
+                                           minHeight="-Infinity"
+                                           maxWidth="Infinity"
+                                           style="-fx-font-size: 13px; -fx-text-fill: #587083;" />
+
+                                    <VBox fx:id="contactForm"
+                                          spacing="12"
+                                          minHeight="-Infinity"
+                                          visible="false"
+                                          managed="false">
+
+                                        <VBox spacing="7">
+                                            <Label text="Preferred safe contact"
+                                                   style="-fx-font-size: 12px; -fx-font-weight: bold; -fx-text-fill: #142D45;" />
+
+                                            <ComboBox fx:id="contactMethodField"
+                                                      maxWidth="Infinity"
+                                                      style="-fx-background-color: white; -fx-background-insets: 0; -fx-background-radius: 8px; -fx-border-color: #D8E3EB; -fx-border-radius: 8px; -fx-padding: 12px; -fx-font-size: 14px; -fx-text-fill: #142D45;" />
+                                        </VBox>
+
+                                        <VBox spacing="7">
+                                            <Label text="Safe phone · optional"
+                                                   style="-fx-font-size: 12px; -fx-font-weight: bold; -fx-text-fill: #142D45;" />
+
+                                            <TextField fx:id="phoneField"
+                                                       style="-fx-background-color: white; -fx-background-insets: 0; -fx-background-radius: 8px; -fx-border-color: #D8E3EB; -fx-border-radius: 8px; -fx-padding: 12px; -fx-font-size: 14px; -fx-text-fill: #142D45;" />
+                                        </VBox>
+
+                                        <VBox spacing="7">
+                                            <Label text="Safe contact times / instructions"
+                                                   wrapText="true"
+                                                   minHeight="-Infinity"
+                                                   style="-fx-font-size: 12px; -fx-font-weight: bold; -fx-text-fill: #142D45;" />
+
+                                            <TextField fx:id="safeTimeField"
+                                                       style="-fx-background-color: white; -fx-background-insets: 0; -fx-background-radius: 8px; -fx-border-color: #D8E3EB; -fx-border-radius: 8px; -fx-padding: 12px; -fx-font-size: 14px; -fx-text-fill: #142D45;" />
+                                        </VBox>
+                                    </VBox>
+                                </VBox>
+
+                                <!-- Situation editor -->
+                                <VBox spacing="12"
+                                      minHeight="-Infinity"
+                                      style="-fx-background-color: white; -fx-background-radius: 12px; -fx-border-color: #D8E3EB; -fx-border-radius: 12px; -fx-padding: 16px;">
+
+                                    <HBox alignment="CENTER_LEFT">
+                                        <Label text="Situation &amp; access needs"
+                                               wrapText="true"
+                                               minHeight="-Infinity"
+                                               style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #142D45;" />
+
+                                        <Region HBox.hgrow="ALWAYS" />
+
+                                        <Hyperlink text="Edit"
+                                                   onAction="#toggleSituation"
+                                                   style="-fx-text-fill: #008681; -fx-font-size: 12px;" />
+                                    </HBox>
+
+                                    <Label fx:id="editSituationSummary"
+                                           wrapText="true"
+                                           minHeight="-Infinity"
+                                           maxWidth="Infinity"
+                                           style="-fx-font-size: 13px; -fx-text-fill: #587083;" />
+
+                                    <VBox fx:id="situationForm"
+                                          spacing="12"
+                                          minHeight="-Infinity"
+                                          visible="false"
+                                          managed="false">
+
+                                        <VBox spacing="7">
+                                            <Label text="Situation"
+                                                   style="-fx-font-size: 12px; -fx-font-weight: bold; -fx-text-fill: #142D45;" />
+
+                                            <TextArea fx:id="situationField"
+                                                      wrapText="true"
+                                                      prefRowCount="3"
+                                                      style="-fx-background-color: white; -fx-background-insets: 0; -fx-background-radius: 8px; -fx-border-color: #D8E3EB; -fx-border-radius: 8px; -fx-padding: 12px; -fx-font-size: 14px; -fx-text-fill: #142D45;" />
+                                        </VBox>
+
+                                        <VBox spacing="7">
+                                            <Label text="Accessibility / medical supply needs"
+                                                   wrapText="true"
+                                                   minHeight="-Infinity"
+                                                   style="-fx-font-size: 12px; -fx-font-weight: bold; -fx-text-fill: #142D45;" />
+
+                                            <TextArea fx:id="accessibilityField"
+                                                      wrapText="true"
+                                                      prefRowCount="3"
+                                                      style="-fx-background-color: white; -fx-background-insets: 0; -fx-background-radius: 8px; -fx-border-color: #D8E3EB; -fx-border-radius: 8px; -fx-padding: 12px; -fx-font-size: 14px; -fx-text-fill: #142D45;" />
+                                        </VBox>
+                                    </VBox>
+                                </VBox>
+
+                                <Label text="Attachments"
+                                       style="-fx-font-size: 13px; -fx-font-weight: bold; -fx-text-fill: #142D45;" />
+
+                                <Label text="None added"
+                                       style="-fx-font-size: 13px; -fx-text-fill: #587083;" />
+
+                                <VBox spacing="7"
+                                      minHeight="-Infinity"
+                                      style="-fx-background-color: #E4F3F0; -fx-background-radius: 9px; -fx-padding: 14px;">
+
+                                    <Label text="Save before leaving"
+                                           wrapText="true"
+                                           minHeight="-Infinity"
+                                           style="-fx-font-size: 13px; -fx-font-weight: bold; -fx-text-fill: #008681;" />
+
+                                    <Label text="Your edits apply only when you select Save changes. Assigned requests cannot be changed here."
+                                           wrapText="true"
+                                           minHeight="-Infinity"
+                                           maxWidth="Infinity"
+                                           style="-fx-font-size: 12px; -fx-text-fill: #142D45;" />
+                                </VBox>
+
+                                <Button text="Save changes"
+                                        onAction="#saveChanges"
+                                        maxWidth="Infinity"
+                                        style="-fx-background-color: #008681; -fx-background-insets: 0; -fx-background-radius: 8px; -fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 14px; -fx-padding: 14px; -fx-min-height: 50px; -fx-cursor: hand;" />
+
+                                <Button text="Discard changes"
+                                        onAction="#discardChanges"
+                                        maxWidth="Infinity"
+                                        style="-fx-background-color: white; -fx-background-insets: 0; -fx-background-radius: 8px; -fx-border-color: #D8E3EB; -fx-border-radius: 8px; -fx-text-fill: #008681; -fx-font-weight: bold; -fx-font-size: 14px; -fx-padding: 13px; -fx-min-height: 48px; -fx-cursor: hand;" />
+                            </VBox>
+                        </VBox>
+                    </StackPane>
+                </content>
+            </ScrollPane>
+        </center>
+
+        <!-- Fixed bottom navigation -->
+        <bottom>
+            <HBox alignment="CENTER"
+                  style="-fx-background-color: white; -fx-border-color: #D8E3EB transparent transparent transparent; -fx-padding: 10px;">
+
+                <Button text="⌂&#10;Home"
+                        onAction="#openHome"
+                        HBox.hgrow="ALWAYS"
+                        maxWidth="Infinity"
+                        prefWidth="90"
+                        minWidth="0"
+                        style="-fx-background-color: transparent; -fx-font-size: 11px; -fx-min-height: 52px; -fx-text-fill: #587083;" />
+
+                <Button text="▤&#10;Requests"
+                        onAction="#openRequests"
+                        HBox.hgrow="ALWAYS"
+                        maxWidth="Infinity"
+                        prefWidth="90"
+                        minWidth="0"
+                        style="-fx-background-color: transparent; -fx-font-size: 11px; -fx-min-height: 52px; -fx-text-fill: #008681; -fx-font-weight: bold;" />
+
+                <Button text="◇&#10;Safety"
+                        onAction="#openSafety"
+                        HBox.hgrow="ALWAYS"
+                        maxWidth="Infinity"
+                        prefWidth="90"
+                        minWidth="0"
+                        style="-fx-background-color: transparent; -fx-font-size: 11px; -fx-min-height: 52px; -fx-text-fill: #587083;" />
+
+                <Button text="♙&#10;Account"
+                        onAction="#openAccount"
+                        HBox.hgrow="ALWAYS"
+                        maxWidth="Infinity"
+                        prefWidth="90"
+                        minWidth="0"
+                        style="-fx-background-color: transparent; -fx-font-size: 11px; -fx-min-height: 52px; -fx-text-fill: #587083;" />
+            </HBox>
+        </bottom>
+    </BorderPane>
+
+    <!-- SCREEN 15: CANCEL REQUEST DIALOG -->
+    <StackPane fx:id="cancelOverlay"
+               visible="false"
+               managed="false"
+               onKeyPressed="#cancelKey"
+               style="-fx-background-color: rgba(20,45,69,0.32);
+                      -fx-padding: 22px;">
+
+        <ScrollPane fitToWidth="true"
+                    hbarPolicy="NEVER"
+                    maxWidth="346"
+                    prefHeight="480"
+                    maxHeight="${detailRoot.height - 44}"
+                    style="-fx-background: white;
+                           -fx-background-color: white;
+                           -fx-padding: 0;">
+            <content>
+                <VBox spacing="18"
+                      minHeight="-Infinity"
+                      style="-fx-background-color: white;
+                             -fx-padding: 22px;">
+
+                    <Label text="Cancel this request?"
+                           wrapText="true"
+                           minHeight="-Infinity"
+                           style="-fx-font-size: 23px; -fx-font-weight: bold; -fx-text-fill: #142D45;" />
+
+                    <Label fx:id="cancelSummary"
+                           wrapText="true"
+                           minHeight="-Infinity"
+                           maxWidth="Infinity"
+                           style="-fx-font-size: 13px; -fx-text-fill: #587083;" />
+
+                    <VBox spacing="7"
+                          minHeight="-Infinity"
+                          style="-fx-background-color: #E4F3F0; -fx-background-radius: 9px; -fx-padding: 14px;">
+
+                        <Label text="Cancellation stops this request"
+                               wrapText="true"
+                               minHeight="-Infinity"
+                               style="-fx-font-size: 13px; -fx-font-weight: bold; -fx-text-fill: #008681;" />
+
+                        <Label text="Coordinators will stop reviewing this request. You can create a new request later if needed."
+                               wrapText="true"
+                               minHeight="-Infinity"
+                               maxWidth="Infinity"
+                               style="-fx-font-size: 12px; -fx-text-fill: #142D45;" />
+                    </VBox>
+
+                    <Label fx:id="cancelError"
+                           visible="false"
+                           managed="false"
+                           wrapText="true"
+                           minHeight="-Infinity"
+                           maxWidth="Infinity"
+                           style="-fx-font-size: 13px; -fx-text-fill: #B52E37;" />
+
+                    <Button fx:id="keepRequestButton"
+                            text="Keep request"
+                            onAction="#keepRequest"
+                            maxWidth="Infinity"
+                            style="-fx-background-color: #008681; -fx-background-insets: 0; -fx-background-radius: 8px; -fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 14px; -fx-padding: 14px; -fx-min-height: 50px; -fx-cursor: hand;" />
+
+                    <Button fx:id="confirmCancelButton"
+                            text="Cancel request"
+                            onAction="#confirmCancel"
+                            maxWidth="Infinity"
+                            style="-fx-background-color: white; -fx-background-insets: 0; -fx-background-radius: 8px; -fx-border-color: #D8E3EB; -fx-border-radius: 8px; -fx-text-fill: #BB303A; -fx-font-weight: bold; -fx-font-size: 14px; -fx-padding: 13px; -fx-min-height: 48px; -fx-cursor: hand;" />
+                </VBox>
+            </content>
+        </ScrollPane>
+    </StackPane>
+</StackPane>

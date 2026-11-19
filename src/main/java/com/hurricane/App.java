@@ -26,8 +26,15 @@ public class App extends Application {
     }
 
     private static Parent loadFXML(String fxml) throws IOException {
-        FXMLLoader fxmlLoader = new FXMLLoader(App.class.getResource(fxml + ".fxml"));
-        return fxmlLoader.load();
+        FXMLLoader fxmlLoader = new FXMLLoader(
+                App.class.getResource(fxml + ".fxml")
+        );
+
+        Parent root = fxmlLoader.load();
+
+        com.controllers.AccountController.applyTextScale(root);
+
+        return root;
     }
 
     public static void main(String[] args) {

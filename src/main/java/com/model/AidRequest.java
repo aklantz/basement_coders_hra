@@ -259,4 +259,11 @@ public class AidRequest {
     public ArrayList<TaskAssignment> getAssignments() {
         return assignments;
     }
+    /** Used by resident request persistence while preserving this request's identity. */
+    void updateResidentDetails(RequestCategory category, int householdSize, String streetAddress, String note) {
+        this.category = category;
+        this.householdSize = householdSize;
+        this.streetAddress = streetAddress;
+        this.note = note;
+    }
 }
