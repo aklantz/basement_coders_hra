@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+
+<StackPane stylesheets="@styles.css"
+           xmlns="http://javafx.com/javafx/26"
+           xmlns:fx="http://javafx.com/fxml/1"
+           fx:controller="com.controllers.VolunteerPreviewController">
+    <children>
+
+        <BorderPane>
+            <center>
+                <StackPane>
+                    <children>
+
+                        <ScrollPane fitToWidth="true" hbarPolicy="NEVER">
+                            <content>
+                                <VBox styleClass="screen">
+                                    <children>
+                                        <HBox alignment="CENTER_LEFT">
+                                            <children>
+                                                <Button styleClass="back-button" onAction="#back" text="← Back" />
+                                                <Region HBox.hgrow="ALWAYS" />
+                                                <Label styleClass="hint" text="Volunteer" />
+                                            </children>
+                                        </HBox>
+
+                                        <Label styleClass="title" text="A neighbor needs help" />
+                                        <Label styleClass="subtitle" text="HT-261014-082 · Food &amp; water" />
+                                        <Label styleClass="tag" text="Matches your skill" />
+
+                                        <VBox styleClass="card">
+                                            <children>
+                                                <Label styleClass="card-title" text="Food · Water · Phone charger" />
+                                                <Label styleClass="subtitle" text="3 people · 1 child · 1 adult 65+" />
+                                                <Label styleClass="subtitle" text="ZIP 33607 · 12 min drive" />
+                                                <Label styleClass="subtitle" text="Needed today · Non-emergency" />
+                                                <Label styleClass="subtitle"
+                                                       text="Power is out. Drinking water and ready-to-eat food are running low." />
+                                            </children>
+                                        </VBox>
+
+                                        <VBox styleClass="card">
+                                            <children>
+                                                <Label styleClass="card-title" text="Exact address appears after you accept." />
+                                                <Label styleClass="subtitle"
+                                                       text="Only the service ZIP and household size are visible before acceptance." />
+                                            </children>
+                                        </VBox>
+
+                                        <Label styleClass="hint" text="Accept only if you can safely deliver these supplies today." />
+
+                                        <Button styleClass="primary-button" onAction="#btnAcceptClicked" text="Accept" />
+                                        <Button styleClass="secondary-button" onAction="#btnNotForMeClicked" text="Not for me" />
+                                    </children>
+                                </VBox>
+                            </content>
+                        </ScrollPane>
+
+                        <!-- V07 Accept popup -->
+                        <StackPane fx:id="acceptOverlay" styleClass="overlay" visible="false">
+                            <children>
+                                <VBox styleClass="popup" maxHeight="-Infinity" StackPane.alignment="BOTTOM_CENTER">
+                                    <StackPane.margin>
+                                        <Insets top="12.0" right="12.0" bottom="12.0" left="12.0" />
+                                    </StackPane.margin>
+                                    <children>
+                                        <Label styleClass="title" text="Accept this request?" />
+                                        <Label styleClass="subtitle" text="Please accept only if you can safely complete it." />
+
+                                        <VBox styleClass="card">
+                                            <children>
+                                                <Label styleClass="card-title" text="Food &amp; water · HT-261014-082" />
+                                                <Label styleClass="subtitle" text="3 people · ZIP 33607 · 12 min drive" />
+                                                <Label styleClass="subtitle"
+                                                       text="After you accept, the full address and access notes will be shared with you." />
+                                            </children>
+                                        </VBox>
+
+                                        <Button styleClass="primary-button" onAction="#btnConfirmClicked" text="Confirm acceptance" />
+                                        <Button styleClass="secondary-button" onAction="#btnNotNowClicked" text="Not now" />
+                                    </children>
+                                </VBox>
+                            </children>
+                        </StackPane>
+
+                    </children>
+                </StackPane>
+            </center>
+
+            <bottom>
+                <fx:include fx:id="volunteerNav" source="volunteer_nav.fxml" />
+            </bottom>
+        </BorderPane>
+
+        <!-- V08 Decline bottom sheet -->
+        <StackPane fx:id="declineOverlay" styleClass="overlay" visible="false">
+            <children>
+                <VBox styleClass="sheet" maxHeight="-Infinity" StackPane.alignment="BOTTOM_CENTER">
+                    <children>
+                        <Label styleClass="title" text="Not the right fit?" />
+                        <Label styleClass="subtitle" text="Tell us why so we can improve your matches." />
+
+                        <VBox fx:id="reasonList" spacing="10.0" />
+
+                        <Button styleClass="primary-button" onAction="#btnSubmitReasonClicked" text="Submit reason" />
+                        <Button styleClass="secondary-button" onAction="#btnKeepBrowsingClicked" text="Keep browsing" />
+                        <Label styleClass="hint" text="Declining won’t affect your volunteer approval." />
+                    </children>
+                </VBox>
+            </children>
+        </StackPane>
+
+    </children>
+</StackPane>
