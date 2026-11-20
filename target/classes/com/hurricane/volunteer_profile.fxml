@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.ToggleButton?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.shape.Circle?>
+<?import javafx.scene.shape.SVGPath?>
+
+<BorderPane stylesheets="@styles.css"
+            xmlns="http://javafx.com/javafx/26"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.controllers.VolunteerProfileController">
+    <center>
+        <ScrollPane fitToWidth="true" hbarPolicy="NEVER">
+            <content>
+                <VBox styleClass="screen">
+                    <children>
+                        <HBox alignment="CENTER_LEFT" spacing="8.0">
+                            <children>
+                                <SVGPath fill="TRANSPARENT" stroke="#087F7A" strokeWidth="1.2"
+                                         mouseTransparent="true"
+                                         content="M 12 2 C 5 2 1 7 2 13 C 3 20 10 24 17 20 M 21 4 C 15 0 7 4 6 11 C 5 17 12 21 17 16 C 21 12 17 6 12 8 C 8 10 10 15 14 14" />
+                                <Label styleClass="app-name" text="Hurricane Tracker" />
+                                <Region HBox.hgrow="ALWAYS" />
+                                <Label styleClass="hint" text="Volunteer" />
+                            </children>
+                        </HBox>
+
+                        <Label styleClass="title" text="Volunteer profile" />
+                        <Label styleClass="subtitle" text="Manage how and where you can help." />
+
+                        <VBox styleClass="card">
+                            <children>
+                                <Label styleClass="card-title" text="Marcus Johnson" />
+                                <Label styleClass="confirm-text" text="Approved volunteer" />
+                                <Label styleClass="hint" text="marcus.johnson@example.com" />
+                                <Label styleClass="hint" text="(813) 555-0168" />
+                            </children>
+                        </VBox>
+
+                        <VBox styleClass="card">
+                            <children>
+                                <Label styleClass="card-title" text="Skills &amp; supplies" />
+                                <Label styleClass="field-label" text="Food · Water · Transport · Supplies" />
+                                <Label styleClass="hint" text="Only offer help you can safely provide." />
+                                <Button styleClass="link-button" text="Edit skills" />
+                            </children>
+                        </VBox>
+
+                        <VBox styleClass="card">
+                            <children>
+                                <Label styleClass="card-title" text="Service ZIP codes" />
+                                <Label styleClass="field-label" text="33607, 33609" />
+                                <Label styleClass="hint" text="Requests are matched to these areas." />
+                                <Button styleClass="link-button" text="Edit ZIP codes" />
+                            </children>
+                        </VBox>
+
+                        <VBox styleClass="card">
+                            <children>
+                                <HBox alignment="CENTER_LEFT">
+                                    <children>
+                                        <Label styleClass="section-title" text="Available now" />
+                                        <Region HBox.hgrow="ALWAYS" />
+                                        <ToggleButton styleClass="switch" selected="true" contentDisplay="GRAPHIC_ONLY">
+                                            <graphic>
+                                                <Circle radius="11.0" fill="WHITE" />
+                                            </graphic>
+                                        </ToggleButton>
+                                    </children>
+                                </HBox>
+                                <Label styleClass="hint" text="Ready for requests in 33607 and 33609." />
+                            </children>
+                        </VBox>
+
+                        <Label styleClass="hint"
+                               text="Turn availability off to pause new offers. Your active tasks will stay in My tasks." />
+
+                        <Button styleClass="secondary-button" onAction="#btnSignOutClicked" text="Sign out" />
+                    </children>
+                </VBox>
+            </content>
+        </ScrollPane>
+    </center>
+
+    <bottom>
+        <fx:include fx:id="volunteerNav" source="volunteer_nav.fxml" />
+    </bottom>
+</BorderPane>

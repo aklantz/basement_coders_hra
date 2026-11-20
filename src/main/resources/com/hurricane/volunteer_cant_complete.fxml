@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+
+<StackPane stylesheets="@styles.css"
+           xmlns="http://javafx.com/javafx/26"
+           xmlns:fx="http://javafx.com/fxml/1"
+           fx:controller="com.controllers.VolunteerCantCompleteController">
+    <children>
+
+        <!-- Screen behind the sheet -->
+        <VBox styleClass="screen" alignment="TOP_LEFT">
+            <children>
+                <HBox alignment="CENTER_LEFT">
+                    <children>
+                        <Label styleClass="app-name" text="← Back" />
+                        <Region HBox.hgrow="ALWAYS" />
+                        <Label styleClass="hint" text="Volunteer" />
+                    </children>
+                </HBox>
+                <Label styleClass="title" text="Task accepted" />
+                <Label styleClass="subtitle" text="HT-261014-082 · Elena’s household" />
+                <Label styleClass="tag" text="ACCEPTED · READY TO START" />
+            </children>
+        </VBox>
+
+        <Region styleClass="overlay" />
+
+        <VBox styleClass="sheet" maxHeight="-Infinity" StackPane.alignment="BOTTOM_CENTER">
+            <children>
+                <Label styleClass="title" text="Can’t complete?" />
+                <Label styleClass="subtitle"
+                       text="Let your coordinator know what happened. Only return this task if you can’t safely finish it." />
+                <Label styleClass="tag" text="HT-261014-082 · FOOD &amp; WATER" />
+
+                <Label styleClass="field-label" text="Reason" />
+                <VBox styleClass="card">
+                    <children>
+                        <Label styleClass="field-label" text="Safety concern" />
+                        <Button styleClass="link-button" text="Change reason" />
+                    </children>
+                </VBox>
+
+                <Label styleClass="field-label" text="Note for coordinator" />
+                <TextArea prefRowCount="3" wrapText="true"
+                          promptText="The road to the address is flooded. I can’t reach the household safely." />
+
+                <Label styleClass="hint"
+                       text="The task will be returned for reassignment. Your coordinator will review your note." />
+
+                <Button styleClass="primary-button" onAction="#btnReturnClicked" text="Return to coordinator" />
+                <Button styleClass="secondary-button" onAction="#btnKeepClicked" text="Keep task" />
+            </children>
+        </VBox>
+
+    </children>
+</StackPane>

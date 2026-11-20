@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.VBox?>
+
+<BorderPane stylesheets="@styles.css"
+            xmlns="http://javafx.com/javafx/26"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.controllers.VolunteerOfferController">
+    <center>
+        <ScrollPane fitToWidth="true" hbarPolicy="NEVER">
+            <content>
+                <VBox styleClass="screen">
+                    <children>
+                        <HBox alignment="CENTER_LEFT">
+                            <children>
+                                <Button styleClass="back-button" onAction="#back" text="← Back" />
+                                <Region HBox.hgrow="ALWAYS" />
+                                <Label styleClass="hint" text="Volunteer" />
+                            </children>
+                        </HBox>
+
+                        <Label styleClass="title" text="A task for you" />
+                        <Label styleClass="subtitle" text="Your coordinator has matched you to a request." />
+                        <Label styleClass="tag" text="COORDINATOR-ASSIGNED OFFER" />
+
+                        <VBox styleClass="card">
+                            <children>
+                                <Label styleClass="card-title" text="Food and water needed nearby" />
+                                <Label styleClass="subtitle"
+                                       text="This household is in your service area and matches your delivery skills. Please review before accepting." />
+                            </children>
+                        </VBox>
+
+                        <VBox styleClass="card">
+                            <children>
+                                <Label styleClass="card-title" text="Food · Water · Phone charger" />
+                                <Label styleClass="subtitle" text="3 people · 1 child · 1 adult 65+" />
+                                <Label styleClass="subtitle" text="ZIP 33607 · 12 min drive" />
+                                <Label styleClass="subtitle" text="Needed today · Non-emergency" />
+                                <Label styleClass="subtitle"
+                                       text="Power is out. Drinking water and ready-to-eat food are running low." />
+                            </children>
+                        </VBox>
+
+                        <Label styleClass="hint" text="Exact address appears after you accept." />
+
+                        <Button styleClass="primary-button" onAction="#btnAcceptClicked" text="Accept" />
+                        <Button styleClass="secondary-button" onAction="#btnDeclineClicked" text="Decline" />
+                    </children>
+                </VBox>
+            </content>
+        </ScrollPane>
+    </center>
+
+    <bottom>
+        <fx:include fx:id="volunteerNav" source="volunteer_nav.fxml" />
+    </bottom>
+</BorderPane>

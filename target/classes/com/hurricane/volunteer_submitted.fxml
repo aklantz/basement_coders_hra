@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.shape.SVGPath?>
+
+<ScrollPane fitToWidth="true"
+            hbarPolicy="NEVER"
+            stylesheets="@styles.css"
+            xmlns="http://javafx.com/javafx/26"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.controllers.VolunteerSubmittedController">
+    <content>
+        <VBox styleClass="screen">
+            <children>
+                <HBox alignment="CENTER_LEFT" spacing="8.0">
+                    <children>
+                        <SVGPath fill="TRANSPARENT" stroke="#087F7A" strokeWidth="1.2"
+                                 mouseTransparent="true"
+                                 content="M 12 2 C 5 2 1 7 2 13 C 3 20 10 24 17 20 M 21 4 C 15 0 7 4 6 11 C 5 17 12 21 17 16 C 21 12 17 6 12 8 C 8 10 10 15 14 14" />
+                        <Label styleClass="app-name" text="Hurricane Tracker" />
+                        <Region HBox.hgrow="ALWAYS" />
+                        <Label styleClass="hint" text="Volunteer" />
+                    </children>
+                </HBox>
+
+                <Label styleClass="title" text="Delivery submitted" />
+                <Label styleClass="subtitle" text="Thanks for helping your neighbor." />
+                <Label styleClass="tag" text="AWAITING RESIDENT CONFIRMATION" />
+
+                <VBox styleClass="card">
+                    <children>
+                        <Label styleClass="card-icon" text="🛡" />
+                        <Label styleClass="card-title" text="Waiting for the resident to confirm" />
+                        <Label styleClass="subtitle" text="Your delivery was submitted Oct 14, 2026 · 11:22 AM EDT." />
+                        <Label styleClass="subtitle"
+                               text="We’ll notify you when Elena confirms receipt or reports a problem." />
+                    </children>
+                </VBox>
+
+                <VBox styleClass="card">
+                    <children>
+                        <Label styleClass="card-title" text="HT-261014-082" />
+                        <Label styleClass="subtitle" text="Water · Food · Portable phone charger" />
+                        <Label styleClass="subtitle" text="Left supplies with Elena at the front gate." />
+                        <Label styleClass="hint" text="Photo: not added" />
+                    </children>
+                </VBox>
+
+                <Button styleClass="primary-button" onAction="#btnHomeClicked" text="Back to volunteer home" />
+                <Button styleClass="secondary-button" onAction="#btnBrowseClicked" text="Browse recommended requests" />
+            </children>
+        </VBox>
+    </content>
+</ScrollPane>
